@@ -1,6 +1,5 @@
 import React from 'react';
 import Card from './Card';
-import { title } from 'process';
 import { IPexelImages } from '@/pages/types';
 import { titleANDdescFeatures } from '@/utils/texts';
 

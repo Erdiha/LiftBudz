@@ -5,10 +5,12 @@ import style from '@/styles/Home.module.css';
 import MainSegments from '../components/MainSegments';
 import axios from 'axios';
 import { IPexelImages } from './types';
-
-const PEXELS_API_KEY = process.env.NEXT_PUBLIC_PEXELS_API;
+import useAuth from '@/firebase/firebaseUI';
+import HomePage from '@/components/HomePage';
 
 export async function getServerSideProps() {
+  const PEXELS_API_KEY = process.env.NEXT_PUBLIC_PEXELS_API;
+
   const res = await axios.get(
     `https://api.pexels.com/v1/search?query=gym&per_page=3`,
     {
@@ -26,6 +28,7 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ data }: IPexelImages) {
+  const { isLoading, currentUser } = useAuth();
   return (
     <>
       <Head>
@@ -36,8 +39,14 @@ export default function Home({ data }: IPexelImages) {
       </Head>
 
       <main className={style.main}>
-        <Hero />
-        <MainSegments {...{ data }} />
+        {currentUser ? (
+          <HomePage />
+        ) : (
+          <>
+            <Hero />
+            <MainSegments {...{ data }} />
+          </>
+        )}
       </main>
     </>
   );
