@@ -28,3 +28,10 @@ export interface IPexelImages {
     ];
   };
 }
+
+export interface IPost {
+  id: string | number;
+  created_at: string;
+  friends: [string];
+  likes: [string];
+}

@@ -4,13 +4,13 @@
 @tailwind utilities;
 /* @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap'); */
 
-/* 
+
 @layer components{
-  html{
+  /* html{
     overflow-x: hidden;
    scroll-behavior: smooth;
    transition: all;
    transition-duration: 300ms;
    transition-timing-function: ease-in;
- };
-} */
+ }; */
+}

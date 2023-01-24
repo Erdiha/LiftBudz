@@ -1,12 +1,12 @@
 import Head from 'next/head';
-import Hero from '@/components/Hero';
+import Hero from '@/components/mainpage/Hero';
 import { CiDumbbell } from 'react-icons/ci';
 import style from '@/styles/Home.module.css';
-import MainSegments from '../components/MainSegments';
+import MainSegments from '../components/mainpage/MainSegments';
 import axios from 'axios';
 import { IPexelImages } from './types';
 import useAuth from '@/firebase/firebaseUI';
-import HomePage from '@/components/HomePage';
+import HomePage from '@/components/user/HomePage';
 
 export async function getServerSideProps() {
   const PEXELS_API_KEY = process.env.NEXT_PUBLIC_PEXELS_API;
@@ -29,6 +29,7 @@ export async function getServerSideProps() {
 
 export default function Home({ data }: IPexelImages) {
   const { isLoading, currentUser } = useAuth();
+
   return (
     <>
       <Head>

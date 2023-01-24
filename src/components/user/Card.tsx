@@ -1,6 +1,6 @@
 import React from 'react';
 import { BsArrowUpRight } from 'react-icons/bs';
-import { ICard } from './types';
+import { ICard } from '../types';
 
 const Card = ({ feature: { title, description, link }, data }: ICard) => {
   return (

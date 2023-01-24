@@ -10,7 +10,7 @@ module.exports = withMT({
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Montserrat"', 'sans-serif'],
+        sans: ['Open Sans', 'sans-serif'],
       },
     },
   },

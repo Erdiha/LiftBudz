@@ -11,7 +11,7 @@ function Signin_signup() {
   const [userLogin, setUserLogin] = useState(false);
   const [demo, setDemo] = useState(false);
   const { logIn, Register } = useAuth();
-  const [signup, setSignup] = useState(false);
+  const [signup, setSignup] = useState(true);
 
   //react hook form validation
   const {
@@ -28,7 +28,7 @@ function Signin_signup() {
       data.password = '123456';
     }
     //if user has account login else register
-    signup
+     signup
       ? await Register(data.email, data.password)
       : await logIn(data.email, data.password);
   };
@@ -71,7 +71,7 @@ function Signin_signup() {
               <div className="mt-10">
                 <button
                   onClick={() => {
-                    setDemo(true);
+                   
                     setUserLogin(true);
                   }}
                   type="submit"
@@ -101,7 +101,7 @@ function Signin_signup() {
               type="submit"
               onClick={() => {
                 setDemo(true);
-                setUserLogin(true);
+                setUserLogin(false);
               }}
               className="bg-indigo-500 text-gray-100 p-4 w-full rounded-full tracking-wide font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg"
             >

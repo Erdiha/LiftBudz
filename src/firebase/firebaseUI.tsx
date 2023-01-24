@@ -13,7 +13,8 @@ import React, {
   useContext,
   useEffect,
 } from 'react';
-import { auth } from './firebase';
+import { auth, db } from './firebase';
+import { DocumentData, collection, onSnapshot } from 'firebase/firestore';
 
 export interface Iinput {
   email: string;
@@ -77,7 +78,7 @@ export const AuthProvider = ({ children }: AProps) => {
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userinfo) => {
         setCurrentUser(userinfo.user);
-        router.push('/Account');
+        router.push('/');
         setIsLoading(false);
       })
       .catch((error) => alert(error.message))
@@ -89,7 +90,7 @@ export const AuthProvider = ({ children }: AProps) => {
     await signInWithEmailAndPassword(auth, email, password)
       .then((userinfo) => {
         setCurrentUser(userinfo.user);
-        router.push('/Account');
+        router.push('/');
         setIsLoading(false);
       })
       .catch((error) => alert(error.message))
@@ -121,31 +122,23 @@ export default function useAuth() {
   return useContext(AuthContext);
 }
 
-// export const userLibrary = (
-//   UID: undefined | string,
-//   items: number | undefined
-// ) => {
-//   const [getList, setGetList] = useState<DocumentData[]>([]);
-//   useEffect(() => {
-//     if (!UID) return;
+export const useUserLibrary = (UID: undefined | string) => {
+  const [getList, setGetList] = useState<DocumentData>();
+  useEffect(() => {
+    if (!UID) return;
 
-//     return onSnapshot(
-//       collection(
-//         db,
-//         'recipes',
-//         UID,
-//         items === 0 ? `myrecipes` : items === 1 ? 'likes' : 'dislikes'
-//       ),
-//       (snapshot) => {
-//         setGetList(
-//           snapshot.docs.map((doc) => ({
-//             id: doc.id,
-//             ...doc.data(),
-//           }))
-//         );
-//       }
-//     );
-//   }, [db, UID]);
+    return onSnapshot(
+      collection(db, 'users', UID, `profileData`),
+      (snapshot) => {
+        setGetList(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+        );
+      }
+    );
+  }, [db, UID]);
 
-//   return getList;
-// };
+  return getList;
+};

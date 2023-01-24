@@ -1,4 +1,4 @@
-import NavbarComponent from '@/components/NavbarComponent';
+import NavbarComponent from '@/components/navbar/NavbarComponent';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { ThemeProvider } from '@material-tailwind/react';
