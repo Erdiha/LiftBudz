@@ -138,7 +138,7 @@ export const useUserLibrary = (UID: undefined | string) => {
         );
       }
     );
-  }, [db, UID]);
+  }, []);
 
   return getList;
 };
