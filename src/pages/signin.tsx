@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useAuth, { IRegister, Iinput } from '@/firebase/firebaseUI';
+import useAuth, { IRegister, Iinput } from '@/firebase/usefirebaseUI';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Input } from '@material-tailwind/react';
 
@@ -28,7 +28,7 @@ function Signin_signup() {
       data.password = '123456';
     }
     //if user has account login else register
-     signup
+    signup
       ? await Register(data.email, data.password)
       : await logIn(data.email, data.password);
   };
@@ -71,7 +71,6 @@ function Signin_signup() {
               <div className="mt-10">
                 <button
                   onClick={() => {
-                   
                     setUserLogin(true);
                   }}
                   type="submit"

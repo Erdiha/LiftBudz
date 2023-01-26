@@ -1,7 +1,7 @@
 import { Fragment, useState, useMemo, useEffect } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import useAuth from '@/firebase/firebaseUI';
+import useAuth from '@/firebase/usefirebaseUI';
 import Link from 'next/link';
 import { Search } from '@/components/search/Search';
 const user = {
@@ -16,10 +16,6 @@ function classNames(...classes: string[]): string {
 
 export default function NavbarComponent() {
   const { currentUser, logout } = useAuth();
-
-  const handleSignOut = () => {
-    logout();
-  };
 
   useEffect(() => {
     !currentUser && logout();
@@ -61,7 +57,7 @@ export default function NavbarComponent() {
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 bg-red-100 flex justify-center items-center p-1 px-2 rounded shadow-white shadow-sm ">
+                    <div className="flex-shrink-0 bg-gray-50  flex justify-center items-center p-1 px-2 rounded shadow-blue-300 shadow-sm ">
                       LIFTBudz
                       {/* <img
                         className="h-8 w-8  absolute z-[1]"

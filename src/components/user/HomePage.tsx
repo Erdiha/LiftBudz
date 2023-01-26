@@ -1,48 +1,57 @@
-import React, { useCallback, useEffect } from 'react';
-import useAuth, { useUserLibrary } from '../../firebase/firebaseUI';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import useAuth from '../../firebase/usefirebaseUI';
 import Link from 'next/link';
+import message from '@/components/messages/Message';
+import Message from '@/components/messages/Message';
 
 const Homepage: React.FC = () => {
-  const { currentUser, logIn, logout, Register, isLoading } = useAuth();
+  const { currentUser } = useAuth();
+  const [activeTab, setActiveTab] = useState('posts');
 
-  const inf: any = useUserLibrary(currentUser?.uid);
-
-  console.log(currentUser, inf);
   return (
-    <div className="bg-gray-300 min-h-screen w-full mt-20 p-10 ">
-      <div className="container mx-auto">
-        <div className="flex flex-col md:flex-row gap-2">
-          <div className="md:w-1/4 border-4 border-indigo-600">
-            <img src="/fittness.svg" className="h-32 mx-auto" alt="Avatar" />
-            <p className="text-center font-medium">{currentUser?.email}</p>
-            <hr className="text-black border-2 border-black" />
-            <div className="mt-4 gap-4 grid grid-rows-auto p-1">
-              <Link href="/profile" className="block text-center font-medium">
-                Profile
-              </Link>
-              <a href="#" className="block text-center font-medium">
-                Messages
-              </a>
-              <a href="#" className="block text-center font-medium">
-                Progress
-              </a>
-              <a href="#" className="block text-center font-medium">
-                Friends
-              </a>
-            </div>
+    <div className="max-w-[90%] h-screen p-4 grid grid-cols-[20%,75%] scroll-x-none">
+      <div className="">
+        {' '}
+        <aside
+          id="logo-sidebar"
+          className="w-64 fixed left-0 top-10  transition-transform -translate-x-full sm:translate-x-0 z-40 pt-20 border-r border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 justify-center flex"
+          aria-label="Sidebar"
+        >
+          <div className="flex flex-col min-h-10 justify-between gap-2">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className="border-2 p-2  hover:bg-blue-gray-200"
+            >
+              Dashboard
+            </button>
+            <button
+              onClick={() => setActiveTab('friends')}
+              className="border-2 p-2  hover:bg-blue-gray-200"
+            >
+              Friends
+            </button>
+            <button
+              onClick={() => setActiveTab('messages')}
+              className="border-2 p-2  hover:bg-blue-gray-200"
+            >
+              Messages
+            </button>
+            <button
+              onClick={() => setActiveTab('progress')}
+              className="border-2 p-2  hover:bg-blue-gray-200"
+            >
+              Progress
+            </button>
           </div>
-          <div className="md:w-3/4 overflow-y-auto ">
-            <div className="bg-white p-4 rounded-lg">
-              <h2 className="text-lg font-medium mb-2">Recent Posts</h2>
-              <div className="mb-4">
-                <p>Post 1</p>
-              </div>
-              <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
-                New Post
-              </button>
-            </div>
-          </div>
+        </aside>
+      </div>
+
+      <div className="sm:ml-64 scroll-y-auto min-w-fuull min-h-full ">
+        <div className="m-4 p-4 border-dashed border-gray-200 dark:border-gray-700 border-2 rounded-lg mt-20 w-fu;">
+          {activeTab === 'dashboard'}
+          {activeTab === 'friends'}
+          {activeTab === 'messages' && <Message />}
+          {activeTab === 'progress'}
         </div>
       </div>
     </div>

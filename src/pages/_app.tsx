@@ -1,16 +1,17 @@
 import NavbarComponent from '@/components/navbar/NavbarComponent';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
-import { ThemeProvider } from '@material-tailwind/react';
-import { AuthProvider } from '@/firebase/firebaseUI';
-
+import { AuthProvider } from '@/firebase/usefirebaseUI';
+import { RecoilRoot } from 'recoil';
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       {' '}
       <AuthProvider>
-        <NavbarComponent />
-        <Component {...pageProps} />
+        <RecoilRoot>
+          <NavbarComponent />
+          <Component {...pageProps} />
+        </RecoilRoot>
       </AuthProvider>
     </>
   );

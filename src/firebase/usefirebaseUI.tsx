@@ -13,7 +13,7 @@ import React, {
   useContext,
   useEffect,
 } from 'react';
-import { auth, db } from './firebase';
+import { auth, db } from './fireBase';
 import { DocumentData, collection, onSnapshot } from 'firebase/firestore';
 
 export interface Iinput {
@@ -123,12 +123,12 @@ export default function useAuth() {
 }
 
 export const useUserLibrary = (UID: undefined | string) => {
-  const [getList, setGetList] = useState<DocumentData>();
+  const [getList, setGetList] = useState<DocumentData[]>([]);
   useEffect(() => {
     if (!UID) return;
 
     return onSnapshot(
-      collection(db, 'users', UID, `profileData`),
+      collection(db, 'users', UID, 'profileData'),
       (snapshot) => {
         setGetList(
           snapshot.docs.map((doc) => ({
