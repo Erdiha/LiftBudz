@@ -10,6 +10,7 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\""
   },
   "dependencies": {
+    "@firebase/functions-types": "^0.6.0",
     "@headlessui/react": "^1.7.7",
     "@heroicons/react": "^2.0.13",
     "@material-tailwind/react": "^1.2.5",
