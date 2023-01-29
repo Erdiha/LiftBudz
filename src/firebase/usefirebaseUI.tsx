@@ -4,6 +4,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import React, {
@@ -13,18 +14,27 @@ import React, {
   useContext,
   useEffect,
 } from 'react';
-import { auth, db } from './fireBase';
-import { DocumentData, collection, onSnapshot } from 'firebase/firestore';
+import {
+  DocumentData,
+  addDoc,
+  collection,
+  getDocs,
+  onSnapshot,
+} from 'firebase/firestore';
+import { updateCurrentUser } from 'firebase/auth';
+import { firebase, db, auth } from './fireBase';
 
 export interface Iinput {
+  displayName?: string;
   email: string;
   password: string;
+  photoUrl: string;
 }
 //for register
 export interface IRegister {
+  name: string;
   email: string;
   password: string;
-  repassword: string;
 }
 
 //our autentication settings for firebase
@@ -37,7 +47,7 @@ interface IAuth {
   isLoading: boolean;
   logIn: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  Register: (email: string, password: string) => Promise<void>;
+  Register: (email: string, password: string, name: string) => Promise<void>;
 }
 
 const AuthContext = createContext<IAuth>({
@@ -55,7 +65,6 @@ export const AuthProvider = ({ children }: AProps) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [firstLoading, setFirstLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-
   useEffect(
     () =>
       onAuthStateChanged(auth, (user) => {
@@ -69,15 +78,24 @@ export const AuthProvider = ({ children }: AProps) => {
         }
         setFirstLoading(false);
       }),
-    [auth]
+    [auth],
   );
 
-  const Register = async (email: string, password: string) => {
+  const Register = async (
+    displayName: string,
+    email: string,
+    password: string,
+  ) => {
     setIsLoading(true);
-
+    console.log('in register', displayName, email, password);
     await createUserWithEmailAndPassword(auth, email, password)
-      .then((userinfo) => {
-        setCurrentUser(userinfo.user);
+      .then(async (userinfo) => {
+        const docRef: any = await addDoc(collection(db, 'users'), {
+          displayName: displayName,
+          userId: `${userinfo.user.uid}`,
+          email: `${userinfo.user.email}`,
+        });
+        setCurrentUser(docRef);
         router.push('/');
         setIsLoading(false);
       })
@@ -124,21 +142,22 @@ export default function useAuth() {
 
 export const useUserLibrary = (UID: undefined | string) => {
   const [getList, setGetList] = useState<DocumentData[]>([]);
+  const [getCurrentUser, setGetCurrentUser]: any = useState();
+  const [getAllUsers, setGetAllUsers]: any = useState();
   useEffect(() => {
     if (!UID) return;
+    return onSnapshot(collection(db, 'users'), (snapshot) => {
+      setGetAllUsers(snapshot);
 
-    return onSnapshot(
-      collection(db, 'users', UID, 'profileData'),
-      (snapshot) => {
-        setGetList(
-          snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-        );
-      }
-    );
-  }, []);
+      setGetList(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+          ...(doc.data().userId === UID && setGetCurrentUser(doc.data())),
+        })),
+      );
+    });
+  }, [db]);
 
-  return getList;
+  return { getList, getCurrentUser, getAllUsers };
 };

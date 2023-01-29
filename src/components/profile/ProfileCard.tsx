@@ -6,6 +6,7 @@ import {
   Typography,
 } from '@material-tailwind/react';
 import { DocumentData } from 'firebase/firestore';
+import UserLists from '../user/UserList';
 
 export function UserProfileInfo({
   title,
@@ -70,6 +71,7 @@ export function UserProfileInfo({
             ))}
           </ul>
         )}
+        <UserLists />
       </CardBody>
     </Card>
   );

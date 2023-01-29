@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import useAuth, { IRegister, Iinput } from '@/firebase/usefirebaseUI';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Input } from '@material-tailwind/react';
@@ -12,6 +12,9 @@ function Signin_signup() {
   const [demo, setDemo] = useState(false);
   const { logIn, Register } = useAuth();
   const [signup, setSignup] = useState(true);
+  const emailRef = useRef();
+  const paswordRef = useRef();
+  const nameRef = useRef();
 
   //react hook form validation
   const {
@@ -23,13 +26,14 @@ function Signin_signup() {
   //when the user clicked button to login, do auth
   const onSubmit: SubmitHandler<Iinput> = async (data: any) => {
     if (demo) {
-      data.name = 'Guest';
+      data.displayName = 'Guest';
       data.email = 'demo@demo.com';
       data.password = '123456';
     }
     //if user has account login else register
+    console.log(data);
     signup
-      ? await Register(data.email, data.password)
+      ? await Register(data.displayName, data.email, data.password)
       : await logIn(data.email, data.password);
   };
 
@@ -46,26 +50,39 @@ function Signin_signup() {
           <div className="mt-12">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div>
-                <Input color="indigo" size="lg" label="Name (optional)" />
+                <Input
+                  id="name"
+                  {...register('displayName')}
+                  type="text"
+                  color="indigo"
+                  size="lg"
+                  label="Name (optional)"
+                  name="displayName"
+                  required
+                />
               </div>
               <div className="mt-8">
                 <Input
+                  id="email"
                   {...register('email')}
                   type="email"
                   required
                   color="indigo"
                   size="lg"
                   label="Email Address"
+                  name="email"
                 />
               </div>
               <div className="mt-8">
                 <Input
+                  id="password"
                   {...register('password')}
                   type="password"
                   required
                   color="indigo"
                   size="lg"
                   label="Enter your password"
+                  name="password"
                 />
               </div>
               <div className="mt-10">

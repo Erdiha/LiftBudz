@@ -1,15 +1,17 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   useCollectionData,
   useCollection,
 } from 'react-firebase-hooks/firestore';
-import { auth, firestore, firebase } from './chatAuth';
-import MessageCard from '../user/MessageCard';
+import { auth, db, firebase } from '@/firebase/fireBase';
+import MessageCard from './MessageCard';
+import Loading from '@/utils/Loading';
+import UserLists from '../user/UserList';
 
 function MessageList() {
   const dummy: any = useRef();
   const [formValue, setFormValue]: any = useState();
-  const messagesRef: any = firestore.collection('messages');
+  const messagesRef: any = db.collection('messages');
 
   let query: any = messagesRef.orderBy('createdAt').limit(25);
 
@@ -31,12 +33,13 @@ function MessageList() {
   const sendMessage = async (e: any) => {
     e.preventDefault();
     const { uid, photoURL }: any = auth.currentUser;
-    await messagesRef.add({
-      text: formValue,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      uid,
-      photoURL,
-    });
+    formValue !== '' &&
+      (await messagesRef.add({
+        text: formValue,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        uid,
+        photoURL,
+      }));
 
     setFormValue('');
     dummy?.current?.scrollIntoView({ behavior: 'smooth' });
@@ -51,14 +54,18 @@ function MessageList() {
   );
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
   }
 
   if (error) {
     return <div>Error: {error.message}</div>;
   }
   return (
-    <div className="">
+    <div className="flex   w-full max-h-[90vh] h-[50rem] justify-center items-center">
       <MessageCard
         messages={messages}
         setFormValue={setFormValue}

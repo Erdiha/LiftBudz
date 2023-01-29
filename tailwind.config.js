@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const withMT = require('@material-tailwind/react/utils/withMT');
-require('dotenv').config()
+require('dotenv').config();
 module.exports = withMT({
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
@@ -14,7 +14,7 @@ module.exports = withMT({
       },
     },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar-hide')],
   // plugins: [
   //   require('@tailwindcss/typography'),
   //   // ...

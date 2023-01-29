@@ -19,6 +19,7 @@
     "@types/react-dom": "18.0.10",
     "@types/redux": "^3.6.0",
     "@types/redux-thunk": "^2.1.0",
+    "avataaars": "^2.0.0",
     "dotenv": "^16.0.3",
     "emotion-theming": "^11.0.0",
     "eslint": "8.31.0",
@@ -38,6 +39,7 @@
     "recoil": "^0.7.6",
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.2",
+    "tailwind-scrollbar-hide": "^1.1.7",
     "twin.macro": "^3.1.0",
     "typescript": "4.9.4"
   },

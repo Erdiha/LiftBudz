@@ -1,16 +1,25 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 /* @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap'); */
 
+@layer components {
+  .scroll-bar::-webkit-scrollbar {
+    width: 0.55rem;
+    height: 0.25rem;
+  }
 
-@layer components{
-  /* html{
-    overflow-x: hidden;
-   scroll-behavior: smooth;
-   transition: all;
-   transition-duration: 300ms;
-   transition-timing-function: ease-in;
- }; */
+  .scroll-bar::-webkit-scrollbar-track {
+    --bg-opacity: 1;
+    background-color: #ffffff;
+  }
+
+  .scroll-bar::-webkit-scrollbar-thumb {
+    --bg-opacity: 1;
+    background-color: #686868;
+  }
+
+  .scroll-bar::-webkit-scrollbar-thumb {
+    border-radius: 0.25rem;
+  }
 }
