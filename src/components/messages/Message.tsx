@@ -3,7 +3,7 @@ import {
   useCollectionData,
   useCollection,
 } from 'react-firebase-hooks/firestore';
-import { auth, db, firebase } from '@/firebase/fireBase';
+import { auth, db, firebase } from '../../firebase/fireBase';
 import MessageCard from './MessageCard';
 import Loading from '@/utils/Loading';
 import UserLists from '../user/UserList';
