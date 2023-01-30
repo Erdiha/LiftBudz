@@ -38,6 +38,8 @@ import {
 } from 'firebase/firestore';
 import { db, auth, firebase } from '@/firebase/fireBase';
 import { useUserLibrary } from '../firebase/usefirebaseUI';
+import ProfileAvatar from '../components/profile/ProfileAvatar';
+import AvatarModal from '@/components/profile/AvatarModal';
 
 function Profile() {
   const { currentUser, isLoading } = useAuth();
@@ -46,6 +48,7 @@ function Profile() {
   const [userData, setUserData]: any = useState(getCurrentUser);
   const [newData, setNewData] = useState<any>(useUserLibrary(currentUser?.uid));
   const [openSettings, setOpenSettings] = useState(false);
+  const [openAvatarModal, setOpenAvatarModal] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     setOpenSettings(false);
@@ -189,12 +192,9 @@ function Profile() {
           <CardBody className="p-4 w-full flex flex-col ">
             <div className="mb-10 flex items-center justify-between gap-6 flex-wrap">
               <div className="flex items-center gap-6 ">
-                <Avatar
-                  src="/fittness.svg"
-                  alt="bruce-mars"
-                  size="xl"
-                  className="rounded-lg shadow-lg shadow-blue-gray-500/40"
-                />
+                <Tooltip content="change avatar image">
+                  <AvatarModal />
+                </Tooltip>
                 <div>
                   <Typography variant="h5" color="blue-gray" className="mb-1">
                     {getCurrentUser?.displayName}

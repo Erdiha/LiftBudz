@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import useAuth from '../../firebase/usefirebaseUI';
+import useAuth, { useUserLibrary } from '../../firebase/usefirebaseUI';
 import Link from 'next/link';
 import message from '@/components/messages/Message';
 import Message from '@/components/messages/Message';
@@ -33,11 +33,14 @@ import Friends from '../friends/Friends';
 const Homepage: React.FC = () => {
   const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('posts');
-
+  const { getCurrentUser } = useUserLibrary(currentUser!.uid);
+  console.log('home page ', getCurrentUser);
   const sideMenu = () => {
     return (
       <div className=" p-8  bg-gray-800">
-        <div className="h-fit w-fit flex items-center text-gray-300">NAME</div>
+        <div className="h-fit w-fit flex items-center text-gray-300">
+          {getCurrentUser?.displayName}
+        </div>
 
         <div className="mt-12 text-sm md:text-md">
           <button

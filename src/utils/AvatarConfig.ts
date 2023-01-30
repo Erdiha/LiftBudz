@@ -182,7 +182,7 @@ const configsKeys = Object.keys(configs);
 export function generateRandomAvatarOptions() {
   const options: any = {};
   const keys: any = [...configsKeys];
-  keys.forEach((key: any) => {
+  keys.forEach((key: any, index: number) => {
     const configArray: string[] = configs[key];
     options[key] = configArray[Math.floor(Math.random() * configArray.length)];
   });

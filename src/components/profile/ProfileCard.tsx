@@ -7,6 +7,7 @@ import {
 } from '@material-tailwind/react';
 import { DocumentData } from 'firebase/firestore';
 import UserLists from '../user/UserList';
+import AvatarCard from './AvatarCard';
 
 export function UserProfileInfo({
   title,

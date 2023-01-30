@@ -17,6 +17,7 @@ function Posts() {
       postRef.current.scrollTop = postRef.current.scrollHeight;
     }
   }, [postArray]);
+
   useEffect(() => {
     db.collection('posts')
       .orderBy('createdAt')
@@ -25,7 +26,7 @@ function Posts() {
         setPostArray(snapshot.docs.map((doc) => doc.data())),
       );
   }, []);
-  console.log('post array', postArray);
+
   return (
     <>
       <div
