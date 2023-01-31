@@ -9,7 +9,7 @@ import { DocumentData } from 'firebase/firestore';
 import UserLists from '../user/UserList';
 import AvatarCard from './AvatarCard';
 
-export function UserProfileInfo({
+export function ProfileCard({
   title,
   description,
   details,
@@ -72,19 +72,18 @@ export function UserProfileInfo({
             ))}
           </ul>
         )}
-        <UserLists />
       </CardBody>
     </Card>
   );
 }
 
-UserProfileInfo.defaultProps = {
+ProfileCard.defaultProps = {
   action: null,
   description: null,
   details: {},
 };
 
-UserProfileInfo.propTypes = {
+ProfileCard.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.node,
   details: PropTypes.object,
@@ -92,4 +91,4 @@ UserProfileInfo.propTypes = {
 
 // UserProfileInfo.displayName = '/src/widgets/cards/profile-info-card.jsx';
 
-export default UserProfileInfo;
+export default ProfileCard;

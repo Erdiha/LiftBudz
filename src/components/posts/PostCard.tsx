@@ -5,11 +5,10 @@ import { Button } from '@material-tailwind/react';
 const Postcard = ({ id, uid, text, title, photoURL }: any) => {
   const { currentUser } = useAuth();
   const [editable, setEditable] = useState<boolean>(false);
-  console.log(text, uid, id, photoURL);
   return (
-    <div key={id} className="flex w-full h-full p-4 	bg-gray-200 ">
-      <div className=" flex flex-col border shadow-md overflow-y-auto w-full backdrop-blur-lg bg-white/50 p-5">
-        <div className="w-full px-6 py-4 bg-white rounded shadow-md ring-1 ring-gray-900/10 relative">
+    <div key={id} className="flex w-full 	bg-gray-200 pt-16">
+      <div className=" flex flex-col border shadow-md overflow-y-auto w-full backdrop-blur-lg bg-white/50 p-3  max-h-[25rem]">
+        <div className="w-full px-6 py-4 bg-white rounded shadow-md ring-1 ring-gray-900/10 relative h-full">
           <form>
             <div>
               <h3 className="text-2xl font-semibold">{title}</h3>

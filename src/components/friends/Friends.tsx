@@ -3,7 +3,7 @@ import UserLists from '../user/UserList';
 
 function Friends() {
   return (
-    <div className="w-full">
+    <div className="w-full h-fit">
       <UserLists />
     </div>
   );

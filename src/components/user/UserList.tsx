@@ -3,43 +3,33 @@ import { firebase, auth, db } from '@/firebase/fireBase';
 import useAuth, { useUserLibrary } from '@/firebase/usefirebaseUI';
 import { updateCurrentUser } from 'firebase/auth';
 import { collection, getDocs } from 'firebase/firestore';
+import { connect, useSelector, useDispatch } from 'react-redux';
+import { fetchUsers } from '../../redux/actions/getAllRegisteredUsers';
+import UserCard from './UserCard';
 
 function UserLists() {
-  const { currentUser } = useAuth();
-  const { getAllUsers } = useUserLibrary(currentUser?.uid);
-  const [users, setUsers] = useState(getAllUsers);
-  const userz: any = [];
-  const getUsers = async () => {
-    const colRef = collection(db, 'users');
-    try {
-      const docsSnap = await getDocs(colRef);
-      if (docsSnap.docs.length > 0) {
-        setUsers(docsSnap.docs);
-        // docsSnap.forEach((doc) => {
-        //   userz.push({ ...doc.data(), id: doc.id });
-        // });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const dispatch: any = useDispatch();
+  const users = useSelector((state: any) => state.users);
+
   useEffect(() => {
-    getUsers();
-  }, [db, auth, currentUser]);
+    dispatch(fetchUsers('all'));
+  }, [dispatch]);
+
   return (
-    <div
-      className={`w-full   bg-gray-100 text-black grid grid-rows-${users?.length} p-10 gap-10`}
-    >
-      {users?.map((user: any, index: number) => {
-        return (
-          <div key={index} className="flex flex-col gap-2 ">
-            <p>Name: {user?.data()?.displayName}</p>
-            <p>Email: {user?.data()?.email}</p>
-          </div>
-        );
-      })}
+    <div>
+      <div
+        className={`w-full justify-center items-center bg-gray-100 text-black grid grid-rows-${users?.length} p-10 gap-10`}
+      >
+        {users?.map((user: any, index: number) => {
+          return (
+            <div key={index} className="flex flex-col gap-2 ">
+              <UserCard {...user} />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-export default UserLists;
+export default connect()(UserLists);

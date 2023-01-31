@@ -1,10 +1,9 @@
 import React from 'react';
-import Card from '@/components/user/Card';
+import Card from '@/components/user/UserCard';
 import { IPexelImages } from '@/pages/types';
 import { titleANDdescFeatures } from '@/utils/texts';
 
 function mainpageSegments({ data }: IPexelImages) {
-  console.log('pexel images', data);
   return (
     <section className="bg-gray-100 py-8 w-full">
       <div className="container mx-auto">

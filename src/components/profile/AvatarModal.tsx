@@ -16,20 +16,23 @@ export default function AvatarModal() {
   const handleOpen = () => {
     setOpen(!open);
   };
-  console.log(open);
   return (
-    <Fragment>
+    <div className="flex items-center justify-center">
       <Tooltip content="change avatar image">
         <Button onClick={() => setOpen(!open)} variant="gradient">
           <ProfileAvatar setOpen={setOpen} />
         </Button>
       </Tooltip>
-      <Dialog open={open} handler={handleOpen}>
+      <Dialog
+        open={open}
+        handler={handleOpen}
+        className=" relative bg-white/80 m-4  backdrop-blur-md rounded-lg shadow-2xl text-blue-gray-500 antialiased font-sans text-base font-light leading-relaxed w-[20rem]  min-w-[30%] text-center max-w-5xl"
+      >
         <DialogHeader>Choose.</DialogHeader>
         <DialogBody divider>
           <AvatarCard setOpen={setOpen} open={open} />
         </DialogBody>
       </Dialog>
-    </Fragment>
+    </div>
   );
 }

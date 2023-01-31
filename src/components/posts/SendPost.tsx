@@ -35,10 +35,9 @@ function SendPost({ setOpenPostFields }: any) {
     setPostValue(initialState);
     setOpenPostFields(false);
   };
-  console.log('this is postvalue after sent', postValue);
   return (
     <div className="flex flex-col items-center w-full pt-6 bg-gray-100 sm:justify-center sm:pt-0">
-      <form onSubmit={sendPost} className="w-[50%] py-2">
+      <form onSubmit={sendPost} className="w-full p-2">
         <div>
           <Input
             type="text"

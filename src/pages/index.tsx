@@ -5,7 +5,7 @@ import style from '@/styles/Home.module.css';
 import MainSegments from '../components/mainpage/MainSegments';
 import { IPexelImages } from './types';
 import useAuth from '@/firebase/usefirebaseUI';
-import HomePage from '@/components/user/HomePage';
+import Dashboard from '@/components/user/Dashboard';
 
 export async function getServerSideProps() {
   const PEXELS_API_KEY = process.env.NEXT_PUBLIC_PEXELS_API;
@@ -17,7 +17,7 @@ export async function getServerSideProps() {
         headers: {
           Authorization: `Bearer ${PEXELS_API_KEY}`,
         },
-      }
+      },
     );
 
     if (!res.ok) {
@@ -53,7 +53,7 @@ export default function Home({ data }: IPexelImages) {
 
       <main className={style.main}>
         {currentUser ? (
-          <HomePage />
+          <Dashboard />
         ) : (
           <>
             <Hero />

@@ -13,8 +13,8 @@ export function MessageCard({ messages, setFormValue, sendMessage }: any) {
     }
   }, [messages]);
   return (
-    <div className=" flex  w-full h-full p-4 	bg-gray-200">
-      <div className="  flex flex-col border shadow-md overflow-y-auto w-full backdrop-blur-lg bg-white/50">
+    <div className=" flex  h-[65vh] bottom-0 relative w-full pb-2">
+      <div className="  flex flex-col border shadow-md  w-full backdrop-blur-lg bg-gray-100 p-4 h-full">
         <div className="flex items-center justify-between border-b p-2">
           <div className="flex items-center">
             <img
@@ -56,7 +56,7 @@ export function MessageCard({ messages, setFormValue, sendMessage }: any) {
 
         <div
           ref={messageContainerRef}
-          className=" flex flex-col w-full px-4 py-4 overflow-y-auto duration-200 transform ease-in-out "
+          className=" flex flex-col px-4  overflow-y-auto scroll-y-auto duration-200 transform ease-in-out mb-12 bg-blue-gray-100"
         >
           {messages?.map((message: any) => {
             if (currentUser?.uid === message?.uid) {
@@ -104,7 +104,7 @@ export function MessageCard({ messages, setFormValue, sendMessage }: any) {
           })}
         </div>
 
-        <div className="flex items-center border-t p-2">
+        <div className="flex items-center border-t justify-around  absolute bottom-2 ">
           <div>
             <button
               className="inline-flex hover:bg-indigo-50 rounded-full p-2"
@@ -127,15 +127,15 @@ export function MessageCard({ messages, setFormValue, sendMessage }: any) {
             </button>
           </div>
 
-          <form onSubmit={sendMessage} className="w-full mx-2 p-4 flex  gap-4">
+          <form onSubmit={sendMessage} className="w-full grid grid-cols-[70%,25%] gap-2  ">
             <Input
               onChange={(e) => setFormValue(e.target.value)}
-              className="w-full rounded-full border border-gray-200 h-10 p-4"
+              className=" rounded-full border border-gray-200 h-10 p-4"
               label="Message"
               autoFocus
             />
 
-            <Button type="submit">send</Button>
+            <Button className=" flex  justify-center" type="submit">send</Button>
           </form>
         </div>
       </div>

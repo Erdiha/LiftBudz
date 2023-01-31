@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useAuth, { useUserLibrary } from '../../firebase/usefirebaseUI';
 import Link from 'next/link';
 import message from '@/components/messages/Message';
@@ -30,24 +30,33 @@ import {
 } from '@heroicons/react/24/outline';
 import Posts from '../posts/Posts';
 import Friends from '../friends/Friends';
-const Homepage: React.FC = () => {
+const Dashboard: React.FC = () => {
   const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('posts');
   const { getCurrentUser } = useUserLibrary(currentUser!.uid);
-  console.log('home page ', getCurrentUser);
+  const dashboardRightSide = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    console.log(dashboardRightSide.current);
+    if (dashboardRightSide.current) {
+      dashboardRightSide.current.scrollTop =
+        dashboardRightSide.current.scrollHeight;
+    }
+  }, []);
+
   const sideMenu = () => {
     return (
-      <div className=" p-8  bg-gray-800">
+      <div className=" p-8 bg-gray-900 pt-10">
         <div className="h-fit w-fit flex items-center text-gray-300">
           {getCurrentUser?.displayName}
         </div>
 
-        <div className="mt-12 text-sm md:text-md">
+        <div className="md:flex flex-col grid grid-cols-2 mt-4 md:mt-12 text-sm md:text-md">
           <button
             onClick={() => setActiveTab('posts')}
-            className={`flex w-full justify-between rounded p-2  hover:text-gray-500 cursor-pointer items-center mb-6 ${
+            className={`flex w-full justify-between rounded p-2  hover:text-gray-500 cursor-pointer items-center md:mb-6 ${
               activeTab === 'posts'
-                ? 'text-gray-300 border-[2px] border-white'
+                ? 'text-gray-300 border-[1px] border-white'
                 : 'text-gray-500'
             } `}
           >
@@ -58,9 +67,9 @@ const Homepage: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('friends')}
-            className={`flex w-full justify-between p-2  hover:text-gray-500 cursor-pointer items-center mb-6 ${
+            className={`flex w-full justify-between p-2  hover:text-gray-500 cursor-pointer items-center md:mb-6 ${
               activeTab === 'friends'
-                ? 'text-gray-300 border-[2px] border-white'
+                ? 'text-gray-300 border-[1px] border-white'
                 : 'text-gray-500 border-none '
             } `}
           >
@@ -74,9 +83,9 @@ const Homepage: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('progress')}
-            className={`flex w-full justify-between  p-2 hover:text-gray-500 cursor-pointer items-center mb-6 ${
+            className={`flex w-full justify-between  p-2 hover:text-gray-500 cursor-pointer items-center md:mb-6 ${
               activeTab === 'progress'
-                ? 'text-gray-300 border-[2px] border-white'
+                ? 'text-gray-300 border-[1px] border-white'
                 : 'text-gray-500 border-none '
             }`}
           >
@@ -87,9 +96,9 @@ const Homepage: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('messages')}
-            className={` flex w-full justify-between p-2  hover:text-gray-500 cursor-pointer items-center mb-6 ${
+            className={` flex w-full justify-between p-2  hover:text-gray-500 cursor-pointer items-center md:mb-6 ${
               activeTab === 'messages'
-                ? 'text-gray-300 border-[2px] border-white'
+                ? 'text-gray-300 border-[1px] border-white'
                 : 'text-gray-500 border-none '
             }`}
           >
@@ -106,47 +115,25 @@ const Homepage: React.FC = () => {
     );
   };
 
-  const slideMenu = () => {
-    return (
-      <div className="w-96">
-        <Tabs value="app">
-          <TabsHeader>
-            <Tab value="app">
-              <HomeIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
-              App
-            </Tab>
-            <Tab value="message">
-              <ChatBubbleLeftEllipsisIcon className="-mt-0.5 mr-2 inline-block h-5 w-5" />
-              Message
-            </Tab>
-            <Tab value="settings">
-              <Cog6ToothIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
-              Settings
-            </Tab>
-          </TabsHeader>
-        </Tabs>
-      </div>
-    );
-  };
-
   const Progress = () => {
     return <div className=" w-full h-full p-2  text-black">PROGRESS</div>;
   };
 
   return (
-    <div className="grid grid-cols-4 w-screen  mt-16 max-w-7xl p-4 border-box max-h-[90vh]">
-      <div className="col-span-1 ">{sideMenu()}</div>
+    <div className="md:grid grid-cols-4 flex w-screen flex-col mt-8 md:mt-16 md:max-w-7xl md:p-4 border-box   ">
+      <div className="col-span-1 w-full ">{sideMenu()}</div>
 
-      <div className="col-span-3 block w-full  relative">
-        <div className=" rounded  scroll-y-auto">
-          {activeTab === 'posts' && <Posts />}
-          {activeTab === 'friends' && <Friends />}
-          {activeTab === 'messages' && <Message />}
-          {activeTab === 'progress' && <Progress />}
-        </div>
+      <div
+        ref={dashboardRightSide}
+        className="bg-red-200 col-span-3 p-4  w-full scroll-y-auto overflow-y-auto transisiton-all duration-200 ease-in-out"
+      >
+        {activeTab === 'posts' && <Posts />}
+        {activeTab === 'friends' && <Friends />}
+        {activeTab === 'messages' && <Message />}
+        {activeTab === 'progress' && <Progress />}
       </div>
     </div>
   );
 };
 
-export default Homepage;
+export default Dashboard;

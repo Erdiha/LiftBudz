@@ -4,7 +4,7 @@ import { db } from '@/firebase/fireBase';
 import useAuth from '../../firebase/usefirebaseUI';
 import { useEffect } from 'react';
 
-let avatarBucket: any = [];
+
 
 function AvatarCard({ setOpen }: any) {
   const { currentUser } = useAuth();
@@ -54,14 +54,13 @@ function AvatarCard({ setOpen }: any) {
     }
   };
 
-  console.log(allAvatars);
   return (
-    <div className="grid grid-cols-3 gap-2 ">
+    <div className="grid grid-cols-5 gap-2 ">
       {allAvatars?.map((avatar: any) => {
         return (
           <button
             key={avatar.id}
-            className="flex justify-center items-center"
+            className="flex justify-center items-center border p-1 md:hover:scale-[1.1] md:hover:bg-white/90 transform duration-200 ease-in-out"
             onClick={(event: any) => handleChosenAvatar(event, avatar)}
           >
             <Avatar

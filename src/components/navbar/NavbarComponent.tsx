@@ -17,6 +17,8 @@ function classNames(...classes: string[]): string {
 export default function NavbarComponent() {
   const { currentUser, logout } = useAuth();
 
+  console.log('this is currentuser', currentUser?.displayName);
+
   useEffect(() => {
     !currentUser && logout();
   }, []);
@@ -28,15 +30,10 @@ export default function NavbarComponent() {
   ];
   const [navigation, setNavigation] = useState([
     { name: 'Dashboard', href: '/', current: false },
-    // { name: 'Team', href: '#', current: false },
-    // { name: 'Projects', href: '#', current: false },
-    // { name: 'Calendar', href: '#', current: false },
-    // { name: 'Reports', href: '#', current: false },
   ]);
   const handleNavItemsclicked = (event: React.MouseEvent<HTMLElement>) => {
     const element = event.target as HTMLElement;
 
-    console.log(element.innerHTML);
     const updatedNavigation = navigation.map((item) => {
       return {
         ...item,
@@ -46,11 +43,11 @@ export default function NavbarComponent() {
     setNavigation(updatedNavigation);
   };
   const handleSearch = (value: string) => {
-    console.log(`Searching for ${value}`);
+    //console.log(`Searching for ${value}`);
   };
   return (
     <>
-      <div className="fixed min-w-full z-[9999]">
+      <div className="fixed min-w-full z-[9999] ">
         <Disclosure as="nav" className="bg-gray-800">
           {({ open }) => (
             <>
@@ -175,7 +172,7 @@ export default function NavbarComponent() {
                 </div>
               </div>
 
-              <Disclosure.Panel className="md:hidden">
+              <Disclosure.Panel className="md:hidden ">
                 <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
                   {navigation.map((item) => (
                     <Disclosure.Button
@@ -219,7 +216,7 @@ export default function NavbarComponent() {
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
                     </button>
                   </div>
-                  <div className="mt-3 space-y-1 px-2">
+                  <div className="mt-3 space-y-1 px-2 ">
                     {userNavigation.map((item) => (
                       <Disclosure.Button
                         key={item.name}

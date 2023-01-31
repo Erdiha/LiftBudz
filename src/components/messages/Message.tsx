@@ -28,8 +28,6 @@ function MessageList() {
       })
     : [];
 
-  console.log(messages);
-
   const sendMessage = async (e: any) => {
     e.preventDefault();
     const { uid, photoURL }: any = auth.currentUser;
@@ -65,7 +63,7 @@ function MessageList() {
     return <div>Error: {error.message}</div>;
   }
   return (
-    <div className="flex   w-full max-h-[90vh] h-[50rem] justify-center items-center">
+    <div className="flex w-full justify-center items-center">
       <MessageCard
         messages={messages}
         setFormValue={setFormValue}
