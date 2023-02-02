@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { db } from '../../firebase/fireBase';
+import { db } from '@/firebase/fireBase';
 import MessageCard from './MessageCard';
 import Loading from '@/utils/Loading';
 import { useadddb, useFetchDB } from '../../hooks/useFetch';
