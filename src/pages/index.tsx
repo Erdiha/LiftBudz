@@ -11,11 +11,17 @@ export async function getServerSideProps() {
   const PEXELS_API_KEY = process.env.NEXT_PUBLIC_PEXELS_API;
 
   try {
-    const res = await fetch(`https://api.pexels.com/v1/search?query=gym&per_page=3`,{
-        headers: {Authorization: `Bearer ${PEXELS_API_KEY}`,},},);
-    if (!res.ok) {throw new Error(`Failed to fetch data, status: ${res.status}`);}
+    const res = await fetch(
+      `https://api.pexels.com/v1/search?query=gym&per_page=3`,
+      {
+        headers: { Authorization: `Bearer ${PEXELS_API_KEY}` },
+      },
+    );
+    if (!res.ok) {
+      throw new Error(`Failed to fetch data, status: ${res.status}`);
+    }
     const data = await res.json();
-    return {props: {data,},};
+    return { props: { data } };
   } catch (error) {
     console.error(error);
     return {

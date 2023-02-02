@@ -1,31 +1,16 @@
-import { RxDashboard } from 'react-icons/rx';
-import { FaUserFriends } from 'react-icons/fa';
-import { IoBarChartOutline } from 'react-icons/io5';
-import { TbMessages } from 'react-icons/tb';
 import useAuth, { useUserLibrary } from '@/firebase/usefirebaseUI';
-import { IActiveTabs, ITabs } from './types';
+import React from 'react';
 
-export const SideMenu: React.FC<IActiveTabs> = ({
-  setActiveTab,
-  activeTab,
-}) => {
+function Segments({ tabs, setActiveTab, activeTab }: any) {
   const { currentUser } = useAuth();
   const { getCurrentUser } = useUserLibrary(currentUser!.uid);
-
-  const tabs: ITabs[] = [
-    { tabName: 'posts', name: 'Dashboard', icon: <RxDashboard /> },
-    { tabName: 'friends', name: 'Friends', icon: <FaUserFriends /> },
-    { tabName: 'progress', name: 'Progress', icon: <IoBarChartOutline /> },
-    { tabName: 'messages', name: 'Messages', icon: <TbMessages /> },
-  ];
-
   return (
-    <div className=" p-8 bg-gray-900 pt-10">
+    <div className="w-full h-full">
       <div className="h-fit w-fit flex items-center text-gray-300">
         {getCurrentUser?.displayName}
       </div>
       <div className="md:flex flex-col grid grid-cols-2 mt-4 md:mt-12 text-sm md:text-md">
-        {tabs.map((tab, index: number) => (
+        {tabs.map((tab: any, index: number) => (
           <button
             key={index}
             onClick={() => setActiveTab(tab.tabName)}
@@ -48,4 +33,6 @@ export const SideMenu: React.FC<IActiveTabs> = ({
       </div>
     </div>
   );
-};
+}
+
+export default Segments;

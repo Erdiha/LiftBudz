@@ -22,7 +22,7 @@ import {
   onSnapshot,
 } from 'firebase/firestore';
 import { updateCurrentUser } from 'firebase/auth';
-import {  db, auth } from './fireBase';
+import { db, auth } from './fireBase';
 
 export interface Iinput {
   displayName?: string;
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: AProps) => {
         }
         setFirstLoading(false);
       }),
-    [auth],
+    [],
   );
 
   const Register = async (
@@ -157,7 +157,7 @@ export const useUserLibrary = (UID: undefined | string) => {
         })),
       );
     });
-  }, [db]);
+  }, [db, UID]);
 
   return { getList, getCurrentUser, getAllUsers };
 };

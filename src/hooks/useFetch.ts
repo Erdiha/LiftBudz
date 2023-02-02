@@ -20,14 +20,13 @@ export function useFetchDB(collectionString: string, order: any) {
             snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
           ),
         );
-  }, []);
+  }, [collectionREF, order, timedAT]);
   console.log(postArray);
   return postArray;
 }
 
 //updates current db
-export function useAddDB(value: any, event: any, refDB: any) {
-  event.preventDefault();
+export function useadddb(value: any, refDB: any) {
   const { uid, photoURL }: any = auth.currentUser;
   value !== '' &&
     refDB.add({

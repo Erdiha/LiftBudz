@@ -1,5 +1,5 @@
 import React from 'react';
-import Card from '@/components/user/UserCard';
+import Card from './SegmentCards';
 import { IPexelImages } from '@/pages/types';
 import { titleANDdescFeatures } from '@/utils/texts';
 

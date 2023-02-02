@@ -9,7 +9,7 @@ import {
 import Avatar from 'avataaars';
 import { useEffect, useState } from 'react';
 
-import  {IUser}  from './types';
+import { IUser } from './types';
 
 export default function UserCard({
   photoURL,
@@ -20,15 +20,18 @@ export default function UserCard({
   location,
   id,
 }: IUser) {
-
-
   return (
     <Card key={id} className="flex max-h-64 w-full ">
       <CardHeader
         floated={false}
         className=" bg-clip-border mt-0 mx-0 p-2 rounded-none overflow-hidden bg-white text-gray-700 shadow-lg flex justify-start items-center"
       >
-        <Avatar avatarStyle='Circle' style={{ width: '40px', height: '40px' }} {...photoURL} />,
+        <Avatar
+          avatarStyle="Circle"
+          style={{ width: '40px', height: '40px' }}
+          {...photoURL}
+        />
+        ,
         <Typography variant="h4" color="blue-gray" className=" ">
           {displayName}
         </Typography>
