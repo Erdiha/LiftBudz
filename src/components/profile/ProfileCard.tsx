@@ -23,7 +23,7 @@ export function ProfileCard({
   isEditable: boolean;
 }) {
   return (
-    <Card color="transparent" shadow={false}>
+    <Card color="transparent" shadow={false} className="w-full px-2 py-1">
       <CardHeader
         color="transparent"
         shadow={true}

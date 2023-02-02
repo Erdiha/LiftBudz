@@ -1,25 +1,46 @@
-import useAuth from '@/firebase/usefirebaseUI';
+import useAuth, { useUserLibrary } from '@/firebase/usefirebaseUI';
 import { Button, Input } from '@material-tailwind/react';
 import { useEffect, useRef } from 'react';
+import ProfileAvatar from '../profile/ProfileAvatar';
+import { useGetAvatar } from '../../hooks/useFetch';
+import Avatar from 'avataaars';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUsers } from '@/redux/actions/getAllRegisteredUsers';
 
 export function MessageCard({ messages, setFormValue, sendMessage }: any) {
   const { currentUser } = useAuth();
   const messageContainerRef = useRef<HTMLDivElement>(null);
+  const dispatch: any = useDispatch();
+  const users: any = useSelector((state: any) => state.users);
 
+  useEffect(() => {
+    dispatch(fetchUsers('all'));
+  }, [dispatch]);
+  const getAvatar = useGetAvatar();
   useEffect(() => {
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop =
         messageContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages] || []);
+
+  useEffect(() => {
+    users.map((user: any) => {
+      messages.map((message: any) => {
+        user.userId === message.uid && message.photoURL === user.photoURL;
+      });
+    });
+  }, []);
+  console.log(getAvatar, users, messages);
   return (
-    <div className=" flex  h-[65vh] bottom-0 relative w-full pb-2">
+    <div className=" flex  h-[65vh] bottom-0 relative w-full">
       <div className="  flex flex-col border shadow-md  w-full backdrop-blur-lg bg-gray-100 p-4 h-full">
         <div className="flex items-center justify-between border-b p-2">
           <div className="flex items-center">
-            <img
-              className="rounded-full w-10 h-10"
-              src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+            <Avatar
+              style={{ width: '80px', height: '80px' }}
+              {...getAvatar}
+              avatarStyle="Circle"
             />
             <div className="pl-2">
               <div className="font-semibold">
@@ -63,9 +84,10 @@ export function MessageCard({ messages, setFormValue, sendMessage }: any) {
               return (
                 <div key={message?.id} className="flex items-center mb-4">
                   <div className="flex-none flex flex-col items-center space-y-1 mr-4">
-                    <img
-                      className="rounded-full max-w-10 max-h-10"
-                      src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    <Avatar
+                      style={{ width: '40px', height: '40px' }}
+                      {...getAvatar}
+                      avatarStyle="Circle"
                     />
                     <a href="#" className="block text-xs hover:underline">
                       John Doe
@@ -79,18 +101,23 @@ export function MessageCard({ messages, setFormValue, sendMessage }: any) {
                 </div>
               );
             } else {
+              const url = users.find(
+                (user: any) => user?.userId === message?.uid,
+              );
+
               return (
                 <div
                   key={message?.id}
                   className="flex items-center flex-row-reverse mb-4"
                 >
                   <div className="flex-none flex flex-col items-center space-y-1 ml-4">
-                    <img
-                      className="rounded-full w-10 h-10"
-                      src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    <Avatar
+                      style={{ width: '40px', height: '40px' }}
+                      {...url?.photoURL}
+                      avatarStyle="Circle"
                     />
                     <a href="#" className="block text-xs hover:underline">
-                      Jesse
+                      {}
                     </a>
                   </div>
                   <div className=" bg-indigo-100 text-gray-800 p-2 rounded-lg mb-2 relative">
@@ -127,7 +154,10 @@ export function MessageCard({ messages, setFormValue, sendMessage }: any) {
             </button>
           </div>
 
-          <form onSubmit={sendMessage} className="w-full grid grid-cols-[70%,25%] gap-2  ">
+          <form
+            onSubmit={sendMessage}
+            className="w-full grid grid-cols-[70%,25%] gap-2  "
+          >
             <Input
               onChange={(e) => setFormValue(e.target.value)}
               className=" rounded-full border border-gray-200 h-10 p-4"
@@ -135,7 +165,9 @@ export function MessageCard({ messages, setFormValue, sendMessage }: any) {
               autoFocus
             />
 
-            <Button className=" flex  justify-center" type="submit">send</Button>
+            <Button className=" flex  justify-center" type="submit">
+              send
+            </Button>
           </form>
         </div>
       </div>

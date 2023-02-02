@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Input, Textarea, Card } from '@material-tailwind/react';
-import { db, auth, firebase } from '@/firebase/fireBase';
-import { collection } from 'firebase/firestore';
+import firebase, { db, auth } from '@/firebase/fireBase';
 import useAuth from '@/firebase/usefirebaseUI';
 function SendPost({ setOpenPostFields }: any) {
   const [postValue, setPostValue] = useState({ title: '', text: '' });
-  const { currentUser } = useAuth();
   const initialState = {
     title: '',
     text: '',
@@ -18,7 +16,6 @@ function SendPost({ setOpenPostFields }: any) {
       title: postValue.title,
       text: postValue.text,
       uid,
-
       photoURL,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });

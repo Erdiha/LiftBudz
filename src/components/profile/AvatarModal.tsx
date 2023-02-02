@@ -1,11 +1,10 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import AvatarCard from './AvatarCard';
 import {
   Button,
   Dialog,
   DialogHeader,
   DialogBody,
-  DialogFooter,
   Tooltip,
 } from '@material-tailwind/react';
 import ProfileAvatar from './ProfileAvatar';

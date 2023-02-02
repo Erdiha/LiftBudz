@@ -5,31 +5,17 @@ import style from '@/styles/Home.module.css';
 import MainSegments from '../components/mainpage/MainSegments';
 import { IPexelImages } from './types';
 import useAuth from '@/firebase/usefirebaseUI';
-import Dashboard from '@/components/user/Dashboard';
+import Dashboard from '@/components/dashboard/Dashboard';
 
 export async function getServerSideProps() {
   const PEXELS_API_KEY = process.env.NEXT_PUBLIC_PEXELS_API;
 
   try {
-    const res = await fetch(
-      `https://api.pexels.com/v1/search?query=gym&per_page=3`,
-      {
-        headers: {
-          Authorization: `Bearer ${PEXELS_API_KEY}`,
-        },
-      },
-    );
-
-    if (!res.ok) {
-      throw new Error(`Failed to fetch data, status: ${res.status}`);
-    }
-
+    const res = await fetch(`https://api.pexels.com/v1/search?query=gym&per_page=3`,{
+        headers: {Authorization: `Bearer ${PEXELS_API_KEY}`,},},);
+    if (!res.ok) {throw new Error(`Failed to fetch data, status: ${res.status}`);}
     const data = await res.json();
-    return {
-      props: {
-        data,
-      },
-    };
+    return {props: {data,},};
   } catch (error) {
     console.error(error);
     return {

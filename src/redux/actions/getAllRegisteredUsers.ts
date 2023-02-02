@@ -1,19 +1,12 @@
+import { auth, db } from '@/firebase/fireBase';
 import {
   fetchUsersStart,
   fetchUsersSuccess,
   fetchUsersFailure,
 } from '../reducers/usersReducer';
 
-import {
-  updateUserStart,
-  updateUserSuccess,
-  updateUserFailure,
-} from '../reducers/UpdateCurrentUser';
-
 //import { FETCH_USERS, ADD_USER } from '@/redux/types/userTypes';
 import { collection, getDocs } from 'firebase/firestore';
-import { auth, db, firebase } from '../../firebase/fireBase';
-import { updateCurrentUser } from 'firebase/auth';
 
 export const fetchUsers = (action: string) => async (dispatch: any) => {
   try {

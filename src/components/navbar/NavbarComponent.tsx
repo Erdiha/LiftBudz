@@ -4,6 +4,9 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import useAuth from '@/firebase/usefirebaseUI';
 import Link from 'next/link';
 import { Search } from '@/components/search/Search';
+import { useUserLibrary } from '../../firebase/usefirebaseUI';
+import Avatar from 'avataaars';
+import { useGetAvatar } from '@/hooks/useFetch';
 const user = {
   name: 'Name',
   email: 'name@example.com',
@@ -16,8 +19,8 @@ function classNames(...classes: string[]): string {
 
 export default function NavbarComponent() {
   const { currentUser, logout } = useAuth();
-
-  console.log('this is currentuser', currentUser?.displayName);
+  const { getCurrentUser } = useUserLibrary(useAuth().currentUser?.uid);
+  const getAvatar = useGetAvatar();
 
   useEffect(() => {
     !currentUser && logout();
@@ -45,6 +48,7 @@ export default function NavbarComponent() {
   const handleSearch = (value: string) => {
     //console.log(`Searching for ${value}`);
   };
+  console.log(getCurrentUser);
   return (
     <>
       <div className="fixed min-w-full z-[9999] ">
@@ -102,10 +106,10 @@ export default function NavbarComponent() {
                           {currentUser ? (
                             <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 p-1">
                               <span className="sr-only">Open user menu</span>
-                              <img
-                                className="h-8 w-8 rounded-full"
-                                src={user.imageUrl}
-                                alt=""
+                              <Avatar
+                                avatarStyle="Circle"
+                                style={{ width: '40px', height: '40px' }}
+                                {...getAvatar}
                               />
                             </Menu.Button>
                           ) : (
@@ -194,10 +198,10 @@ export default function NavbarComponent() {
                 <div className="border-t border-gray-700 pt-4 pb-3">
                   <div className="flex items-center px-5">
                     <div className="flex-shrink-0">
-                      <img
-                        className="h-10 w-10 rounded-full"
-                        src={user.imageUrl}
-                        alt=""
+                      <Avatar
+                        avatarStyle="Circle"
+                        style={{ width: '40px', height: '40px' }}
+                        {...getAvatar}
                       />
                     </div>
                     <div className="ml-3">

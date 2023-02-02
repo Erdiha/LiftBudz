@@ -1,26 +1,26 @@
 import { useEffect, useState } from 'react';
-import { firebase, auth, db } from '@/firebase/fireBase';
+import {  auth, db } from '@/firebase/fireBase';
 import useAuth, { useUserLibrary } from '@/firebase/usefirebaseUI';
 import { updateCurrentUser } from 'firebase/auth';
 import { collection, getDocs } from 'firebase/firestore';
-import { connect, useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { fetchUsers } from '../../redux/actions/getAllRegisteredUsers';
 import UserCard from './UserCard';
 
 function UserLists() {
-  const dispatch: any = useDispatch();
-  const users = useSelector((state: any) => state.users);
+  const dispatch:any = useDispatch();
+  const users:any = useSelector((state:any) => state.users);
 
   useEffect(() => {
     dispatch(fetchUsers('all'));
   }, [dispatch]);
 
   return (
-    <div>
+    <div className="scroll-y-auto overflow-y-auto max-h-[65vh]">
       <div
-        className={`w-full justify-center items-center bg-gray-100 text-black grid grid-rows-${users?.length} p-10 gap-10`}
+        className={`w-full justify-center items-center bg-gray-100 text-black grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-10 gap-10 `}
       >
-        {users?.map((user: any, index: number) => {
+        {users?.map((user:any, index:number) => {
           return (
             <div key={index} className="flex flex-col gap-2 ">
               <UserCard {...user} />
@@ -32,4 +32,4 @@ function UserLists() {
   );
 }
 
-export default connect()(UserLists);
+export default UserLists;

@@ -1,15 +1,16 @@
-import Avatar, { AvatarStyle } from 'avataaars';
-import { useRef, useState } from 'react';
+import Avatar from 'avataaars';
+import { useState } from 'react';
 import { db } from '@/firebase/fireBase';
 import useAuth from '../../firebase/usefirebaseUI';
 import { useEffect } from 'react';
-
-
+import { useFetchDB } from '@/hooks/useFetch';
 
 function AvatarCard({ setOpen }: any) {
   const { currentUser } = useAuth();
   const userID = currentUser!.uid;
-  let [allAvatars, setAllAvatars]: any = useState([]);
+  let [allAvatars, setAllAvatars]: any = useState(
+    useFetchDB('avatars', undefined),
+  );
   //const avatarRef: any = useRef(null);
 
   const handleGetAvatarCollection = async () => {
@@ -18,9 +19,9 @@ function AvatarCard({ setOpen }: any) {
       .get()
       .then((snapshot) => {
         let avatars: any = [];
-        snapshot.forEach((doc) => {
+        snapshot.forEach((doc: any) => {
           const data = doc.data();
-          avatars.push(data);
+          avatars.push({ ...data, id: doc.id });
         });
         setAllAvatars(avatars);
         console.log(snapshot);
@@ -56,7 +57,7 @@ function AvatarCard({ setOpen }: any) {
 
   return (
     <div className="grid grid-cols-5 gap-2 ">
-      {allAvatars?.map((avatar: any) => {
+      {allAvatars?.map((avatar: any, index: number) => {
         return (
           <button
             key={avatar.id}

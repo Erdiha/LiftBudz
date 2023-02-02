@@ -1,29 +1,55 @@
+import firebase, { auth, db } from '@/firebase/fireBase';
+import { collection, onSnapshot, query } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 
-export const useFetch = (url: string) => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export function useFetchDB(collectionString: string, order: any) {
+  const [postArray, setPostArray]: any = useState([]);
+  const collectionREF = db.collection(collectionString);
+  const timedAT = collectionREF.orderBy('createdAt', order).limit(50);
+  // const NotTimedAT = collectionREF
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(url);
-        if (!res.ok) {
-          const json = await res.json();
-          setError(json);
-        } else {
-          const json = await res.json();
-          setData(json);
-        }
-      } catch (err: any) {
-        setError(err);
-      }
-      setLoading(false);
-    };
-    fetchData();
-  }, [url]);
+    order
+      ? timedAT.onSnapshot((snapshot) =>
+          setPostArray(
+            snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
+          ),
+        )
+      : collectionREF.onSnapshot((snapshot) =>
+          setPostArray(
+            snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
+          ),
+        );
+  }, []);
+  console.log(postArray);
+  return postArray;
+}
 
-  return { data, loading, error };
+//updates current db
+export function useAddDB(value: any, event: any, refDB: any) {
+  event.preventDefault();
+  const { uid, photoURL }: any = auth.currentUser;
+  value !== '' &&
+    refDB.add({
+      text: value,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      uid,
+      photoURL,
+    });
+}
+
+export const useGetAvatar = () => {
+  const [avatarOptions, setAvatarOptions] = useState({});
+
+  useEffect(() => {
+    const q = query(collection(db, 'users'));
+    onSnapshot(q, (QuerySnapshot) => {
+      QuerySnapshot.forEach((doc) => {
+        if (doc.data().userId === auth.currentUser?.uid) {
+          setAvatarOptions(doc.data().photoURL);
+        }
+      });
+    });
+  }, []);
+  return avatarOptions;
 };

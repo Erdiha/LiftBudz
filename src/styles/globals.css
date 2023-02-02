@@ -21,5 +21,11 @@
 
   .scroll-bar::-webkit-scrollbar-thumb {
     border-radius: 0.25rem;
+  } 
+  .imgContainer{      
+        mask-image:-webkit-gradient(linear, left top, left bottom, 
+    from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));;
+    -webkit-mask-image:-webkit-gradient(linear, left top, left bottom, 
+    from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
   }
 }
