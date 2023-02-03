@@ -4,6 +4,7 @@ import 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const credentials = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -21,6 +22,8 @@ if ((firebase as any).apps && !(firebase as any).apps.length) {
 
 const auth = firebase.auth();
 const db = firebase.firestore();
+const getAUTH = getAuth();
+const getDB = getFirestore();
 
 function useAuthState(firebaseAuth: firebase.auth.Auth) {
   const [user, setUser] = useState<firebase.User | null>(null);
@@ -45,4 +48,4 @@ function useAuthState(firebaseAuth: firebase.auth.Auth) {
 }
 
 export default firebase;
-export { auth, db, useAuthState };
+export { auth, db, useAuthState, getDB, getAUTH };

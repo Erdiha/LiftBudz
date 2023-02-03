@@ -45,7 +45,9 @@ export default function Home({ data }: IPexelImages) {
 
       <main className={style.main}>
         {currentUser ? (
-          <Dashboard />
+          <div className="w-screen h-screen flex justify-center items-center">
+            <Dashboard />
+          </div>
         ) : (
           <>
             <Hero />

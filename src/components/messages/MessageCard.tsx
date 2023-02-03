@@ -1,22 +1,35 @@
 import useAuth, { useUserLibrary } from '@/firebase/usefirebaseUI';
 import { Button, Input } from '@material-tailwind/react';
 import { useEffect, useRef } from 'react';
-import ProfileAvatar from '../profile/ProfileAvatar';
 import { useGetAvatar } from '../../hooks/useFetch';
 import Avatar from 'avataaars';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUsers } from '@/redux/actions/getAllRegisteredUsers';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import { getDB } from '@/firebase/fireBase';
+import { collection } from 'firebase/firestore';
 
-export function MessageCard({ messages, setFormValue, sendMessage }: any) {
+export function MessageCard({
+  messages,
+  setFormValue,
+  sendMessage,
+  setOpenChat,
+  openChat,
+  sendMessageToUser,
+  setSendMessageToUser,
+  messageUserId,
+  setMessageUserId,
+}: any) {
   const { currentUser } = useAuth();
   const messageContainerRef = useRef<HTMLDivElement>(null);
   const dispatch: any = useDispatch();
-  const users: any = useSelector((state: any) => state.users);
-
-  useEffect(() => {
-    dispatch(fetchUsers('all'));
-  }, [dispatch]);
+  const { getCurrentUser } = useUserLibrary(useAuth().currentUser?.uid);
   const getAvatar = useGetAvatar();
+  const [usersData] = useCollection(collection(getDB, 'users'));
+  const users = usersData?.docs.map((user: any) => ({
+    id: user.id,
+    ...user.data(),
+  }));
+  console.log('this is users', users);
   useEffect(() => {
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop =
@@ -25,15 +38,15 @@ export function MessageCard({ messages, setFormValue, sendMessage }: any) {
   }, [messages] || []);
 
   useEffect(() => {
-    users.map((user: any) => {
+    users?.map((user: any) => {
       messages.map((message: any) => {
         user.userId === message.uid && message.photoURL === user.photoURL;
       });
     });
   }, []);
-  console.log(getAvatar, users, messages);
-  return (
-    <div className=" flex  h-[65vh] bottom-0 relative w-full">
+  console.log('send message to user', sendMessageToUser);
+  return sendMessageToUser ? (
+    <div className=" flex  md:h-[65vh] h-full relative w-full">
       <div className="  flex flex-col border shadow-md  w-full backdrop-blur-lg bg-gray-100 p-4 h-full">
         <div className="flex items-center justify-between border-b p-2">
           <div className="flex items-center">
@@ -45,7 +58,7 @@ export function MessageCard({ messages, setFormValue, sendMessage }: any) {
             <div className="pl-2">
               <div className="font-semibold">
                 <a className="hover:underline" href="#">
-                  John Doe
+                  {getCurrentUser?.displayName}
                 </a>
               </div>
               <div className="text-xs text-gray-600">Online</div>
@@ -54,6 +67,7 @@ export function MessageCard({ messages, setFormValue, sendMessage }: any) {
 
           <div>
             <button
+              onClick={() => setOpenChat(false)}
               className="inline-flex hover:bg-indigo-50 rounded-full p-2"
               type="button"
             >
@@ -101,7 +115,7 @@ export function MessageCard({ messages, setFormValue, sendMessage }: any) {
                 </div>
               );
             } else {
-              const url = users.find(
+              const url = users?.find(
                 (user: any) => user?.userId === message?.uid,
               );
 
@@ -172,6 +186,8 @@ export function MessageCard({ messages, setFormValue, sendMessage }: any) {
         </div>
       </div>
     </div>
+  ) : (
+    <p>IT'S LONELY HERE</p>
   );
 }
 

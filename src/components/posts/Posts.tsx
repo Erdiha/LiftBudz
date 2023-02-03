@@ -11,8 +11,8 @@ function Posts() {
   const posts: FirebaseDatabase[] = useFetchDB('posts', 'desc');
 
   return (
-    <div className="relative flex flex-col ">
-      <div className="flex absolute top-0 z-[200] w-full justify-end">
+    <div className=" flex flex-col h-full">
+      <div className="flex  top-0 z-[200] w-full justify-end">
         {openPostFields ? (
           <SendPost setOpenPostFields={setOpenPostFields} />
         ) : (
@@ -23,7 +23,7 @@ function Posts() {
       </div>
       <div
         ref={postRef}
-        className="relative overflow-y-auto flex flex-col  scrollbar-hide md:scrollbar-default scroll-bar h-[65vh] "
+        className="relative overflow-y-auto flex flex-col  scrollbar-hide md:scrollbar-default scroll-bar  "
       >
         {posts?.map(({ id, text, title, userName, photoURL, uid }: any) => {
           return <PostCard key={id} {...{ id, text, title, photoURL, uid }} />;

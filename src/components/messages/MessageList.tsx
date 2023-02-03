@@ -5,7 +5,14 @@ import MessageCard from './MessageCard';
 import Loading from '@/utils/Loading';
 import { useadddb, useFetchDB } from '../../hooks/useFetch';
 
-const MessageList = () => {
+const MessageList = ({
+  openChat,
+  setOpenChat,
+  sendMessageToUser,
+  setSendMessageToUser,
+  messageUserId,
+  setMessageUserId,
+}: any) => {
   const dummy = useRef<HTMLDivElement>(null);
   const [formValue, setFormValue]: any = useState('');
   const messagesRef: any = db.collection('messages');
@@ -15,7 +22,7 @@ const MessageList = () => {
 
   const sendMessage = async (e: any) => {
     e.preventDefault();
-    useadddb(formValue, messagesRef);
+    useadddb(formValue, messagesRef, messageUserId);
     setFormValue('');
     dummy?.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -33,13 +40,17 @@ const MessageList = () => {
   }
 
   return (
-    <div className="flex w-full justify-center items-center">
-      <MessageCard
-        messages={messages}
-        setFormValue={setFormValue}
-        sendMessage={sendMessage}
-      />
-    </div>
+    openChat && (
+      <div className="h-[90vh] relative flex flex-col justify-center items-center">
+        <MessageCard
+          setOpenChat={setOpenChat}
+          openChat={openChat}
+          messages={messages}
+          setFormValue={setFormValue}
+          sendMessage={sendMessage}
+        />
+      </div>
+    )
   );
 };
 

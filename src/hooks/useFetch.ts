@@ -20,20 +20,20 @@ export function useFetchDB(collectionString: string, order: any) {
             snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
           ),
         );
-  }, [collectionREF, order, timedAT]);
+  }, []);
   console.log(postArray);
   return postArray;
 }
 
 //updates current db
-export function useadddb(value: any, refDB: any) {
+export function useadddb(value: any, refDB: any,receiverId:string) {
   const { uid, photoURL }: any = auth.currentUser;
   value !== '' &&
     refDB.add({
       text: value,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      uid,
       photoURL,
+      sender: uid,receiver:receiverId
     });
 }
 

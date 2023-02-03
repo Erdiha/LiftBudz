@@ -1,18 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import useAuth, { useUserLibrary } from '../../firebase/usefirebaseUI';
-import Message from '@/components/messages/MessageList';
+import useAuth from '../../firebase/usefirebaseUI';
+import MessageList from '@/components/messages/MessageList';
 import Posts from '../posts/Posts';
 import Friends from '../friends/Friends';
 import SideMenu from './SideMenu';
 import SideFriends from './sideBarContents/SideFriends';
 import SideChats from './sideBarContents/SideChats';
-
 import SideProgress from './sideBarContents/SideProgress';
 
 const Dashboard: React.FC = () => {
   const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('posts');
-  const { getCurrentUser } = useUserLibrary(currentUser!.uid);
+  const [openChat, setOpenChat] = useState(true);
+  const [sendMessageToUser, setSendMessageToUser] = useState(false);
+  const [messageUserId, setMessageUserId] = useState('');
   const dashboardRightSide = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,43 +23,67 @@ const Dashboard: React.FC = () => {
     }
   }, []);
 
-  const Progress = () => {
-    return <div className=" w-full h-full p-2  text-black">PROGRESS</div>;
+  const renderRightSide = () => {
+    switch (activeTab) {
+      case 'posts':
+        return <Posts />;
+      case 'friends':
+        return <Friends />;
+      case 'messages':
+        return (
+          <MessageList
+            openChat={openChat}
+            setOpenChat={setOpenChat}
+            sendMessageToUser={sendMessageToUser}
+            setSendMessageToUser={setSendMessageToUser}
+            messageUserId={messageUserId}
+            setMessageUserId={setMessageUserId}
+          />
+        );
+      case 'progress':
+        return <div className="w-full h-full p-2 text-black">PROGRESS</div>;
+      default:
+        return <div />;
+    }
+  };
+
+  const renderLeftSide = () => {
+    switch (activeTab) {
+      case 'posts':
+        return <SideMenu setActiveTab={setActiveTab} activeTab={activeTab} />;
+      case 'friends':
+        return (
+          <SideFriends setActiveTab={setActiveTab} activeTab={activeTab} />
+        );
+      case 'messages':
+        return (
+          <SideChats
+            setActiveTab={setActiveTab}
+            activeTab={activeTab}
+            sendMessageToUser={sendMessageToUser}
+            setSendMessageToUser={setSendMessageToUser}
+            messageUserId={messageUserId}
+            setMessageUserId={setMessageUserId}
+          />
+        );
+      case 'progress':
+        return (
+          <SideProgress setActiveTab={setActiveTab} activeTab={activeTab} />
+        );
+      default:
+        return <div />;
+    }
   };
 
   return (
-    <div className="md:grid grid-cols-4 flex w-screen flex-col mt-8 md:mt-16 md:max-w-7xl md:p-4 border-box  h-full ">
-      <div className="col-span-1 w-full h-full relative">
-        {activeTab === 'posts' && (
-          <SideMenu
-            {...{
-              setActiveTab,
-              activeTab,
-            }}
-          />
-        )}
-        {activeTab === 'friends' && (
-          <SideFriends {...{ setActiveTab, activeTab }} />
-        )}
-        {activeTab === 'messages' && (
-          <SideChats {...{ setActiveTab, activeTab }} />
-        )}
-        {activeTab === 'progress' && (
-          <SideProgress {...{ setActiveTab, activeTab }} />
-        )}
+    <div className="relative flex mt-[5vh] w-screen md:max-w-7xl border-box h-[90vh] justify-center items-center">
+      {' '}
+      <div className="w-1/3 h-full p-2 text-black m-auto">
+        {' '}
+        {renderLeftSide()}
       </div>
-
-      <div
-        ref={dashboardRightSide}
-        className="bg-red-200 col-span-3 p-4  w-full scroll-y-auto overflow-y-auto transisiton-all duration-200 ease-in-out"
-      >
-        {activeTab === 'posts' && <Posts />}
-        {activeTab === 'friends' && <Friends />}
-        {activeTab === 'messages' && <Message />}
-        {activeTab === 'progress' && <Progress />}
-      </div>
+      <div className="w-3/4 h-full p-2 text-black">{renderRightSide()}</div>;
     </div>
   );
 };
-
 export default Dashboard;
