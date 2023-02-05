@@ -1,4 +1,4 @@
 interface SearchProps {
-  placeholder: string;
-  onSearch: (value: string) => void;
+	placeholder: string;
+	onSearch: (value: string) => void;
 }

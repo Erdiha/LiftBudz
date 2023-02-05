@@ -7,17 +7,17 @@ import Segments from './Segments';
 import Chats from './sideBarContents/SideChats';
 
 const SideMenu: React.FC<IActiveTabs> = ({ setActiveTab, activeTab }) => {
-  const tabs: ITabs[] = [
-    { tabName: 'posts', name: 'Dashboard', icon: <RxDashboard /> },
-    { tabName: 'friends', name: 'Friends', icon: <FaUserFriends /> },
-    { tabName: 'progress', name: 'Progress', icon: <IoBarChartOutline /> },
-    { tabName: 'messages', name: 'Messages', icon: <TbMessages /> },
-  ];
+	const tabs: ITabs[] = [
+		{ tabName: 'posts', name: 'Dashboard', icon: <RxDashboard /> },
+		{ tabName: 'friends', name: 'Friends', icon: <FaUserFriends /> },
+		{ tabName: 'progress', name: 'Progress', icon: <IoBarChartOutline /> },
+		{ tabName: 'messages', name: 'Messages', icon: <TbMessages /> },
+	];
 
-  return (
-    <div className=" p-8 bg-gray-900 pt-10  h-full ">
-      <Segments {...{ setActiveTab, activeTab, tabs }} />
-    </div>
-  );
+	return (
+		<div className=" p-8 bg-gray-900 pt-10  h-full ">
+			<Segments {...{ setActiveTab, activeTab, tabs }} />
+		</div>
+	);
 };
 export default SideMenu;

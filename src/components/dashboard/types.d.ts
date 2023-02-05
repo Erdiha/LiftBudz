@@ -9,3 +9,13 @@ export interface IActiveTabs {
   setActiveTab: (tabName: string) => void;
   activeTab: string;
 }
+
+export interface IMessage {
+  sender: String;
+  receiver: String;
+  timestamp: any;
+  receiverHasRead: Boolean;
+  text: String;
+  image?: String;
+  createdAt: any;
+}

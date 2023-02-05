@@ -10,15 +10,15 @@ import usersReducer from '../redux/reducers/usersReducer';
 const store = configureStore({ reducer: usersReducer });
 
 export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <>
-      {' '}
-      <AuthProvider>
-        <Provider store={store}>
-          <NavbarComponent />
-          <Component {...pageProps} />
-        </Provider>
-      </AuthProvider>
-    </>
-  );
+	return (
+		<>
+			{' '}
+			<AuthProvider>
+				<Provider store={store}>
+					<NavbarComponent />
+					<Component {...pageProps} />
+				</Provider>
+			</AuthProvider>
+		</>
+	);
 }

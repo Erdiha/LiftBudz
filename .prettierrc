@@ -4,10 +4,10 @@
   "semi": true,
   "singleQuote": true,
   "tabWidth": 2,
-  "useTabs": false,
+  "useTabs": true,
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx"],
+      "files": ["*.ts", "*.tsx", "*.d.ts", " *.js", "*.jsx", "*.json", "*.css"],
       "options": {
         "parser": "typescript"
       }
