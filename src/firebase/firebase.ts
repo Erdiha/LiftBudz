@@ -39,7 +39,7 @@ function useAuthState(firebaseAuth: firebase.auth.Auth) {
 			(error: any) => {
 				setError(error);
 				setLoading(false);
-			},
+			}
 		);
 		return () => unsubscribe();
 	}, [firebaseAuth]);

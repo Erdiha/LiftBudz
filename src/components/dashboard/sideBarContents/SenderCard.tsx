@@ -1,4 +1,6 @@
-function SenderCard({ senderName, senderAvatar, senderStatus }) {
+import Avatar from 'avataaars';
+
+function SenderCard({ senderName, senderAvatar, senderStatus }: any) {
 	return (
 		<div className="flex items-center p-1 bg-blue-gray-50 relative">
 			<Avatar

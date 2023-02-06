@@ -6,14 +6,11 @@ import { collection, getDocs } from 'firebase/firestore';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUsers } from '../../redux/actions/getAllRegisteredUsers';
 import UserCard from './UserCard';
+import { useGetUsers } from '../data/index';
 
 function UserLists() {
-	const dispatch: any = useDispatch();
-	const users: any = useSelector((state: any) => state.users);
-
-	useEffect(() => {
-		dispatch(fetchUsers('all'));
-	}, [dispatch]);
+	const { currentUser } = useAuth();
+	const { users, loading, error } = useGetUsers(currentUser?.email, 'friends');
 
 	return (
 		<div className="scroll-y-auto overflow-y-auto max-h-[65vh]">

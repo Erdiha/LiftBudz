@@ -16,15 +16,15 @@ export function useFetchDB(collectionString: string, order: any) {
 
 	useEffect(() => {
 		order
-			? timedAT.onSnapshot((snapshot) =>
+			? timedAT.onSnapshot(snapshot =>
 					setPostArray(
-						snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
-					),
+						snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+					)
 			  )
-			: collectionREF.onSnapshot((snapshot) =>
+			: collectionREF.onSnapshot(snapshot =>
 					setPostArray(
-						snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
-					),
+						snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+					)
 			  );
 	}, []);
 	console.log(postArray);
@@ -45,8 +45,8 @@ export const useGetAvatar = () => {
 
 	useEffect(() => {
 		const q = query(collection(db, 'users'));
-		onSnapshot(q, (QuerySnapshot) => {
-			QuerySnapshot.forEach((doc) => {
+		onSnapshot(q, QuerySnapshot => {
+			QuerySnapshot.forEach(doc => {
 				if (doc.data().userId === auth.currentUser?.uid) {
 					setAvatarOptions(doc.data().photoURL);
 				}
@@ -54,30 +54,4 @@ export const useGetAvatar = () => {
 		});
 	}, []);
 	return avatarOptions;
-};
-
-export const useGetMessages = ({ messageUserId, setMessages }: any) => {
-	const messageRef: any = collection(db, 'messages');
-
-	const memoizedMessages = useMemo(() => {
-		const queryMessages = query(
-			messageRef,
-			where('receiver', '==', messageUserId),
-			orderBy('timestamp', 'desc'),
-		);
-		const handleSnapshot = (snapshot: any) => {
-			let conversation: IMessage[] = [];
-			snapshot.forEach((doc: any) =>
-				conversation.push({ ...doc.data(), id: doc.id }),
-			);
-			setMessages(conversation);
-		};
-		onSnapshot(queryMessages, handleSnapshot);
-
-		return queryMessages;
-	}, [messageUserId]);
-
-	useEffect(() => {
-		memoizedMessages;
-	}, [memoizedMessages]);
 };

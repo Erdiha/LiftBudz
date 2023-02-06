@@ -1,34 +1,21 @@
-import React, {
-	useState,
-	useEffect,
-	useRef,
-	useMemo,
-	useCallback,
-} from 'react';
-import { useCollection } from 'react-firebase-hooks/firestore';
-import firebase, { db } from '@/firebase/fireBase';
+import React, { useState, useEffect, useRef } from 'react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import useAuth from '@/firebase/usefirebaseUI';
 import Loading from '@/utils/Loading';
 import SelectRecipient from './SelectRecipient';
-import {
-	collection,
-	query,
-	where,
-	onSnapshot,
-	addDoc,
-	serverTimestamp,
-	orderBy,
-} from 'firebase/firestore';
 import { Input } from '@material-tailwind/react';
 import ChatContent from './ChatContent';
+import { useGetAvatar } from '@/hooks/useFetch';
+import { useGetMessages, useGetUsers } from '../data';
+import { db } from '@/firebase/fireBase';
 
 export interface IMessage {
-	sender: String;
-	receiver: String;
+	sender: string;
+	receiver: string;
 	timestamp: any;
-	receiverHasRead: Boolean;
-	text: String;
-	image?: String;
+	receiverHasRead: boolean;
+	text: string;
+	image?: string;
 }
 
 const ChatUI = ({
@@ -38,16 +25,21 @@ const ChatUI = ({
 	setSendMessageToUser,
 	messageUserId,
 	setMessageUserId,
-	users,
 }: any) => {
-	//const [newMessage, setNewMessage] = useState<IMessage>();
-	const [messages, setMessages] = useState<IMessage[]>([]);
-	const [inputValue, setInputValue]: any = useState();
+	const [inputValue, setInputValue] = useState<string>('');
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const { currentUser } = useAuth();
 	const curUserID = currentUser?.uid;
 	const curUserEMAIL = currentUser?.email;
-	const messageRef: any = collection(db, 'messages');
+	const messageRef = collection(db, 'messages');
+
+	const { users, loading, error } = useGetUsers(curUserEMAIL, '');
+
+	const {
+		allMessages,
+		loading: messagesLoading,
+		error: messagesError,
+	} = useGetMessages(messageUserId, curUserEMAIL, false);
 
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
@@ -70,34 +62,13 @@ const ChatUI = ({
 		await addDoc(messageRef, message);
 		setInputValue('');
 	};
-	const messagesRef: any = db
-		.collection('messages')
-		.orderBy('timestamp', 'asc');
-
-	const [Messages, loading, error] = useCollection(messagesRef);
-
-	const rawMessages = Messages?.docs.map((doc: any) => ({
-		...doc.data(),
-		id: doc.id,
-	}));
-
-	const allMessages = rawMessages?.filter(
-		(msg: any) =>
-			(msg.sender === curUserEMAIL && msg.receiver === messageUserId) ||
-			(msg.receiver === curUserEMAIL && msg.sender === messageUserId),
-	);
 
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 	}, [inputValue, []]);
 
-	console.log('MESSAGES', allMessages);
-	if (loading) {
-		return <Loading />;
-	}
-
 	if (error) {
-		return <div>Error: {error.message}</div>;
+		return <div>Error: {error?.message}</div>;
 	}
 
 	return (
@@ -112,6 +83,7 @@ const ChatUI = ({
 						handleSubmit,
 						inputValue,
 						setInputValue,
+						loading,
 					}}
 				/>
 			) : (

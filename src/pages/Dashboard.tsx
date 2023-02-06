@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import useAuth from '../../firebase/usefirebaseUI';
+import useAuth from '../firebase/usefirebaseUI';
 import MessageList from '@/components/messages/MessageList';
-import Posts from '../posts/Posts';
-import Friends from '../friends/Friends';
-import SideMenu from './SideMenu';
-import SideFriends from './sideBarContents/SideFriends';
-import SideChats from './sideBarContents/SideChats';
-import SideProgress from './sideBarContents/SideProgress';
-import Chat from '../chat/Chat';
+import Posts from '../components/posts/Posts';
+import Friends from '../components/friends/Friends';
+import SideMenu from '../components/dashboard/SideMenu';
+import SideFriends from '../components/dashboard/sideBarContents/SideFriends';
+import SideChats from '../components/dashboard/sideBarContents/SideChats';
+import SideProgress from '../components/dashboard/sideBarContents/SideProgress';
+import Chat from '../components/chat/Chat';
 import { send } from 'process';
 import { getDB } from '@/firebase/fireBase';
 import { collection } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
+import { useGetUsers } from '../components/data';
+import error from 'next/error';
 
 const Dashboard: React.FC = () => {
 	const { currentUser } = useAuth();
@@ -19,11 +21,9 @@ const Dashboard: React.FC = () => {
 	const [openChat, setOpenChat] = useState(false);
 	const [sendMessageToUser, setSendMessageToUser] = useState(false);
 	const [messageUserId, setMessageUserId] = useState();
+	const unreadMessages = useRef<number>(0);
 	const dashboardRightSide = useRef<HTMLDivElement>(null);
-	const [usersData] = useCollection(collection(getDB, 'users'));
-	const users = usersData?.docs.map((user: any) => {
-		return { id: user.id, ...user.data() };
-	});
+	const { users, loading, error } = useGetUsers(currentUser?.email, 'friends');
 
 	useEffect(() => {
 		if (dashboardRightSide.current) {
@@ -49,6 +49,7 @@ const Dashboard: React.FC = () => {
 							messageUserId={messageUserId}
 							setMessageUserId={setMessageUserId}
 							users={users}
+							unreadMessages={unreadMessages}
 						/>
 					)
 				);
@@ -75,7 +76,7 @@ const Dashboard: React.FC = () => {
 						sendMessageToUser={sendMessageToUser}
 						setSendMessageToUser={setSendMessageToUser}
 						messageUserId={messageUserId}
-						setMessageUserId={setMessageUserId}
+						setMessageUserId={setMessageUserId}unreadMessages={unreadMessages}
 					/>
 				);
 			case 'progress':
