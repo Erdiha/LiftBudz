@@ -24,7 +24,7 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const getAUTH = getAuth();
 const getDB = getFirestore();
-
+export { auth, db, useAuthState, getDB, getAUTH };
 function useAuthState(firebaseAuth: firebase.auth.Auth) {
 	const [user, setUser] = useState<firebase.User | null>(null);
 	const [loading, setLoading] = useState(true);
@@ -48,4 +48,3 @@ function useAuthState(firebaseAuth: firebase.auth.Auth) {
 }
 
 export default firebase;
-export { auth, db, useAuthState, getDB, getAUTH };
