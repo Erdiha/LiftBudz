@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import useAuth from '@/firebase/usefirebaseUI';
-import Loading from '@/utils/Loading';
+import useAuth from '../../firebase/usefirebaseUI';
 import SelectRecipient from './SelectRecipient';
 import ChatContent from './ChatContent';
-import { useGetAvatar } from '@/hooks/useFetch';
 import { useGetMessages, useGetUsers } from '../data';
-import { Input } from '@material-tailwind/react';
-import { db } from '@/firebase/fireBase';
+import { db } from '../../firebase/fireBase';
 
 interface IMessage {
 	conversationId: string[];
