@@ -111,7 +111,7 @@ export function MessageCard({
 							);
 						} else {
 							const url = users?.find(
-								(user: any) => messageUserId === message?.receiver,
+								(user: any) => messageUserId === message?.receiver
 							);
 
 							return (
@@ -168,7 +168,7 @@ export function MessageCard({
 						className="w-full grid grid-cols-[70%,25%] gap-2  "
 					>
 						<Input
-							onChange={(e) => setFormValue(e.target.value)}
+							onChange={e => setFormValue(e.target.value)}
 							className=" rounded-full border border-gray-200 h-10 p-4"
 							label="Message"
 							autoFocus
@@ -182,7 +182,7 @@ export function MessageCard({
 			</div>
 		</div>
 	) : (
-		<p>IT'S LONELY HERE</p>
+		<p>SELECT FRIENDS TO SEND MESSAGES</p>
 	);
 }
 

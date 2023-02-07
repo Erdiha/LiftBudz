@@ -9,15 +9,14 @@ function AvatarCard({ setOpen }: any) {
 	const { currentUser } = useAuth();
 	const userID = currentUser!.uid;
 	let [allAvatars, setAllAvatars]: any = useState(
-		useFetchDB('avatars', undefined),
+		useFetchDB('avatars', undefined)
 	);
 	//const avatarRef: any = useRef(null);
 
 	const handleGetAvatarCollection = async () => {
-		const avatarsRef = db
-			.collection('avatars')
+		db.collection('avatars')
 			.get()
-			.then((snapshot) => {
+			.then(snapshot => {
 				let avatars: any = [];
 				snapshot.forEach((doc: any) => {
 					const data = doc.data();
@@ -26,7 +25,7 @@ function AvatarCard({ setOpen }: any) {
 				setAllAvatars(avatars);
 				console.log(snapshot);
 			})
-			.catch((error) => console.log(error));
+			.catch(error => console.log(error));
 	};
 
 	useEffect(() => {
@@ -46,7 +45,7 @@ function AvatarCard({ setOpen }: any) {
 							photoURL: avatar,
 						});
 					}
-				}),
+				})
 			);
 		} catch (error) {
 			console.error('Error saving data: ', error);

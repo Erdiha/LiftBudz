@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useAuth from '../firebase/usefirebaseUI';
-import MessageList from '@/components/messages/MessageList';
 import Posts from '../components/posts/Posts';
 import Friends from '../components/friends/Friends';
 import SideMenu from '../components/dashboard/SideMenu';
@@ -8,12 +7,8 @@ import SideFriends from '../components/dashboard/sideBarContents/SideFriends';
 import SideChats from '../components/dashboard/sideBarContents/SideChats';
 import SideProgress from '../components/dashboard/sideBarContents/SideProgress';
 import Chat from '../components/chat/Chat';
-import { send } from 'process';
-import { getDB } from '@/firebase/fireBase';
-import { collection } from 'firebase/firestore';
-import { useCollection } from 'react-firebase-hooks/firestore';
+
 import { useGetUsers } from '../components/data';
-import error from 'next/error';
 
 const Dashboard: React.FC = () => {
 	const { currentUser } = useAuth();
@@ -76,7 +71,8 @@ const Dashboard: React.FC = () => {
 						sendMessageToUser={sendMessageToUser}
 						setSendMessageToUser={setSendMessageToUser}
 						messageUserId={messageUserId}
-						setMessageUserId={setMessageUserId}unreadMessages={unreadMessages}
+						setMessageUserId={setMessageUserId}
+						unreadMessages={unreadMessages}
 					/>
 				);
 			case 'progress':
@@ -87,6 +83,8 @@ const Dashboard: React.FC = () => {
 				return <div />;
 		}
 	};
+
+	console.log('this is messageUserId', messageUserId);
 
 	return (
 		<div className="relative flex mt-[5vh] w-screen md:max-w-7xl border-box h-[90vh] justify-center items-center">

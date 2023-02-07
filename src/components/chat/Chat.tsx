@@ -3,22 +3,21 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import useAuth from '@/firebase/usefirebaseUI';
 import Loading from '@/utils/Loading';
 import SelectRecipient from './SelectRecipient';
-import { Input } from '@material-tailwind/react';
 import ChatContent from './ChatContent';
 import { useGetAvatar } from '@/hooks/useFetch';
 import { useGetMessages, useGetUsers } from '../data';
+import { Input } from '@material-tailwind/react';
 import { db } from '@/firebase/fireBase';
 
-export interface IMessage {
-	sender: string;
-	receiver: string;
+interface IMessage {
+	conversationId: string[];
 	timestamp: any;
 	receiverHasRead: boolean;
 	text: string;
 	image?: string;
 }
 
-const ChatUI = ({
+const Chat = ({
 	setActiveTab,
 	activeTab,
 	sendMessageToUser,
@@ -29,37 +28,34 @@ const ChatUI = ({
 	const [inputValue, setInputValue] = useState<string>('');
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const { currentUser } = useAuth();
-	const curUserID = currentUser?.uid;
-	const curUserEMAIL = currentUser?.email;
-	const messageRef = collection(db, 'messages');
+	const curUserEMAIL: any = currentUser?.email;
 
-	const { users, loading, error } = useGetUsers(curUserEMAIL, '');
-
+	const {
+		users,
+		loading: usersLoading,
+		error: usersError,
+	}: any = useGetUsers(curUserEMAIL, '');
 	const {
 		allMessages,
 		loading: messagesLoading,
 		error: messagesError,
-	} = useGetMessages(messageUserId, curUserEMAIL, false);
+	}: any = useGetMessages(messageUserId, curUserEMAIL, false);
 
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
-		if (!messageUserId) {
-			return;
-		}
-		if (!inputValue) {
+		if (!messageUserId || !inputValue) {
 			return;
 		}
 
 		const message = {
 			text: inputValue,
-			sender: curUserEMAIL!,
-			receiver: messageUserId,
+			conversationId: [currentUser?.email, messageUserId],
 			receiverHasRead: false,
 			createdAt: serverTimestamp(),
 			timestamp: Date.now(),
 			image: '',
 		};
-		await addDoc(messageRef, message);
+		await addDoc(collection(db, 'messages'), message);
 		setInputValue('');
 	};
 
@@ -67,38 +63,37 @@ const ChatUI = ({
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 	}, [inputValue, []]);
 
-	if (error) {
-		return <div>Error: {error?.message}</div>;
+	if (usersError || messagesError) {
+		return <div>Error: {usersError?.message || messagesError?.message}</div>;
 	}
 
 	return (
 		<div className="flex flex-col h-full w-full bg-blue-gray-50 relative pt-10">
 			{messageUserId ? (
 				<ChatContent
-					{...{
-						allMessages,
-						users,
-						curUserEMAIL,
-						messagesEndRef,
-						handleSubmit,
-						inputValue,
-						setInputValue,
-						loading,
-					}}
+					allMessages={allMessages}
+					users={users}
+					curUserEMAIL={curUserEMAIL}
+					messagesEndRef={messagesEndRef}
+					handleSubmit={handleSubmit}
+					inputValue={inputValue}
+					setInputValue={setInputValue}
+					messageUserId={messageUserId}
 				/>
 			) : (
 				<SelectRecipient
 					setActiveTab={setActiveTab}
 					activeTab={activeTab}
-					sendMessageToUser={sendMessageToUser}
-					setSendMessageToUser={setSendMessageToUser}
-					messageUserId={messageUserId}
 					setMessageUserId={setMessageUserId}
+					loading={usersLoading}
+					error={usersError}
 					users={users}
+					curUserEMAIL={curUserEMAIL}
+					setSendMessageToUser={setSendMessageToUser}
 				/>
 			)}
 		</div>
 	);
 };
 
-export default ChatUI;
+export default Chat;

@@ -7,6 +7,7 @@ import { Settings } from '@/components/profile/EditProfile';
 
 function Profile() {
 	const { getCurrentUser } = useUserLibrary(useAuth().currentUser?.uid);
+	const { currentUser } = useAuth();
 
 	return (
 		<>
@@ -21,7 +22,7 @@ function Profile() {
 								</Tooltip>
 								<div>
 									<Typography variant="h5" color="blue-gray" className="mb-1">
-										{getCurrentUser?.displayName}
+										{getCurrentUser?.displayName || currentUser?.displayName}
 									</Typography>
 								</div>
 							</div>

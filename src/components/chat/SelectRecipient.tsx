@@ -2,24 +2,33 @@ import { Input } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { useGetUsers } from '../data';
 import useAuth from '@/firebase/usefirebaseUI';
+import Loading from '@/utils/Loading';
 
 export default function SelectRecipient({
 	sendMessageToUser,
 	setMessageUserId,
 	setSendMessageToUser,
+	users,
+	loading,
+	error,
 }: any) {
 	const { currentUser } = useAuth();
 	const [searchTerm, setSearchTerm] = useState('');
-	const { users, loading, error } = useGetUsers(currentUser?.email, 'friends');
 	const [filteredUsers, setFilteredUsers]: any = useState(users)!;
+	useEffect(() => {
+		setFilteredUsers(users);
+	}, []);
 	useEffect(() => {
 		setFilteredUsers(
 			users?.filter((user: any) =>
 				user?.displayName.toLowerCase().includes(searchTerm?.toLowerCase())
 			)
 		);
-	}, [searchTerm, users]);
+	}, [searchTerm]);
 
+	if (error) {
+		console.log(error.message);
+	}
 	return (
 		<div className="flex flex-col  h-full justify-center items-center">
 			<div className="mb-3 xl:w-96 w-[50%] ">
@@ -41,21 +50,25 @@ export default function SelectRecipient({
 					onChange={e => setSearchTerm(e.target.value)}
 				/>
 			</div>
-			<div className="h-full w-full flex flex-col gap-1 items-center">
-				{filteredUsers?.map((user: any) => {
-					return (
-						<button
-							className="bg-gray-200 shadow-md  w-[45%] p-1 md:hover:scale-x-105  rounded md:hover:bg-blue-gray-50"
-							onClick={() => {
-								setSendMessageToUser(true), setMessageUserId(user.email);
-							}}
-							key={user.id}
-						>
-							{user.displayName}
-						</button>
-					);
-				})}
-			</div>
+			{loading ? (
+				<Loading />
+			) : (
+				<div className="h-full w-full flex flex-col gap-1 items-center">
+					{filteredUsers?.map((user: any) => {
+						return (
+							<button
+								className="bg-gray-200 shadow-md  w-[45%] p-1 md:hover:scale-x-105  rounded md:hover:bg-blue-gray-50"
+								onClick={() => {
+									setSendMessageToUser(true), setMessageUserId(user.email);
+								}}
+								key={user.id}
+							>
+								{user.displayName}
+							</button>
+						);
+					})}
+				</div>
+			)}
 		</div>
 	);
 }

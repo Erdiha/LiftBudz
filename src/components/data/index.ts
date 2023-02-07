@@ -3,27 +3,20 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import { sorting } from '../../utils/helperFuntions';
 
 export const useGetMessages = (
-	messageUserId: any,
-	curUserEMAIL: any,
-	all: boolean
-): any => {
-	const messagesRef: any = db
-		.collection('messages')
-		.orderBy('timestamp', 'asc');
+	messageUserId: string | undefined,
+	curUserEMAIL: string | undefined,
+	all: boolean = false
+): { allMessages: object[]; loading: boolean; error: any } => {
+	const messagesRef = db.collection('messages').orderBy('timestamp', 'asc');
 
-	const [Messages, loading, error] = useCollection(messagesRef);
+	let query: any = messagesRef;
 
-	const data: any = Messages?.docs.map((doc: any) => ({
+	const [Messages, loading, error] = useCollection(query);
+
+	const allMessages: any = Messages?.docs.map(doc => ({
 		...doc.data(),
 		id: doc.id,
 	}));
-	const allMessages: any = all
-		? data
-		: data?.filter(
-				(msg: any) =>
-					(msg.sender === curUserEMAIL && msg.receiver === messageUserId) ||
-					(msg.receiver === curUserEMAIL && msg.sender === messageUserId)
-		  );
 
 	return { allMessages, loading, error };
 };
@@ -39,11 +32,13 @@ export const useGetUsers = (curUserEMAIL: any, filter: string | null): any => {
 	let users: any = [];
 	switch (filter) {
 		case 'friends':
+			console.log('sending friends');
 			users = sorting(data?.filter((user: any) => user.email !== curUserEMAIL));
 			break;
 		case 'unreadMessages':
 			users = data?.filter((user: any) => user.email !== curUserEMAIL);
 			break;
+		case 'friendsWithUnreadMessages':
 		default:
 			users = data;
 			break;

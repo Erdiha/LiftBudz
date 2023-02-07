@@ -18,10 +18,10 @@ function SideChats({
 	setMessageUserId,
 }: any) {
 	const { currentUser } = useAuth();
-	const curUserEMAIL = currentUser?.email;
+	const curUserEMAIL: any = currentUser?.email;
 	const unreadRef = useRef<number>(0);
 	let unreadMessages: any = [];
-	const { allMessages, l, e } = useGetMessages(
+	const { allMessages, l, e }: any = useGetMessages(
 		messageUserId,
 		curUserEMAIL,
 		true
@@ -30,7 +30,7 @@ function SideChats({
 
 	const handleUserMessageClicked = async (user: any) => {
 		allMessages?.filter((m: any) => {
-			if (user.email === m.sender) {
+			if (user.email === m.conversationId[0]) {
 				const messageRef = db.collection('messages').doc(m.id);
 				messageRef.update({
 					receiverHasRead: true,
@@ -41,9 +41,6 @@ function SideChats({
 		setMessageUserId(user?.email);
 	};
 
-	// Assuming you have a reference to your Firestore database
-	console.log('this is unread messages', unreadMessages.length);
-	const unread: any = [];
 	return (
 		<div className="flex flex-col md:h-full bg-gray-200 bottom-0 w-full  p-8 gap-2 top-16 md:top-0 md:relative absolute">
 			<Button
@@ -52,24 +49,33 @@ function SideChats({
 			>
 				BACK
 			</Button>
-			<div className="flex-flex-col bg-white w-full h-full rounded-lg p-4 scroll-y-auto ">
-				<div className="grid grid-flow-row gap-3 justify-center  rounded">
+			<div className="flex-flex-col bg-white w-full h-full rounded-lg p-4  relative overflow-y-auto scroll-y-auto">
+				<div className="grid grid-flow-row gap-3 justify-center  rounded ">
 					{loading ? (
 						<Loading />
 					) : (
-						users?.map((user: any) => {
-							return (
-								allMessages?.some((m: any) => user.email === m.sender) && (
+						users?.map(
+							(user: any) =>
+								allMessages?.find((m: any) =>
+									m.conversationId.includes(user.email)
+								) && (
 									<div
 										key={user?.uid}
-										className={`flex rounded shadow-md items-center p-3 relative w-full ${messageUserId === user.email ? 'bg-blue-200 scale-105' : 'bg-blue-gray-50 scale-100'}`}
+										className={`flex rounded shadow-md items-center p-3  w-full ${
+											messageUserId === user.email
+												? 'bg-blue-200 scale-105'
+												: 'bg-blue-gray-50 scale-100'
+										}`}
 									>
-										{allMessages?.some(
+										{allMessages?.find(
 											(m: any) =>
-												m.receiverHasRead === false && m.sender === user.email
+												m.conversationId[1] === curUserEMAIL &&
+												m.conversationId[0] === user.email &&
+												!m.receiverHasRead
 										) && (
 											<span className="w-3  animate-bounce aspect-square text-center rounded-full bg-red-500 text-white absolute -top-1 -right-1"></span>
 										)}
+
 										<Avatar
 											style={{ width: '80px', height: '80px' }}
 											{...user.photoURL}
@@ -88,8 +94,7 @@ function SideChats({
 										</div>
 									</div>
 								)
-							);
-						})
+						)
 					)}
 				</div>
 			</div>
