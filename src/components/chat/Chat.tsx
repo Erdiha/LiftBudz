@@ -4,7 +4,7 @@ import useAuth from '../../firebase/usefirebaseUI';
 import SelectRecipient from './SelectRecipient';
 import ChatContent from './ChatContent';
 import { useGetMessages, useGetUsers } from '../data';
-import { db } from '../../firebase/fireBase';
+import { getDB } from '../../firebase/fireBase';
 
 interface IMessage {
 	conversationId: string[];
@@ -52,7 +52,7 @@ const Chat = ({
 			timestamp: Date.now(),
 			image: '',
 		};
-		await addDoc(collection(db, 'messages'), message);
+		await addDoc(collection(getDB, 'messages'), message);
 		setInputValue('');
 	};
 
