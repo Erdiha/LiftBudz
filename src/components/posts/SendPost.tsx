@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Input, Textarea, Card } from '@material-tailwind/react';
 import firebase, { db, auth } from '@/firebase/fireBase';
 import useAuth from '@/firebase/usefirebaseUI';
+import { serverTimestamp } from 'firebase/firestore';
 function SendPost({ setOpenPostFields }: any) {
 	const [postValue, setPostValue] = useState({ title: '', text: '' });
 	const initialState = {
@@ -17,7 +18,7 @@ function SendPost({ setOpenPostFields }: any) {
 			text: postValue.text,
 			uid,
 			photoURL,
-			createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+			createdAt: serverTimestamp(),
 		});
 		setPostValue(initialState);
 		setOpenPostFields((prev: boolean) => !prev);
