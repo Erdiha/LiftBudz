@@ -1,13 +1,5 @@
 import Avatar from 'avataaars';
-import { generateRandomAvatarOptions } from '@/utils/AvatarConfig';
-import { useEffect, useState } from 'react';
-import {
-	QuerySnapshot,
-	collection,
-	onSnapshot,
-	query,
-} from 'firebase/firestore';
-import firebase, { auth, db } from '@/firebase/fireBase';
+
 import useAuth from '@/firebase/usefirebaseUI';
 import { useGetAvatar } from '../../hooks/useFetch';
 

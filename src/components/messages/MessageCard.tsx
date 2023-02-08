@@ -5,7 +5,7 @@ import { useGetAvatar } from '../../hooks/useFetch';
 import Avatar from 'avataaars';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { getDB } from '@/firebase/fireBase';
+import { getDB } from '../../fireBase';
 import { collection } from 'firebase/firestore';
 
 export function MessageCard({

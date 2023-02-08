@@ -1,10 +1,4 @@
-import { useEffect, useState } from 'react';
-import { auth, db } from '@/firebase/fireBase';
 import useAuth, { useUserLibrary } from '@/firebase/usefirebaseUI';
-import { updateCurrentUser } from 'firebase/auth';
-import { collection, getDocs } from 'firebase/firestore';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchUsers } from '../../redux/actions/getAllRegisteredUsers';
 import UserCard from './UserCard';
 import { useGetUsers } from '../data/index';
 

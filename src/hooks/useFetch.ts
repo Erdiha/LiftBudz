@@ -1,4 +1,4 @@
-import firebase, { auth, db } from '@/firebase/fireBase';
+import firebase, { auth, db } from '../fireBase';
 import {
 	collection,
 	onSnapshot,

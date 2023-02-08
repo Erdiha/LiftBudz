@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Input, Textarea, Card } from '@material-tailwind/react';
-import firebase, { db, auth } from '@/firebase/fireBase';
+import firebase, { db, auth } from '../../fireBase';
 import useAuth from '@/firebase/usefirebaseUI';
 import { serverTimestamp } from 'firebase/firestore';
 function SendPost({ setOpenPostFields }: any) {

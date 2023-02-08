@@ -1,4 +1,4 @@
-import firestore, { getDB, db, auth } from '@/firebase/fireBase';
+import firestore, { getDB, db, auth } from '../../../fireBase';
 import useAuth from '@/firebase/usefirebaseUI';
 import Avatar from 'avataaars';
 import { collection } from 'firebase/firestore';

@@ -1,4 +1,4 @@
-import { auth, db } from '@/firebase/fireBase';
+import { auth, db } from '../../fireBase';
 import {
 	fetchPostsStart,
 	fetchPostsSuccess,
@@ -16,10 +16,10 @@ export const fetchPosts = () => async (dispatch: any) => {
 		db.collection('posts')
 			.orderBy('createdAt', 'desc')
 			.limit(50)
-			.onSnapshot((snapshot) =>
+			.onSnapshot(snapshot =>
 				postArray.push(
-					snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
-				),
+					snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
+				)
 			);
 		console.log(postArray);
 		dispatch(fetchPostsSuccess(postArray));

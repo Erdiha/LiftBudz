@@ -4,7 +4,7 @@ import useAuth from '../../firebase/usefirebaseUI';
 import SelectRecipient from './SelectRecipient';
 import ChatContent from './ChatContent';
 import { useGetMessages, useGetUsers } from '../data';
-import firebase, { db, auth, getDB } from '@/firebase/fireBase';
+import firebase, { db, auth, getDB } from '../../fireBase';
 
 interface IMessage {
 	conversationId: string[];

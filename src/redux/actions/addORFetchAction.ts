@@ -1,4 +1,4 @@
-import firebase from '@/firebase/fireBase';
+import firebase from '../../fireBase';
 import {
 	fetchDataStart,
 	fetchDataSuccess,

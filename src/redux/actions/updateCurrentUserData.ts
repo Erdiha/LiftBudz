@@ -5,7 +5,7 @@ import {
 } from '../reducers/UpdateCurrentUser';
 
 //import { FETCH_USERS, ADD_USER } from '@/redux/types/userTypes';
-import { auth, db } from '../../firebase/fireBase';
+import { auth, db } from '../../fireBase';
 
 export const updateUser = (data: any) => async (dispatch: any) => {
 	try {
@@ -14,10 +14,10 @@ export const updateUser = (data: any) => async (dispatch: any) => {
 		const snapshot = await usersRef.get();
 		let users: any = [];
 		await Promise.all(
-			snapshot.docs.map((doc) => {
+			snapshot.docs.map(doc => {
 				doc.data().userId === auth.currentUser?.uid &&
 					doc.ref.update({ ...data });
-			}),
+			})
 		);
 		dispatch(updateUserSuccess(users));
 	} catch (error: any) {
