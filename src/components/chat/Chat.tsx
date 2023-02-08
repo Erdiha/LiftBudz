@@ -58,7 +58,7 @@ const Chat = ({
 
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-	}, [inputValue, []]);
+	}, [inputValue, [], messageUserId]);
 
 	if (usersError || messagesError) {
 		return <div>Error: {usersError?.message || messagesError?.message}</div>;

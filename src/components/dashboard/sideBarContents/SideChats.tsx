@@ -8,6 +8,7 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import { useGetMessages } from '@/components/data';
 import { useGetUsers } from '../../data';
 import Loading from '@/utils/Loading';
+import { ifError } from 'assert';
 
 function SideChats({
 	setActiveTab,
@@ -19,7 +20,7 @@ function SideChats({
 }: any) {
 	const { currentUser } = useAuth();
 	const curUserEMAIL: any = currentUser?.email;
-	const unreadRef = useRef<number>(0);
+	const unreadRef: any = useRef();
 	let unreadMessages: any = [];
 	const { allMessages, l, e }: any = useGetMessages(
 		messageUserId,
@@ -29,17 +30,25 @@ function SideChats({
 	const { users, loading, error } = useGetUsers(curUserEMAIL, 'friends');
 
 	const handleUserMessageClicked = async (user: any) => {
-		allMessages?.filter((m: any) => {
-			if (user.email === m.conversationId[0]) {
-				const messageRef = db.collection('messages').doc(m.id);
-				messageRef.update({
-					receiverHasRead: true,
-				});
-			}
-		});
-		setSendMessageToUser(true);
-		setMessageUserId(user?.email);
+		if (!user) {
+			return;
+		} else {
+			allMessages?.filter((m: any) => {
+				if (user.email === m.conversationId[0]) {
+					const messageRef = db.collection('messages').doc(m.id);
+					messageRef.update({
+						receiverHasRead: true,
+					});
+				}
+			});
+			setSendMessageToUser(true);
+			setMessageUserId(user?.email);
+		}
 	};
+
+	// useEffect(() => {
+	// 	handleUserMessageClicked(null);
+	// }, [messageUserId]);
 
 	return (
 		<div className="flex flex-col md:h-full bg-gray-200 bottom-0 w-full  p-8 gap-2 top-16 md:top-0 md:relative absolute">
@@ -56,8 +65,10 @@ function SideChats({
 					) : (
 						users?.map(
 							(user: any) =>
-								allMessages?.find((m: any) =>
-									m.conversationId.includes(user.email)
+								allMessages?.find(
+									(m: any) =>
+										m.conversationId.includes(user.email) &&
+										m.conversationId.includes(currentUser?.email)
 								) && (
 									<div
 										key={user?.uid}
@@ -71,7 +82,8 @@ function SideChats({
 											(m: any) =>
 												m.conversationId[1] === curUserEMAIL &&
 												m.conversationId[0] === user.email &&
-												!m.receiverHasRead
+												!m.receiverHasRead &&
+												messageUserId !== user.email
 										) && (
 											<span className="w-3  animate-bounce aspect-square text-center rounded-full bg-red-500 text-white absolute -top-1 -right-1"></span>
 										)}
