@@ -1,34 +1,50 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import useAuth from '@/firebase/usefirebaseUI';
-import { Button } from '@material-tailwind/react';
-import Image from 'next/image';
 import { useUserLibrary } from '../../firebase/usefirebaseUI';
 import Avatar from 'avataaars';
 import { useGetAvatar } from '@/hooks/useFetch';
-import { serverTimestamp } from 'firebase/firestore';
 import EditPost from './EditPost';
-import {
-	AiOutlineLike,
-	AiOutlineDislike,
-	AiOutlineComment,
-} from 'react-icons/ai';
+import { AiOutlineLike, AiOutlineComment } from 'react-icons/ai';
 import { IPost } from './types';
 import useFindUser from '../../hooks/useFindUser';
-import { current } from '@reduxjs/toolkit';
+import { db } from '@/firebase/firebase';
 
 const Postcard = (post: IPost) => {
 	const { currentUser } = useAuth();
 	const { getCurrentUser } = useUserLibrary(currentUser?.uid)!;
-	const [editable, setEditable] = useState<boolean>(false);
+	const likesREF = useRef<any>(null);
 	const getAvatar = useGetAvatar();
+
+	const handleLikes = async () => {
+		const commentRef = db.collection('posts').doc(post.id);
+		try {
+			const postData: any = await commentRef.get();
+			if (postData.exists) {
+				const likes: any = postData.data().likes || [];
+				const index: number | null = likes.indexOf(getCurrentUser?.email);
+				if (index === -1) {
+					likes.push(getCurrentUser?.email);
+				} else {
+					likes.splice(index, 1);
+				}
+				await commentRef.update({
+					likes: likes,
+				});
+			} else {
+				console.error("Document doesn't exist.");
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	return (
 		<div key={post.id} className="flex w-full p-8 py-16 ">
 			<div className="flex flex-col border shadow-md overflow-y-auto w-full max-h-25rem">
 				<div className="w-full flex flex-col bg-gradient  bg-gray-100/90   rounded  ring-gray-900/10  h-full">
 					<div className="flex flex-col w-full ">
-						<div className="flex items-center justify-around w-full  h-24">
-							<div className="w-[85%] flex">
+						<div className="flex items-center w-full  h-24">
+							<div className="w-[85%] flex pl-4">
 								<Avatar
 									style={{ width: '50px', height: '50px' }}
 									avatarStyle="Circle"
@@ -44,7 +60,9 @@ const Postcard = (post: IPost) => {
 									</span>
 								</span>
 							</div>
-							{currentUser?.uid === post?.uid && <EditPost post={post} />}
+							<div className="ml-10">
+								{currentUser?.uid === post?.uid && <EditPost post={post} />}
+							</div>
 						</div>
 
 						{post?.photoURL && (
@@ -55,17 +73,34 @@ const Postcard = (post: IPost) => {
 							/>
 						)}
 					</div>
-					<div className="w-full min-h-24   flex px-2 pt-8 flex-col ">
-						<div className="pb-8 p-2">
+					<div className="w-full min-h-24   flex px-2 pt-8 flex-col bg-white rounded ">
+						<div className="pb-8 p-2 bg-gray-100 h-full rounded-lg">
 							{post?.text && (
 								<p className="text-base text-gray-800 w-[80%]">{post?.text}</p>
 							)}
 						</div>
-						<div className="flex text-2xl w-fit gap-4 p-2 px-16 self-start">
-							<span>
-								<AiOutlineLike />
+						<div className="flex flex-row  text-2xl w-[20%]   p-2 px-4  justify-between min-w-40 ">
+							<span
+								onClick={handleLikes}
+								className="flex items-center cursor-pointer"
+							>
+								<span>
+									<AiOutlineLike
+										className={ `flex w-full  h-full p-2 ${
+											post?.likes.length > 0
+												? 'text-blue-400 font-bold'
+												: 'text-gray-700 font-light '
+										}`}
+									/>
+								</span>
+
+								{post?.likes.length > 0 && (
+									<span className="flex jusfity-center items-center text-sm font-bold text-blue-400  p-2 min-w-4 cursor-default">
+										{post?.likes.length}
+									</span>
+								)}
 							</span>
-							<span>
+							<span className="flex items-center">
 								<AiOutlineComment />
 							</span>
 						</div>

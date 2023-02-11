@@ -1,6 +1,5 @@
 import { Input } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
-import { useGetUsers } from '../data';
 import useAuth from '@/firebase/usefirebaseUI';
 import Loading from '@/utils/Loading';
 
@@ -14,10 +13,11 @@ export default function SelectRecipient({
 }: any) {
 	const { currentUser } = useAuth();
 	const [searchTerm, setSearchTerm] = useState('');
-	const [filteredUsers, setFilteredUsers]: any = useState(users)!;
+	const [filteredUsers, setFilteredUsers]: any = useState(users);
 	useEffect(() => {
 		setFilteredUsers(users);
 	}, []);
+
 	useEffect(() => {
 		setFilteredUsers(
 			users?.filter((user: any) =>
@@ -29,6 +29,7 @@ export default function SelectRecipient({
 	if (error) {
 		console.log(error.message);
 	}
+	console.log('this is users in selectrecipient', filteredUsers, users);
 	return (
 		<div className="flex flex-col  h-full justify-center items-center">
 			<div className="mb-3 xl:w-96 w-[50%] ">
@@ -54,7 +55,7 @@ export default function SelectRecipient({
 				<Loading />
 			) : (
 				<div className="h-full w-full flex flex-col gap-1 items-center">
-					{filteredUsers?.map((user: any) => {
+					{(filteredUsers ? filteredUsers : users).map((user: any) => {
 						return (
 							<button
 								className="bg-gray-200 shadow-md  w-[45%] p-1 md:hover:scale-x-105  rounded md:hover:bg-blue-gray-50"

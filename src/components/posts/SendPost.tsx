@@ -7,13 +7,9 @@ import { serverTimestamp } from 'firebase/firestore';
 import uuid from 'react-uuid';
 import useFileUpload from '../../hooks/useFileUpload';
 import Loading from '@/utils/Loading';
-import { useDeletePost } from '../../hooks/useDelete';
-import useToast from '@/hooks/useToast';
-import { config } from 'dotenv';
 
 function SendPost({ setOpenPostFields }: any) {
 	const [postValue, setPostValue] = useState({ text: '' });
-	const { toast, showToast } = useToast();
 
 	const [imageUpload, setImageUpload] = useState(null);
 	const { file, downloadURL, handleButtonClick, imageLoading } =
@@ -73,7 +69,6 @@ function SendPost({ setOpenPostFields }: any) {
 						) : (
 							<div className="flex gap-2 ">
 								<button
-									onClick={() => showToast('Posted!', 'success', 50000)}
 									type="submit"
 									className="px-6 py-2 text-sm font-semibold rounded-md shadow-md text-sky-100 bg-sky-500 hover:bg-sky-700 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300"
 								>

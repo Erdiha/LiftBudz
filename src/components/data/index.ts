@@ -21,7 +21,7 @@ export const useGetMessages = (
 	return { allMessages, loading, error };
 };
 
-export const useGetUsers = (curUserEMAIL: any, filter: string | null): any => {
+export function useGetUsers(curUserEMAIL: any, filter: string | null): any {
 	const userRef: any = db.collection('users');
 
 	const [usersData, loading, error] = useCollection(userRef);
@@ -38,10 +38,11 @@ export const useGetUsers = (curUserEMAIL: any, filter: string | null): any => {
 		case 'unreadMessages':
 			users = data?.filter((user: any) => user.email !== curUserEMAIL);
 			break;
-		case 'friendsWithUnreadMessages':
+		case 'user':
+			users = data?.filter((user: any) => user.email === curUserEMAIL);
 		default:
 			users = data;
 			break;
 	}
 	return { users, loading, error };
-};
+}

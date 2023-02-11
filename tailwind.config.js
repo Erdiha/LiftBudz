@@ -29,6 +29,11 @@ module.exports = withMT({
 			},
 		},
 	},
+	variants: {
+		extend: {
+			display: ['group-hover','chatBubble-hover'],
+		},
+	},
 	plugins: [require('tailwind-scrollbar-hide')],
 	// plugins: [
 	//   require('@tailwindcss/typography'),

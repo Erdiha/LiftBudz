@@ -11,20 +11,19 @@ import { RiEdit2Fill } from 'react-icons/ri';
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { auth, db } from '@/firebase/firebase';
 import { IPost } from './types';
-import { useDeletePost } from '@/hooks/useDelete';
-import useToast from '@/hooks/useToast';
+import { useDelete } from '@/hooks/useDelete';
 import React from 'react';
 import { toast } from 'react-toastify';
 
 export default function EditPost({ post }: { post: IPost }) {
-	const { deletePost, dLoading, dError } = useDeletePost();
+	const { deleteItem, dLoading, dError } = useDelete();
 	const [open, setOpen] = useState(false);
 	const [postValue, setPostValue] = useState(post.text);
 
 	const handleOpen = () => setOpen(!open);
 
 	const handleDelete = () => {
-		deletePost(post.id);
+		deleteItem(post.id, 'posts');
 		if (dLoading) {
 			toast('Loading!');
 		} else if (dError) {
