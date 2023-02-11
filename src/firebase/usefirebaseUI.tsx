@@ -22,7 +22,7 @@ import {
 	onSnapshot,
 } from 'firebase/firestore';
 import { updateCurrentUser } from 'firebase/auth';
-import { db, auth } from '../fireBase';
+import { db, auth } from '../firebase/firebase';
 
 export interface Iinput {
 	displayName?: string;

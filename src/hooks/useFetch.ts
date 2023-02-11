@@ -1,4 +1,4 @@
-import firebase, { auth, db } from '../fireBase';
+import firebase, { auth, db } from '../firebase/firebase';
 import {
 	collection,
 	onSnapshot,
@@ -8,7 +8,9 @@ import {
 } from 'firebase/firestore';
 import { useState, useEffect, useMemo } from 'react';
 import { IMessage } from '../components/dashboard/types';
+
 export function useFetchDB(collectionString: string, order: any) {
+	console.log('this is post array in hook', collectionString);
 	const [postArray, setPostArray]: any = useState();
 	const collectionREF = db.collection(collectionString);
 	const timedAT = collectionREF.orderBy('createdAt', order).limit(50);

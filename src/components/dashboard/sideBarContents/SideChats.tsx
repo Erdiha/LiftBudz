@@ -1,14 +1,11 @@
-import firestore, { getDB, db, auth } from '../../../fireBase';
+import { db } from '../../../firebase/firebase';
 import useAuth from '@/firebase/usefirebaseUI';
 import Avatar from 'avataaars';
-import { collection } from 'firebase/firestore';
-import { useEffect, useRef } from 'react';
 import { Button } from '@material-tailwind/react';
-import { useCollection } from 'react-firebase-hooks/firestore';
 import { useGetMessages } from '@/components/data';
 import { useGetUsers } from '../../data';
 import Loading from '@/utils/Loading';
-import { ifError } from 'assert';
+import { useRef } from 'react';
 
 function SideChats({
 	setActiveTab,
@@ -20,8 +17,7 @@ function SideChats({
 }: any) {
 	const { currentUser } = useAuth();
 	const curUserEMAIL: any = currentUser?.email;
-	const unreadRef: any = useRef();
-	let unreadMessages: any = [];
+
 	const { allMessages, l, e }: any = useGetMessages(
 		messageUserId,
 		curUserEMAIL,

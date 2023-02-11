@@ -9,6 +9,9 @@ import usersReducer from '../redux/reducers/usersReducer';
 
 const store = configureStore({ reducer: usersReducer });
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<>
@@ -16,6 +19,7 @@ export default function App({ Component, pageProps }: AppProps) {
 			<AuthProvider>
 				<Provider store={store}>
 					<NavbarComponent />
+					<ToastContainer />
 					<Component {...pageProps} />
 				</Provider>
 			</AuthProvider>

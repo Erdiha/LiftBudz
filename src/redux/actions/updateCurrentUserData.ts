@@ -5,7 +5,7 @@ import {
 } from '../reducers/UpdateCurrentUser';
 
 //import { FETCH_USERS, ADD_USER } from '@/redux/types/userTypes';
-import { auth, db } from '../../fireBase';
+import { auth, db } from '../../firebase/firebase';
 
 export const updateUser = (data: any) => async (dispatch: any) => {
 	try {

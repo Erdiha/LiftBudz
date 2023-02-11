@@ -5,6 +5,8 @@ import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import 'firebase/compat/storage';
+import { getStorage } from 'firebase/storage';
 
 const credentials = {
 	apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -22,29 +24,31 @@ if ((firebase as any).apps && !(firebase as any).apps.length) {
 
 const auth = firebase.auth();
 const db = firebase.firestore();
-const getAUTH = getAuth();
-const getDB = getFirestore();
-export { auth, db, useAuthState, getDB, getAUTH };
-function useAuthState(firebaseAuth: firebase.auth.Auth) {
-	const [user, setUser] = useState<firebase.User | null>(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<Error | null>(null);
+const storage = firebase.storage()
+const getAUTH = getAuth(firebase.initializeApp(credentials));
+const getDB = getFirestore(firebase.initializeApp(credentials))
+const getStrge = getStorage(firebase.initializeApp(credentials));
+export { auth, db, getStrge,storage, getDB, getAUTH };
+// function useAuthState(firebaseAuth: firebase.auth.Auth) {
+// 	const [user, setUser] = useState<firebase.User | null>(null);
+// 	const [loading, setLoading] = useState(true);
+// 	const [error, setError] = useState<Error | null>(null);
 
-	React.useEffect(() => {
-		const unsubscribe = firebaseAuth.onAuthStateChanged(
-			(user: any) => {
-				setUser(user);
-				setLoading(false);
-			},
-			(error: any) => {
-				setError(error);
-				setLoading(false);
-			}
-		);
-		return () => unsubscribe();
-	}, [firebaseAuth]);
+// 	React.useEffect(() => {
+// 		const unsubscribe = firebaseAuth.onAuthStateChanged(
+// 			(user: any) => {
+// 				setUser(user);
+// 				setLoading(false);
+// 			},
+// 			(error: any) => {
+// 				setError(error);
+// 				setLoading(false);
+// 			}
+// 		);
+// 		return () => unsubscribe();
+// 	}, [firebaseAuth]);
 
-	return [user, loading, error];
-}
+// 	return [user, loading, error,storage,getStrge];
+// }
 
 export default firebase;

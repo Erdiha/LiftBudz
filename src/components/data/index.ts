@@ -1,6 +1,6 @@
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { sorting } from '../../utils/helperFuntions';
-import { db } from '@/fireBase';
+import { db } from '../../firebase/firebase';
 
 export const useGetMessages = (
 	messageUserId: string | undefined,

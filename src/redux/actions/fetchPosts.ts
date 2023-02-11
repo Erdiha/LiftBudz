@@ -1,4 +1,4 @@
-import { auth, db } from '../../fireBase';
+import { auth, db } from '../../firebase/firebase';
 import {
 	fetchPostsStart,
 	fetchPostsSuccess,

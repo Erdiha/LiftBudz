@@ -4,7 +4,8 @@ import useAuth from '../../firebase/usefirebaseUI';
 import SelectRecipient from './SelectRecipient';
 import ChatContent from './ChatContent';
 import { useGetMessages, useGetUsers } from '../data';
-import firebase, { db, auth, getDB } from '../../fireBase';
+import firebase, { db, auth, getDB } from '../../firebase/firebase';
+import { getAuth } from 'firebase/auth';
 
 interface IMessage {
 	conversationId: string[];
@@ -55,7 +56,7 @@ const Chat = ({
 		await db.collection('messages').add(message);
 		setInputValue('');
 	};
-
+	// Scroll to bottom of chat
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 	}, [inputValue, [], messageUserId]);

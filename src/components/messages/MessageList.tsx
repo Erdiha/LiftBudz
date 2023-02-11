@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { db, getDB } from '../../fireBase';
+import { db, getDB } from '../../firebase/firebase';
 import Loading from '@/utils/Loading';
 import { useadddb, useFetchDB } from '../../hooks/useFetch';
 import { collection } from 'firebase/firestore';
-import useAuth from '../../usefirebaseUI';
+import useAuth from '../../firebase/usefirebaseUI';
 import Chat from '../chat/Chat';
 
 const MessageList = ({

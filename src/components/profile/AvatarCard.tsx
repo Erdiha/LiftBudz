@@ -1,6 +1,6 @@
 import Avatar from 'avataaars';
 import { useState } from 'react';
-import { db } from '../../fireBase';
+import { db } from '../../firebase/firebase';
 import useAuth from '../../firebase/usefirebaseUI';
 import { useEffect } from 'react';
 import { useFetchDB } from '@/hooks/useFetch';
