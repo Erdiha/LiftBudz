@@ -32,7 +32,7 @@ const Dashboard: React.FC = () => {
 			case 'posts':
 				return <Posts />;
 			case 'friends':
-				return <Friends />;
+				return <Friends activeTab={activeTab} setActiveTab={setActiveTab}/>;
 			case 'messages':
 				return (
 					sendMessageToUser && (
@@ -87,11 +87,9 @@ const Dashboard: React.FC = () => {
 	console.log('this is messageUserId', messageUserId);
 
 	return (
-		<div className="relative flex mt-[5vh] w-screen md:max-w-7xl border-box h-[90vh] justify-center items-center">
-			<div className="w-1/3 h-full p-2 text-black m-auto">
-				{renderLeftSide()}
-			</div>
-			<div className="w-3/4 h-full p-2 text-black">{renderRightSide()}</div>;
+		<div className="relative flex  w-screen max-w-7xl border-box h-[94vh] mt-[6vh]  justify-center items-center m-auto">
+			<div className="md:w-1/3 h-full p-2 text-black m-auto">{renderLeftSide()}</div>
+			<div className="md:w-3/4 h-full p-2 text-black">{renderRightSide()}</div>;
 		</div>
 	);
 };

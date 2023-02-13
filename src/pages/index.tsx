@@ -45,13 +45,13 @@ export default function Home({ data }: IPexelImages) {
 
 			<main className={style.main}>
 				{currentUser ? (
-					<div className="w-screen h-screen flex justify-center items-center">
+					<div className="w-screen h-screen flex justify-center items-center m-0 p-0">
 						<Dashboard />
 					</div>
 				) : (
 					<>
-						<Hero />
-						<MainSegments {...{ data }} />
+						{/* <Hero /> */}
+						{/* <MainSegments {...{ data }} /> */}
 					</>
 				)}
 			</main>

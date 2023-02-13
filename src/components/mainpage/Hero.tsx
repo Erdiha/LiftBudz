@@ -10,7 +10,7 @@ function Hero() {
 	});
 
 	return (
-		<section className="relative  bg-blueGray-50">
+		<section className="relative  bg-blueGray-50 ">
 			<div className="relative pt-[7rem] md:pt-[15rem] pb-32 flex content-center items-center justify-center min-h-screen-75">
 				<video
 					autoPlay

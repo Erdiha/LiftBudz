@@ -1,9 +1,9 @@
 import useAuth, { useUserLibrary } from '@/firebase/usefirebaseUI';
 import React from 'react';
-
+import {auth} from  '@/firebase/firebase'
 function Segments({ tabs, setActiveTab, activeTab }: any) {
 	const { currentUser } = useAuth();
-	const { getCurrentUser } = useUserLibrary(currentUser!.uid);
+	const { getCurrentUser } = useUserLibrary(auth?.currentUser?.uid);
 	return (
 		<div className="w-full h-full">
 			<div className="h-fit w-fit flex items-center text-gray-300">

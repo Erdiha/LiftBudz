@@ -5,25 +5,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap'); 
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
-@layer base {
-  /* body {
-    padding: 0;
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  } */
-  /* html {
-    @font-face {
-      font-family: "Inter";
-      font-style: normal;
-      font-weight: 100 900;
-      font-display: optional;
-      src: url(/fonts/inter-var-latin.woff2) format("woff2");
-    }
-  } */
-}
+@layer base{html {
+  overflow-y: overlay;
+}}
 
 @layer components {
+  .slide-down-show {
+    animation: slide-down 0.3s ease forwards;
+  }
+  
+  .slide-down-hide {
+    animation: slide-up 0.3s ease forwards;
+  }
+  
+  @keyframes slide-down {
+    from {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slide-up {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+  }
+  
   
   .scroll-bar::-webkit-scrollbar {
     width: 0.55rem;

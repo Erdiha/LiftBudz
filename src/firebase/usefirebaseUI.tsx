@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }: AProps) => {
 				} else {
 					setCurrentUser(null);
 					setIsLoading(true);
-					//router.push('/Signin_signup');
+					router.push('/signin');
 				}
 				setFirstLoading(false);
 			}),

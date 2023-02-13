@@ -31,7 +31,7 @@ export default function SelectRecipient({
 	}
 	console.log('this is users in selectrecipient', filteredUsers, users);
 	return (
-		<div className="flex flex-col  h-full justify-center items-center">
+		<div className="flex flex-col  h-full justify-center items-center p-8">
 			<div className="mb-3 xl:w-96 w-[50%] ">
 				<Input
 					type="search"
@@ -46,7 +46,7 @@ export default function SelectRecipient({
 			            ease-in-out m-0
 			            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 					id="exampleSearch"
-					label="Type a Name"
+					label="Type A Name"
 					value={searchTerm}
 					onChange={e => setSearchTerm(e.target.value)}
 				/>
