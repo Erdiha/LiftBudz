@@ -8,11 +8,16 @@ interface AvatarProps {
 
 const Avatar: React.FC<AvatarProps> = ({ name, src, size = 'md' }) => {
   return (
-    <div className={`flex items-center justify-center rounded-full h-${size} w-${size}`}>
+    <div
+      className={`flex items-center justify-center rounded-full h-${size} w-${size}`}>
       {src ? (
-        <img className="h-full w-full rounded-full object-cover" src={src} alt={name} />
+        <img
+          className='h-full w-full rounded-full object-cover'
+          src={src}
+          alt={name}
+        />
       ) : (
-        <p className="text-lg font-medium">{name[0]}</p>
+        <p className='text-lg font-medium'>{name[0]}</p>
       )}
     </div>
   );
@@ -20,5 +25,7 @@ const Avatar: React.FC<AvatarProps> = ({ name, src, size = 'md' }) => {
 
 export default Avatar;
 
-{/* <Avatar name="John Doe" />
-<Avatar name="Jane Doe" src="https://via.placeholder.com/150" size="lg" /> */}
+{
+  /* <Avatar name="John Doe" />
+<Avatar name="Jane Doe" src="https://via.placeholder.com/150" size="lg" /> */
+}

@@ -3,10 +3,18 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import useAuth from '../../firebase/usefirebaseUI';
 import SelectRecipient from './SelectRecipient';
 import ChatContent from './ChatContent';
-import { useGetMessages, useGetUsers } from '../data';
-import firebase, { db, auth, getDB } from '../../firebase/firebase';
-import { getAuth } from 'firebase/auth';
+import { useDispatch, useSelector } from 'react-redux';
 
+import {
+  startLoading,
+  loadChatsSuccess,
+  loadChatsFailure,
+  fetchChats,
+} from '@/redux/chatsSlice';
+import { RootState } from '@/redux/store';
+import { loadUsersFailure } from '../../redux/usersSlice';
+import { fetchUsers } from '../../redux/usersSlice';
+import { mockmessages } from '../data/data';
 interface IMessage {
   conversationId: string[];
   timestamp: any;
@@ -25,18 +33,19 @@ const Chat = ({
 }: any) => {
   const { currentUser } = useAuth();
   const curUserEMAIL: any = currentUser?.email;
-  const {
-    users,
-    loading: usersLoading,
-    error: usersError,
-  }: any = useGetUsers(curUserEMAIL, 'all');
-  
-  const {
-    allMessages,
-    loading: messagesLoading,
-    error: messagesError,
-  }: any = useGetMessages(messageUserId, curUserEMAIL, false);
-  
+
+  //redux calls
+  const dispatch: any = useDispatch();
+  const allMessages = useSelector((state: RootState) => state.chats.chats);
+  const users = useSelector((state: RootState) => state.users.users);
+  const isLoadingChat = useSelector(
+    (state: RootState) => state.chats.isLoading,
+  );
+  const isLoadingUsers = useSelector(
+    (state: RootState) => state.users.isLoading,
+  );
+  const errorChat = useSelector((state: RootState) => state.chats.error);
+  const errorUsers = useSelector((state: RootState) => state.users.error);
   const [inputValue, setInputValue] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -57,20 +66,28 @@ const Chat = ({
       sender: currentUser?.email,
       receiver: messageUserId,
     };
-    await db.collection('messages').add(message);
-    setInputValue('');
+    try {
+      dispatch(fetchChats());
+      setInputValue('');
+    } catch (error: any) {
+      dispatch(loadChatsFailure(error.message));
+    }
   };
+
+  useEffect(() => {
+    dispatch(fetchChats());
+    dispatch(fetchUsers());
+    dispatch(loadChatsFailure);
+    dispatch(loadUsersFailure);
+  }, [dispatch]);
   // Scroll to bottom of chat
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [inputValue, [], messageUserId]);
 
-  if (usersError || messagesError) {
-    return <div>Error: {usersError?.message || messagesError?.message}</div>;
-  }
   console.log('users', users);
   return (
-    <div className='flex flex-col h-full w-full bg-blue-gray-50 relative'>
+    <div className='flex flex-col h-full w-full bg-blue-gray-50 relative mt-10'>
       {messageUserId ? (
         <ChatContent
           allMessages={allMessages}
@@ -87,8 +104,8 @@ const Chat = ({
           setActiveTab={setActiveTab}
           activeTab={activeTab}
           setMessageUserId={setMessageUserId}
-          loading={usersLoading}
-          error={usersError}
+          loading={isLoadingUsers}
+          error={errorUsers}
           users={users}
           curUserEMAIL={curUserEMAIL}
           setSendMessageToUser={setSendMessageToUser}

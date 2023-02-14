@@ -1,20 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import useAuth from '@/firebase/usefirebaseUI';
 import { auth } from '@/firebase/firebase';
 import Link from 'next/link';
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
+
   const { logout } = useAuth();
   const handleLogout = async () => {
     await logout();
   };
+  const router = useRouter();
+
+  useEffect(() => {
+    setShowDropdown(false);
+  }, [router.asPath, []]);
+
+  console.log(router);
 
   return (
-    <nav className='flex justify-center items-center bg-gray-900  fixed  h-[6vh] w-screen z-[9999] top-0 '>
+    <nav className='flex justify-center items-center bg-gray-900 fixed w-screen z-[9999] top-0 p-3 md:p-0'>
       <div className='flex items-center justify-between flex-wrap max-w-7xl w-full'>
         <div className='flex items-center flex-shrink-0 text-white'>
-          <Link href="/Dashboard" className='font-semibold text-xl tracking-tight p-2'>
+          <Link
+            href='/Dashboard'
+            className='font-semibold text-xl tracking-tight p-2'>
             <h1 className='text-3xl font-bold'>
               <span className='text-indigo-500'>LIFT</span>
               <span className='text-gray-200'>Budz</span>
@@ -36,22 +47,32 @@ const Navbar = () => {
         </div>
 
         <div
-          className={`w-full flex-grow lg:flex lg:items-center lg:w-auto ${
+          className={`w-full flex-grow lg:flex lg:items-center lg:w-auto bg-gray-900 justify-between py-4 ${
             showDropdown ? 'block ' : 'hidden'
-          } gap-4 p-2`}>
-          <div className='text-md lg:flex-grow p-2.5 md:text-xl'>
+          }  p-2 py-4`}>
+          <div className='text-md lg:flex-grow  md:p-0  md:text-xl md:flex md:justify-center md:gap-10 py-4'>
             <Link
               href='/Dashboard'
-              className='block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4'>
+              onClick={() => router.push('/Dashboard')}
+              className={` ${
+                router.asPath === '/Dashboard'
+                  ? 'md:border-b-4 md:border-blue-400 md:backdrop-blur gradient text-gray-200 '
+                  : 'bg-transparent backdrop-blur-0 text-gray-200'
+              } block mt-4 lg:inline-block lg:mt-0 text-gray-200 hover:text-white mr-4 md:p-2 py-2 rounded`}>
               Dashboard
             </Link>
             <Link
               href='/Profile'
-              className='block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4'>
+              onClick={() => router.push('/Profile')}
+              className={` ${
+                router.asPath === '/Profile'
+                  ? 'md:border-b-4 md:border-blue-400 md:backdrop-blur gradient text-gray-200 '
+                  : 'bg-transparent backdrop-blur-0 text-gray-200'
+              } block mt-4 lg:inline-block lg:mt-0  hover:text-white mr-4 md:p-2 py-2  rounded`}>
               Profile
             </Link>
           </div>
-          <div>
+          <div className=''>
             <button
               className='text-white flex hover:text-gray-400 focus:outline-none ring-1 ring-gray-100 items-center mr-6 md:hover:bg-gray-400 rounded p-2 md:hover:text-black justify-center'
               onClick={handleLogout}>

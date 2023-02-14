@@ -1,7 +1,19 @@
-import { createStore, applyMiddleware } from 'redux';
-import usersReducer from './reducers/usersReducer';
-import thunk from 'redux-thunk';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import usersSlice from './usersSlice';
+import chatANDPostSlice from './chatsSlice';
+import chatsSlice from './chatsSlice';
+import postsSlice from './postsSlice';
 
-const store = createStore(usersReducer, applyMiddleware(thunk));
+const rootReducer = combineReducers({
+  chats: chatsSlice,
+  users: usersSlice,
+  posts: postsSlice,
+});
+
+const store = configureStore({
+  reducer: rootReducer,
+});
+
+export type RootState = ReturnType<typeof rootReducer>;
 
 export default store;

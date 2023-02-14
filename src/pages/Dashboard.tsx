@@ -11,86 +11,91 @@ import Chat from '../components/chat/Chat';
 import { useGetUsers } from '../components/data';
 
 const Dashboard: React.FC = () => {
-	const { currentUser } = useAuth();
-	const [activeTab, setActiveTab] = useState('posts');
-	const [openChat, setOpenChat] = useState(false);
-	const [sendMessageToUser, setSendMessageToUser] = useState(false);
-	const [messageUserId, setMessageUserId] = useState();
-	const unreadMessages = useRef<number>(0);
-	const dashboardRightSide = useRef<HTMLDivElement>(null);
-	const { users, loading, error } = useGetUsers(currentUser?.email, 'friends');
+  const { currentUser } = useAuth();
+  const [activeTab, setActiveTab] = useState('posts');
+  const [openChat, setOpenChat] = useState(false);
+  const [sendMessageToUser, setSendMessageToUser] = useState(false);
+  const [messageUserId, setMessageUserId] = useState();
+  const unreadMessages = useRef<number>(0);
+  const dashboardRightSide = useRef<HTMLDivElement>(null);
+  const { users, loading, error } = useGetUsers(currentUser?.email, 'friends');
 
-	useEffect(() => {
-		if (dashboardRightSide.current) {
-			dashboardRightSide.current.scrollTop =
-				dashboardRightSide.current.scrollHeight;
-		}
-	}, []);
+  useEffect(() => {
+    if (dashboardRightSide.current) {
+      dashboardRightSide.current.scrollTop =
+        dashboardRightSide.current.scrollHeight;
+    }
+  }, []);
 
-	const renderRightSide = () => {
-		switch (activeTab) {
-			case 'posts':
-				return <Posts />;
-			case 'friends':
-				return <Friends activeTab={activeTab} setActiveTab={setActiveTab}/>;
-			case 'messages':
-				return (
-					sendMessageToUser && (
-						<Chat
-							setActiveTab={setActiveTab}
-							activeTab={activeTab}
-							sendMessageToUser={sendMessageToUser}
-							setSendMessageToUser={setSendMessageToUser}
-							messageUserId={messageUserId}
-							setMessageUserId={setMessageUserId}
-							users={users}
-							unreadMessages={unreadMessages}
-						/>
-					)
-				);
-			case 'progress':
-				return <div className="w-full h-full p-2 text-black">PROGRESS</div>;
-			default:
-				return <div />;
-		}
-	};
+  const renderRightSide = () => {
+    switch (activeTab) {
+      case 'posts':
+        return <Posts />;
+      case 'friends':
+        return <Friends activeTab={activeTab} setActiveTab={setActiveTab} />;
+      case 'messages':
+        return (
+          sendMessageToUser && (
+            <Chat
+              setActiveTab={setActiveTab}
+              activeTab={activeTab}
+              sendMessageToUser={sendMessageToUser}
+              setSendMessageToUser={setSendMessageToUser}
+              messageUserId={messageUserId}
+              setMessageUserId={setMessageUserId}
+              users={users}
+              unreadMessages={unreadMessages}
+            />
+          )
+        );
+      case 'progress':
+        return <div className='w-full h-full p-2 text-black'>PROGRESS</div>;
+      default:
+        return <div />;
+    }
+  };
 
-	const renderLeftSide = () => {
-		switch (activeTab) {
-			case 'posts':
-				return <SideMenu setActiveTab={setActiveTab} activeTab={activeTab} />;
-			case 'friends':
-				return (
-					<SideFriends setActiveTab={setActiveTab} activeTab={activeTab} />
-				);
-			case 'messages':
-				return (
-					<SideChats
-						setActiveTab={setActiveTab}
-						activeTab={activeTab}
-						sendMessageToUser={sendMessageToUser}
-						setSendMessageToUser={setSendMessageToUser}
-						messageUserId={messageUserId}
-						setMessageUserId={setMessageUserId}
-						unreadMessages={unreadMessages}
-					/>
-				);
-			case 'progress':
-				return (
-					<SideProgress setActiveTab={setActiveTab} activeTab={activeTab} />
-				);
-			default:
-				return <div />;
-		}
-	};
+  const renderLeftSide = () => {
+    switch (activeTab) {
+      case 'posts':
+        return <SideMenu setActiveTab={setActiveTab} activeTab={activeTab} />;
+      case 'friends':
+        return (
+          <SideFriends setActiveTab={setActiveTab} activeTab={activeTab} />
+        );
+      case 'messages':
+        return (
+          <SideChats
+            setActiveTab={setActiveTab}
+            activeTab={activeTab}
+            sendMessageToUser={sendMessageToUser}
+            setSendMessageToUser={setSendMessageToUser}
+            messageUserId={messageUserId}
+            setMessageUserId={setMessageUserId}
+            unreadMessages={unreadMessages}
+          />
+        );
+      case 'progress':
+        return (
+          <SideProgress setActiveTab={setActiveTab} activeTab={activeTab} />
+        );
+      default:
+        return <div />;
+    }
+  };
 
-	console.log('this is messageUserId', messageUserId);
+  console.log('this is messageUserId', messageUserId);
 
-	return (
-		<div className="relative flex  w-screen max-w-7xl border-box h-[94vh] mt-[6vh]  justify-center items-center m-auto">
-			<div className="md:w-1/3 h-full p-2 text-black m-auto">{renderLeftSide()}</div>
-			<div className="md:w-3/4 h-full p-2 text-black">{renderRightSide()}</div>;
-		</div>
-	);
+  return (
+    <div className='relative flex  w-screen max-w-7xl h-[94vh] pt-[7vh]  justify-center items-center m-auto '>
+      <div className='md:w-1/4 h-full p-2 text-black m-auto'>
+        {renderLeftSide()}
+      </div>
+      <div className='flex justify-center  w-3/4 h-full p-2 text-black'>
+        {renderRightSide()}
+      </div>
+      ;
+    </div>
+  );
 };
 export default Dashboard;

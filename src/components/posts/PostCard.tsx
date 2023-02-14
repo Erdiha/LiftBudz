@@ -1,16 +1,15 @@
-import React, { useRef } from 'react';
-import useAuth from '@/firebase/usefirebaseUI';
-import { useUserLibrary } from '../../firebase/usefirebaseUI';
+import React, { useRef, useState } from 'react';
 import Avatar from 'avataaars';
-import { useGetAvatar } from '@/hooks/useFetch';
-import EditPost from './EditPost';
-import { AiOutlineLike, AiOutlineComment } from 'react-icons/ai';
+import { AiOutlineLike, AiOutlineComment, BsTrash } from 'react-icons/all';
 import { IPost } from './types';
-import useFindUser from '../../hooks/useFindUser';
-import { db } from '@/firebase/firebase';
 import Comment from './Comment';
+import EditPost from './EditPost';
+import Reply from './Reply';
+import { useGetAvatar } from '@/hooks/useFetch';
+import useFindUser from '../../hooks/useFindUser';
 import { sorting } from '../../utils/helperFuntions';
-import { BsTrash } from 'react-icons/bs';
+import useAuth, { useUserLibrary } from '@/firebase/usefirebaseUI';
+import { db } from '@/firebase/firebase';
 
 const Postcard = (post: IPost) => {
   const { currentUser } = useAuth();
@@ -31,21 +30,19 @@ const Postcard = (post: IPost) => {
         } else {
           likes.splice(index, 1);
         }
-        await commentRef.update({
-          likes: likes,
-        });
+        await commentRef.update({ likes });
       } else {
-        console.error("Document doesn't exist.");
+        alert("Document doesn't exist.");
       }
     } catch (error) {
-      console.error(error);
+      alert(error);
     }
   };
-
+  console.log('this is mockpost', post);
   return (
-    <div key={post.id} className='flex w-full p-8 py-16 '>
+    <div key={post.id} className='flex w-full p-8 py-8 '>
       <div className='flex flex-col border shadow-md overflow-y-auto w-full '>
-        <div className='w-full flex flex-col bg-gradient  bg-gray-100/90   rounded  ring-gray-900/10  h-full'>
+        <div className='w-full flex flex-col bg-gradient   rounded  ring-gray-900/10  h-full'>
           <div className='flex flex-col w-full '>
             <div className='flex items-center w-full  h-24'>
               <div className='w-[85%] flex pl-4'>
@@ -59,8 +56,8 @@ const Postcard = (post: IPost) => {
                     {useFindUser(post?.uid)?.displayName}
                   </span>
                   <span className='text-[12px] text-gray-600 italic font-light'>
-                    {post?.createdAt?.toDate()?.toLocaleTimeString()}{' '}
-                    {post?.createdAt?.toDate()?.toLocaleDateString()}
+                    {/* {post?.createdAt?.toDate()?.toLocaleTimeString()}{' '}
+                    {post?.createdAt?.toDate()?.toLocaleDateString()} */}
                   </span>
                 </span>
               </div>
@@ -77,8 +74,8 @@ const Postcard = (post: IPost) => {
               />
             )}
           </div>
-          <div className='w-full min-h-24   flex px-2 pt-8 flex-col bg-white rounded '>
-            <div className='pb-8 p-2 bg-gray-100 h-full rounded-lg'>
+          <div className='w-full min-h-24   flex px-2 pt-1 flex-col bg-white rounded '>
+            <div className='pb-8 p-2  h-full rounded-lg'>
               {post?.text && (
                 <p className='text-base text-gray-800 w-[80%]'>{post?.text}</p>
               )}
@@ -86,23 +83,22 @@ const Postcard = (post: IPost) => {
             <div className='flex  text-2xl w-[20%]   p-2 px-4  justify-between min-w-40 '>
               <span
                 onClick={handleLikes}
-                className={`flex items-center cursor-pointer ${post?.likes?.length > 0 ? 'text-blue-400':'text-black'}
+                className={`flex items-center cursor-pointer ${
+                  post?.likes?.length > 0 ? 'text-blue-400' : 'text-black'
+                }
                 }`}>
-               
-                  <AiOutlineLike
-                 
-                  /> {post?.likes?.length > 0 && (
-                    <span className='flex jusfity-center items-center text-sm font-bold text-red-400 min-w-4 cursor-default'>
-                      {post?.likes?.length}
-                    </span>
-                  )}
-               
-
-               
+                <AiOutlineLike />{' '}
+                {post?.likes?.length > 0 && (
+                  <span className='flex jusfity-center items-center text-sm font-bold text-red-400 min-w-4 cursor-default'>
+                    {post?.likes?.length}
+                  </span>
+                )}
               </span>
               <span
                 onClick={() => setOpenComment(true)}
-                className={`flex items-center cursor-pointer ${post?.comments?.length > 0 ? 'text-blue-400':'text-black'}  ${
+                className={`flex items-center cursor-pointer ${
+                  post?.comments?.length > 0 ? 'text-blue-400' : 'text-black'
+                }  ${
                   openComment ? 'animate-bounce text-red-500 scale-105' : ''
                 }`}>
                 <AiOutlineComment />
@@ -117,30 +113,11 @@ const Postcard = (post: IPost) => {
               <Comment post={post} setOpenComment={setOpenComment} />
             )}
           </div>
-          <section className="flex flex-col bg-orange-300 scroll-y-auto"> {sorting(post?.comments, 'comment','desc').map((comment: any) => {
-            return (
-              <div key={comment?.id} className='bg-gray-100 p-4 m-4 relative rounded '>
-            <div className="flex gap-1 items-center"> 
-            <Avatar
-                  style={{ width: '20px', height: '20px' }}
-                  avatarStyle='Circle'
-                  {...getAvatar}
-                /> 
-                  <h3>{comment?.userName}</h3>
-                </div>
-                <div>
-                  <p className='text-gray-700'>{comment?.text}</p>
-                <p className='text-gray-500 text-xs'>
-                  {new Date(comment?.timestamp).toLocaleDateString()}{' '}
-                  {new Date(comment?.timestamp).toLocaleTimeString()}
-                </p></div>
-                <div className="absolute -bottom-4 right-4 flex justify-center gap-4 bg-white  rounded p-2 items-center"><button>reply</button><button><AiOutlineLike/></button><button><BsTrash/></button></div>
-              </div>
-            );
-          })}</section>
-         
 
-          <div className='flex-1 overflow-y-scroll'></div>
+          {post?.comments?.length > 0 &&
+            post?.comments?.map((comment: any) => (
+              <Reply key={comment?.id} comment={comment} />
+            ))}
         </div>
       </div>
     </div>

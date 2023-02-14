@@ -10,7 +10,7 @@ import Document, {
 export default class MyDocument extends Document {
   render(): ReactElement {
     return (
-      <Html lang="en">
+      <Html lang='en'>
         <Head></Head>
         <body>
           <Main />

@@ -1,13 +1,17 @@
 import { db } from '../../../firebase/firebase';
 import useAuth, { useUserLibrary } from '@/firebase/usefirebaseUI';
 import Avatar from 'avataaars';
-import { Button,Card } from '@material-tailwind/react';
+import { Button, Card } from '@material-tailwind/react';
 import { useGetMessages } from '@/components/data';
 import { useGetUsers } from '../../data';
 import Loading from '@/utils/Loading';
 import { useDelete } from '@/hooks/useDelete';
 import { AiFillDelete } from 'react-icons/ai';
 import { Tooltip } from '@material-tailwind/react';
+import { useEffect } from 'react';
+import { fetchChats } from '../../../redux/chatsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 function SideChats({
   setActiveTab,
   activeTab,
@@ -18,20 +22,23 @@ function SideChats({
 }: any) {
   const { currentUser } = useAuth();
   const curUserEMAIL: any = currentUser?.email;
+  //redux calls
+  const dispatch: any = useDispatch();
+  const allChats = useSelector((state: RootState) => state.chats.chats);
   const { deleteForMe, dLoading, dError } = useDelete();
   const { getCurrentUser } = useUserLibrary(useAuth().currentUser?.uid);
-  const { allMessages, l, e }: any = useGetMessages(
-    messageUserId,
-    curUserEMAIL,
-    true,
-  );
+
+  useEffect(() => {
+    dispatch(fetchChats());
+  }, [dispatch]);
+
   const { users, loading, error } = useGetUsers(curUserEMAIL, 'friends');
 
   const handleUserMessageClicked = async (user: any) => {
     if (!user) {
       return;
     } else {
-      allMessages?.filter((m: any) => {
+      allChats?.filter((m: any) => {
         if (user.email === m.conversationId[0]) {
           const messageRef = db.collection('messages').doc(m.id);
           messageRef.update({
@@ -43,9 +50,9 @@ function SideChats({
       setMessageUserId(user?.email);
     }
   };
-
+  console.log('allChats', allChats);
   return (
-    <div className='flex flex-col md:h-full bg-gray-200 bottom-0 w-full  p-8 gap-2 top-16 md:top-0 md:relative absolute'>
+    <div className='flex flex-col md:h-full bg-gray-200 bottom-0 w-full  p-8 gap-2 top-16 md:top-0 md:relative absolute mt-10'>
       <Button
         className='w-16 flex justify-center'
         onClick={() => setActiveTab('posts')}>
@@ -58,20 +65,21 @@ function SideChats({
           ) : (
             users?.map(
               (user: any) =>
-                allMessages?.find(
+                allChats?.find(
                   (m: any) =>
                     m.conversationId.includes(user.email) &&
                     !m.senderDeleted &&
                     m.conversationId.includes(currentUser?.email),
                 ) && (
-                  <Card color='teal'
+                  <Card
+                    color='teal'
                     key={user?.id}
-                    className={`flex  rounded shadow-md backdrop-blur-sm items-center p-3  w-48 group ${
+                    className={`flex rounded shadow-md backdrop-blur-sm items-center p-3 group  ${
                       messageUserId === user.email
-                        ? 'bg-blue-200 scale-105'
-                        : 'bg-blue-gray-50 scale-100'
-                    }`}>
-                    {allMessages?.find(
+                        ? 'bg-blue-200 scale-105 text-white'
+                        : 'bg-blue-gray-50 scale-100  text-gray-900 '
+                    } transition-all duration-400 ease-in-out `}>
+                    {allChats?.find(
                       (m: any) =>
                         m.conversationId[1] === curUserEMAIL &&
                         m.conversationId[0] === user.email &&
@@ -100,13 +108,14 @@ function SideChats({
                       }}
                       {...user.photoURL}
                       avatarStyle='Circle'
+                      className='hidden group-hover:block '
                     />
-                    <div className='pl-2'>
+                    <div className='pl-2 w-full px-2'>
                       <div className='font-semibold'>
                         <button
                           onClick={() => handleUserMessageClicked(user)}
-                          className='hover:underline'>
-                          {user?.displayName}
+                          className='hover:underline flex  text-start '>
+                          {user?.displayName.toUpperCase()}
                         </button>
                       </div>
                       <div className='text-xs text-gray-600'>Online</div>
