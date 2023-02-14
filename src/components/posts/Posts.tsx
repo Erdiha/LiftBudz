@@ -5,11 +5,27 @@ import { Button } from '@material-tailwind/react';
 import { useFetchDB } from '../../hooks/useFetch';
 import { IPost } from './types';
 import { toast } from 'react-toastify';
+import { db } from '@/firebase/firebase';
 
 function Posts() {
 	const [openPostFields, setOpenPostFields] = useState<boolean>(false);
+	const [posts,setPosts] = useState<IPost[]>()
 	const postRef = useRef<HTMLDivElement>(null);
-	const posts: IPost[] = useFetchDB('posts', 'desc');
+	
+	React.useEffect(() => {
+		const unsubscribe = db.collection('posts').onSnapshot((snapshot) => {
+		  const postsData:any = snapshot.docs.map((doc) => {
+			return {
+			  id: doc.id,
+			  ...doc.data(),
+			} 
+		  });
+		  setPosts(postsData);
+		});
+	
+		return () => unsubscribe();
+	  }, [openPostFields,[]]);
+	//const posts: IPost[] = useFetchDB('posts', 'desc');
 	return (
 		<div className="flex flex-col h-full relative">
 			

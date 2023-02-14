@@ -2,26 +2,31 @@ import { Input } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import useAuth from '@/firebase/usefirebaseUI';
 import Loading from '@/utils/Loading';
+import { useGetUsers } from '../data';
 
 export default function SelectRecipient({
 	sendMessageToUser,
 	setMessageUserId,
 	setSendMessageToUser,
-	users,
+	
 	loading,
 	error,
 }: any) {
 	const { currentUser } = useAuth();
 	const [searchTerm, setSearchTerm] = useState('');
-	const [filteredUsers, setFilteredUsers]: any = useState(users);
+	const {
+		users,
+		loading: usersLoading,
+		error: usersError,
+	  }: any = useGetUsers(currentUser?.email, 'friends');
+	  const [filteredUsers, setFilteredUsers]: any = useState(users);
 	useEffect(() => {
 		setFilteredUsers(users);
 	}, []);
-
 	useEffect(() => {
 		setFilteredUsers(
-			users?.filter((user: any) =>
-				user?.displayName.toLowerCase().includes(searchTerm?.toLowerCase())
+			users?.filter((user: any) => 
+				 user?.displayName.toLowerCase().includes(searchTerm?.toLowerCase()) 
 			)
 		);
 	}, [searchTerm]);

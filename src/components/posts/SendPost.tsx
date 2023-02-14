@@ -7,10 +7,11 @@ import { serverTimestamp } from 'firebase/firestore';
 import uuid from 'react-uuid';
 import useFileUpload from '../../hooks/useFileUpload';
 import Loading from '@/utils/Loading';
+import useAuth from '@/firebase/usefirebaseUI';
 
 function SendPost({ setOpenPostFields }: any) {
 	const [postValue, setPostValue] = useState({ text: '' });
-
+	const {currentUser} = useAuth();
 	const [imageUpload, setImageUpload] = useState(null);
 	const { file, downloadURL, handleButtonClick, imageLoading } =
 		useFileUpload();
@@ -22,6 +23,7 @@ function SendPost({ setOpenPostFields }: any) {
 	async function sendPost(event: any) {
 		event.preventDefault();
 		const { uid }: any = auth.currentUser;
+		const { email }: any = auth.currentUser;
 
 		await db.collection('posts').add({
 			text: postValue.text,
@@ -31,6 +33,7 @@ function SendPost({ setOpenPostFields }: any) {
 			comments: [],
 			likes: [],
 			timeStamp: Date.now(),
+			userEmail:email ||currentUser?.email
 		});
 		setPostValue(initialState);
 		setOpenPostFields((prev: boolean) => !prev);

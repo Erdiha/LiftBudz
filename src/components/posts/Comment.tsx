@@ -1,55 +1,100 @@
-import React, { useState } from 'react';
-
-interface Comment {
+import React, { Dispatch, SetStateAction, useState } from 'react';
+import { IPost } from './types';
+import { Textarea,Button } from "@material-tailwind/react";
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import useAuth,{ useUserLibrary } from '../../firebase/usefirebaseUI';
+import firebase,{ db } from '@/firebase/firebase';
+import {GiCancel} from 'react-icons/gi'
+import uuid from 'react-uuid';
+interface IComment {
+	id?: string;
 	text: string;
+	receiver: string;
+	sender:string;
+	timeStamp:any;
+	likes:any;
+	subComment:any
+	userName:string;
+	parentID:string;
+	isParent:boolean;
 }
 
-const CommentAndLikeButton: React.FC = () => {
-	const [likes, setLikes] = useState(0);
-	const [comments, setComments] = useState<Comment[]>([]);
-	const [comment, setComment] = useState('');
-
-	const handleLike = () => {
-		setLikes(likes + 1);
-	};
-
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+const Comments : React.FC<{ post: IPost, setOpenComment: Dispatch<SetStateAction<boolean>> }> = ({ post, setOpenComment }) => {
+	const [comments, setComments] = useState<any>([]);
+	const [text, setText] = useState('');
+    const {currentUser} =useAuth();
+	const {getCurrentUser} = useUserLibrary(currentUser?.uid)
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		setComments([...comments, { text: comment }]);
-		setComment('');
-	};
-
+	  
+		const newComment: IComment = {
+		  id: uuid(),
+		  text: text.trim(),
+		  sender: currentUser?.email || '',
+		  receiver: post?.uid || '',
+		  timeStamp: Date.now(),
+		  likes: [],
+		  subComment: [],
+		  parentID: post?.uid || '',
+		  userName: getCurrentUser?.displayName || '',
+		  isParent: true
+		};
+	  
+		try {
+			await db.collection('posts').doc(post?.id).update({
+				comments: firebase.firestore.FieldValue.arrayUnion(newComment),
+				createdAt: firebase.firestore.FieldValue.serverTimestamp()
+			  });
+		  
+		  setText('');
+		} catch (error) {
+		  console.error(error);
+		}
+		setOpenComment(prev=>!prev)
+	  };
+	  
+  console.log(comments)
 	return (
-		<div className="flex flex-col">
-			<button
-				className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-				onClick={handleLike}
-			>
-				Like ({likes})
-			</button>
-			<form className="mt-4" onSubmit={handleSubmit}>
-				<input
-					className="border border-gray-400 p-2"
-					type="text"
-					value={comment}
-					onChange={e => setComment(e.target.value)}
-				/>
-				<button
-					className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
-					type="submit"
-				>
-					Submit
-				</button>
-			</form>
-			<ul className="mt-4">
-				{comments.map((c, i) => (
-					<li key={i} className="p-2 border border-gray-400">
-						{c.text}
-					</li>
-				))}
-			</ul>
+	  <div className="flex flex-col ">
+		
+		
+		<button onClick={()=>setOpenComment((prev)=>!prev)} className=" flex w-full  items-center justify-end p-2 text-xl text-red-400"><GiCancel/></button>
+		<form onSubmit={handleSubmit} className="mb-4">
+		  <Textarea
+			className="border p-2 w-full"
+			label="Write a comment..."
+			value={text}
+			onChange={(e) => setText(e.target.value)}
+		  />
+		  <Button type="submit" className="bg-blue-500 text-white p-2 mt-2">
+			Submit
+		  </Button>
+		</form>
+		<div className="flex-1 overflow-y-scroll">
+		  {comments?.map((comment:any) => 
+			 {return <div key={comment?.id} className="bg-gray-300 p-4 mb-4">
+			  <p className="text-gray-700">{comment?.text}</p>
+			  <p className="text-gray-500 text-xs">
+				{new Date(comment?.createdAt).toLocaleString()}
+			  </p>
+			</div>
+		})}
 		</div>
+	  </div>
 	);
-};
+  };
+  
+  export default Comments;
 
-export default CommentAndLikeButton;
+// const newComment: IComment = {
+			
+// 	text: commentText,
+// 	sender:currentUser?.email!,
+// 	receiver:post?.uid,
+// 	timeStamp: Date.now(),
+// 	createdAt: serverTimestamp(),
+// 	likes:post?.comments?.likes,
+// 	subComment:post?.comments?.subComment,
+// 	parentID:post?.uid,
+// 	userName:getCurrentUser?.displayName
+// };

@@ -31,6 +31,7 @@ const ChatContent = ({
 }: Props) => {
 	
 	const { deleteItem, dLoading, dError } = useDelete();
+	
 	const getAvatar = useGetAvatar();
 	const {getCurrentUser} = useUserLibrary(useAuth().currentUser?.uid);
 	const handleDelete = (ID: string) => {

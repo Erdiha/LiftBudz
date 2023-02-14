@@ -29,26 +29,4 @@ const getAUTH = getAuth(firebase.initializeApp(credentials));
 const getDB = getFirestore(firebase.initializeApp(credentials))
 const getStrge = getStorage(firebase.initializeApp(credentials));
 export { auth, db, getStrge,storage, getDB, getAUTH };
-// function useAuthState(firebaseAuth: firebase.auth.Auth) {
-// 	const [user, setUser] = useState<firebase.User | null>(null);
-// 	const [loading, setLoading] = useState(true);
-// 	const [error, setError] = useState<Error | null>(null);
-
-// 	React.useEffect(() => {
-// 		const unsubscribe = firebaseAuth.onAuthStateChanged(
-// 			(user: any) => {
-// 				setUser(user);
-// 				setLoading(false);
-// 			},
-// 			(error: any) => {
-// 				setError(error);
-// 				setLoading(false);
-// 			}
-// 		);
-// 		return () => unsubscribe();
-// 	}, [firebaseAuth]);
-
-// 	return [user, loading, error,storage,getStrge];
-// }
-
 export default firebase;

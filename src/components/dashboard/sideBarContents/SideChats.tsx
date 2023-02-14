@@ -1,7 +1,7 @@
 import { db } from '../../../firebase/firebase';
 import useAuth, { useUserLibrary } from '@/firebase/usefirebaseUI';
 import Avatar from 'avataaars';
-import { Button } from '@material-tailwind/react';
+import { Button,Card } from '@material-tailwind/react';
 import { useGetMessages } from '@/components/data';
 import { useGetUsers } from '../../data';
 import Loading from '@/utils/Loading';
@@ -52,7 +52,7 @@ function SideChats({
         BACK
       </Button>
       <div className='flex-flex-col bg-white w-full h-full rounded-lg p-4  relative overflow-y-auto scroll-y-auto'>
-        <div className='grid grid-flow-row gap-3 justify-center  rounded '>
+        <div className='grid grid-flow-row gap-3 justify-center  rounded w-full '>
           {loading ? (
             <Loading />
           ) : (
@@ -64,9 +64,9 @@ function SideChats({
                     !m.senderDeleted &&
                     m.conversationId.includes(currentUser?.email),
                 ) && (
-                  <div
+                  <Card color='teal'
                     key={user?.id}
-                    className={`flex rounded shadow-md items-center p-3  w-full group ${
+                    className={`flex  rounded shadow-md backdrop-blur-sm items-center p-3  w-48 group ${
                       messageUserId === user.email
                         ? 'bg-blue-200 scale-105'
                         : 'bg-blue-gray-50 scale-100'
@@ -111,7 +111,7 @@ function SideChats({
                       </div>
                       <div className='text-xs text-gray-600'>Online</div>
                     </div>
-                  </div>
+                  </Card>
                 ),
             )
           )}

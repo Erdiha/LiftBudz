@@ -29,12 +29,14 @@ const Chat = ({
     users,
     loading: usersLoading,
     error: usersError,
-  }: any = useGetUsers(curUserEMAIL, '');
+  }: any = useGetUsers(curUserEMAIL, 'all');
+  
   const {
     allMessages,
     loading: messagesLoading,
     error: messagesError,
   }: any = useGetMessages(messageUserId, curUserEMAIL, false);
+  
   const [inputValue, setInputValue] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
