@@ -1,23 +1,25 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities; 
+@tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap'); 
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+/* @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap'); 
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap"); */
 
-@layer base{html {
-  overflow-y: overlay;
-}}
+@layer base {
+  html {
+    overflow-y: overlay;
+  }
+}
 
 @layer components {
   .slide-down-show {
     animation: slide-down 0.3s ease forwards;
   }
-  
+
   .slide-down-hide {
     animation: slide-up 0.3s ease forwards;
   }
-  
+
   @keyframes slide-down {
     from {
       transform: translateY(-10px);
@@ -28,7 +30,7 @@
       opacity: 1;
     }
   }
-  
+
   @keyframes slide-up {
     from {
       transform: translateY(0);
@@ -39,8 +41,7 @@
       opacity: 0;
     }
   }
-  
-  
+
   .scroll-bar::-webkit-scrollbar {
     width: 0.55rem;
     height: 0.25rem;
@@ -58,11 +59,21 @@
 
   .scroll-bar::-webkit-scrollbar-thumb {
     border-radius: 0.25rem;
-  } 
-  .imgContainer{      
-        mask-image:-webkit-gradient(linear, left top, left bottom, 
-    from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));;
-    -webkit-mask-image:-webkit-gradient(linear, left top, left bottom, 
-    from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+  }
+  .imgContainer {
+    mask-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      from(rgba(0, 0, 0, 1)),
+      to(rgba(0, 0, 0, 0))
+    );
+    -webkit-mask-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      from(rgba(0, 0, 0, 1)),
+      to(rgba(0, 0, 0, 0))
+    );
   }
 }

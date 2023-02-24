@@ -9,6 +9,7 @@ import SideProgress from '../components/dashboard/sideBarContents/SideProgress';
 import Chat from '../components/chat/Chat';
 
 import { useGetUsers } from '../components/data';
+import { useMediaQuery } from '@react-hook/media-query';
 
 const Dashboard: React.FC = () => {
   const { currentUser } = useAuth();
@@ -18,7 +19,10 @@ const Dashboard: React.FC = () => {
   const [messageUserId, setMessageUserId] = useState();
   const unreadMessages = useRef<number>(0);
   const dashboardRightSide = useRef<HTMLDivElement>(null);
+  const [openSideBar, setOpenSideBar] = useState(false);
   const { users, loading, error } = useGetUsers(currentUser?.email, 'friends');
+
+  const isSmallScreen = useMediaQuery('(max-width: 720px)');
 
   useEffect(() => {
     if (dashboardRightSide.current) {
@@ -30,23 +34,31 @@ const Dashboard: React.FC = () => {
   const renderRightSide = () => {
     switch (activeTab) {
       case 'posts':
-        return <Posts />;
+        return <Posts setOpenSideBar={setOpenSideBar} />;
       case 'friends':
         return <Friends activeTab={activeTab} setActiveTab={setActiveTab} />;
       case 'messages':
-        return (
-          sendMessageToUser && (
-            <Chat
-              setActiveTab={setActiveTab}
-              activeTab={activeTab}
-              sendMessageToUser={sendMessageToUser}
-              setSendMessageToUser={setSendMessageToUser}
-              messageUserId={messageUserId}
-              setMessageUserId={setMessageUserId}
-              users={users}
-              unreadMessages={unreadMessages}
-            />
-          )
+        return sendMessageToUser ? (
+          <Chat
+            setActiveTab={setActiveTab}
+            activeTab={activeTab}
+            sendMessageToUser={sendMessageToUser}
+            setSendMessageToUser={setSendMessageToUser}
+            messageUserId={messageUserId}
+            setMessageUserId={setMessageUserId}
+            users={users}
+            unreadMessages={unreadMessages}
+          />
+        ) : (
+          <SideChats
+            setActiveTab={setActiveTab}
+            activeTab={activeTab}
+            sendMessageToUser={sendMessageToUser}
+            setSendMessageToUser={setSendMessageToUser}
+            messageUserId={messageUserId}
+            setMessageUserId={setMessageUserId}
+            unreadMessages={unreadMessages}
+          />
         );
       case 'progress':
         return <div className='w-full h-full p-2 text-black'>PROGRESS</div>;
@@ -58,7 +70,13 @@ const Dashboard: React.FC = () => {
   const renderLeftSide = () => {
     switch (activeTab) {
       case 'posts':
-        return <SideMenu setActiveTab={setActiveTab} activeTab={activeTab} />;
+        return (
+          <SideMenu
+            setActiveTab={setActiveTab}
+            activeTab={activeTab}
+            setOpenSideBar={setOpenSideBar}
+          />
+        );
       case 'friends':
         return (
           <SideFriends setActiveTab={setActiveTab} activeTab={activeTab} />
@@ -87,14 +105,32 @@ const Dashboard: React.FC = () => {
   console.log('this is messageUserId', messageUserId);
 
   return (
-    <div className='relative flex  w-screen max-w-7xl h-[94vh] pt-[7vh]  justify-center items-center m-auto '>
-      <div className='md:w-1/4 h-full p-2 text-black m-auto'>
-        {renderLeftSide()}
+    <div
+      className={`relative flex w-full md:max-w-7xl h-[94vh]   justify-end items-center ${
+        openSideBar ? 'bg-white/50 backdrop-blur' : ''
+      }`}>
+      <div
+        className={` h-screen  z-50  
+          ${openSideBar && ' fixed left-0 bottom-0 w-full   bg-black/70'}
+            `}>
+        <div
+          className={`   ${
+            openSideBar
+              ? 'fixed  left-0 bottom-0  w-[75%] md:w-[30%]  top-10 bg-gray-100   ease-in duration-500 text-black '
+              : 'fixed left-[-100%] bottom-0 ease-in-out duration-500'
+          }
+             `}>
+          {' '}
+          {renderLeftSide()}
+        </div>
+        {/* {isSmallScreen && openSideBar && renderLeftSide()} */}
       </div>
-      <div className='flex justify-center  w-3/4 h-full p-2 text-black'>
+
+      <div
+        className={` w-full
+          flex justify-center  h-full  text-black overflow-hidden`}>
         {renderRightSide()}
       </div>
-      ;
     </div>
   );
 };

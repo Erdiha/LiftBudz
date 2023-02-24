@@ -5,7 +5,6 @@ import { db } from '../../firebase/firebase';
 export const useGetMessages = (
   messageUserId: string | undefined,
   curUserEMAIL: string | undefined,
-  all: boolean = false,
 ): { allMessages: object[]; loading: boolean; error: any } => {
   const messagesRef = db.collection('messages').orderBy('timestamp', 'asc');
 

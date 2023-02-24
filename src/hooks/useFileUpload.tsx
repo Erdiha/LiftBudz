@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { storage } from '@/firebase/firebase';
+import { storage, ref, deleteObject, db, auth } from '@/firebase/firebase';
 
 async function uploadPhoto(file: File) {
   // Create a reference to the file to be uploaded
@@ -9,6 +9,10 @@ async function uploadPhoto(file: File) {
   // Get the download URL for the uploaded photo
   const downloadURL = await snapshot.ref.getDownloadURL();
   return downloadURL;
+}
+
+interface Props {
+  imageUrl: string | null;
 }
 
 export default function useFileUpload() {
@@ -24,10 +28,19 @@ export default function useFileUpload() {
 
     if (selectedFile) {
       try {
-        setFile(selectedFile);
         const url = await uploadPhoto(selectedFile);
+        setFile(selectedFile);
         setDownloadURL(url);
         setLoading(false);
+
+        const userRef = db
+          .collection('users')
+          .where('userId', '==', auth.currentUser?.uid);
+        const snapshot = await userRef.get();
+
+        snapshot.forEach(async (doc) => {
+          await doc.ref.update({ imageUrl: url });
+        });
       } catch (error) {
         console.error(error);
         setLoading(false);
@@ -35,12 +48,28 @@ export default function useFileUpload() {
     }
   };
 
+  const handleDelete = () => {
+    if (downloadURL) {
+      const storageRef = storage.refFromURL(downloadURL);
+
+      deleteObject(storageRef)
+        .then(() => {
+          console.log('Image deleted successfully');
+          setDownloadURL(null);
+        })
+        .catch((error) => {
+          console.error('Error deleting image:', error);
+        });
+    }
+  };
+
   const handleButtonClick = () => {
-    const inputElement: any = document.createElement('input');
+    const inputElement: HTMLInputElement | any =
+      document.createElement('input');
     inputElement.type = 'file';
     inputElement.onchange = handleFileChange;
     inputElement.click();
   };
 
-  return { file, downloadURL, handleButtonClick, imageLoading };
+  return { file, downloadURL, handleButtonClick, imageLoading, handleDelete };
 }

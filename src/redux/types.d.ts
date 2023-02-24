@@ -24,6 +24,7 @@ export interface UsersState {
 }
 
 export interface IChat {
+  conversationId: any;
   sender: String;
   receiver: String;
   timestamp: any;

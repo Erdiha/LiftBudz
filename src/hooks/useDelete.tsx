@@ -1,4 +1,4 @@
-import { db } from '@/firebase/firebase';
+import { db, storage } from '@/firebase/firebase';
 import { useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
 
@@ -55,7 +55,18 @@ export const useDelete = () => {
     setError(null);
 
     try {
-      await db.doc(`${type}/${ID}`).delete();
+      const docRef = db.doc(`${type}/${ID}`);
+      const doc = await docRef.get();
+      const message = doc.data();
+      // Check if the message has an image URL
+      if (message?.image) {
+        // Get a reference to the image file in Firebase Storage
+        const storageRef = storage.refFromURL(message.image);
+        // Delete the image file from Firebase Storage
+        await storageRef.delete();
+      }
+      // Delete the message document from Firestore
+      await docRef.delete();
     } catch (e: any) {
       setError(e);
     } finally {

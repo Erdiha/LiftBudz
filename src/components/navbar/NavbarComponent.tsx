@@ -1,11 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import useAuth from '@/firebase/usefirebaseUI';
 import { auth } from '@/firebase/firebase';
 import Link from 'next/link';
 
 const Navbar = () => {
+  const dDownRef: any = useRef();
   const [showDropdown, setShowDropdown] = useState(false);
+
+  // useEffect(() => {
+  //   const handleMouseDown = (event: any) => {
+  //     if (event.target !== dDownRef.current && setShowDropdown) {
+  //       setShowDropdown(!showDropdown);
+  //     }
+  //     console.log(event.target);
+  //   };
+
+  //   window.addEventListener('mousedown', handleMouseDown);
+
+  //   return () => {
+  //     window.removeEventListener('mousedown', handleMouseDown);
+  //   };
+  // }, []);
 
   const { logout } = useAuth();
   const handleLogout = async () => {
@@ -15,12 +31,12 @@ const Navbar = () => {
 
   useEffect(() => {
     setShowDropdown(false);
-  }, [router.asPath, []]);
+  }, [router.asPath]);
 
   console.log(router);
 
   return (
-    <nav className='flex justify-center items-center bg-gray-900 fixed w-screen z-[9999] top-0 p-3 md:p-0'>
+    <nav className='flex justify-center items-center bg-gray-900 fixed w-screen z-[9999] p-3  md:p-0'>
       <div className='flex items-center justify-between flex-wrap max-w-7xl w-full'>
         <div className='flex items-center flex-shrink-0 text-white'>
           <Link
@@ -32,7 +48,7 @@ const Navbar = () => {
             </h1>
           </Link>
         </div>
-        <div className='block lg:hidden '>
+        <div className='block md:hidden '>
           <button
             className='flex items-center px-3 py-2 border rounded text-gray-200 border-gray-400 hover:text-white hover:border-white transform-all ease-in-out duration-300'
             onClick={() => setShowDropdown(!showDropdown)}>
@@ -47,18 +63,19 @@ const Navbar = () => {
         </div>
 
         <div
-          className={`w-full flex-grow lg:flex lg:items-center lg:w-auto bg-gray-900 justify-between py-4 ${
+          ref={dDownRef}
+          className={`w-full flex-grow md:flex md:items-center md:w-auto bg-gray-900 justify-between py-4 ${
             showDropdown ? 'block ' : 'hidden'
           }  p-2 py-4`}>
-          <div className='text-md lg:flex-grow  md:p-0  md:text-xl md:flex md:justify-center md:gap-10 py-4'>
+          <div className='text-md md:flex-grow  md:p-0  md:text-xl md:flex md:justify-center md:gap-10 py-4'>
             <Link
-              href='/Dashboard'
-              onClick={() => router.push('/Dashboard')}
+              href='/'
+              onClick={() => router.push('/')}
               className={` ${
-                router.asPath === '/Dashboard'
+                router.asPath === '/'
                   ? 'md:border-b-4 md:border-blue-400 md:backdrop-blur gradient text-gray-200 '
                   : 'bg-transparent backdrop-blur-0 text-gray-200'
-              } block mt-4 lg:inline-block lg:mt-0 text-gray-200 hover:text-white mr-4 md:p-2 py-2 rounded`}>
+              } block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4 md:p-2 py-2 rounded`}>
               Dashboard
             </Link>
             <Link
@@ -68,7 +85,7 @@ const Navbar = () => {
                 router.asPath === '/Profile'
                   ? 'md:border-b-4 md:border-blue-400 md:backdrop-blur gradient text-gray-200 '
                   : 'bg-transparent backdrop-blur-0 text-gray-200'
-              } block mt-4 lg:inline-block lg:mt-0  hover:text-white mr-4 md:p-2 py-2  rounded`}>
+              } block mt-4 md:inline-block md:mt-0  hover:text-white mr-4 md:p-2 py-2  rounded`}>
               Profile
             </Link>
           </div>

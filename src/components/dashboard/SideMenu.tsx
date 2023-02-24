@@ -7,8 +7,13 @@ import {
 } from 'react-icons/hi';
 import { useMediaQuery } from '@react-hook/media-query';
 import { useRouter } from 'next/router';
+import { AiFillCloseCircle } from 'react-icons/ai';
 
-const SideMenu: React.FC<any> = ({ setActiveTab, activeTab }: any) => {
+const SideMenu: React.FC<any> = ({
+  setActiveTab,
+  activeTab,
+  setOpenSideBar,
+}: any) => {
   const menuOptions = [
     { title: 'Posts', icon: <HiDocumentText /> },
     { title: 'Messages', icon: <HiChat /> },
@@ -19,37 +24,54 @@ const SideMenu: React.FC<any> = ({ setActiveTab, activeTab }: any) => {
   const handleTabClick = (tab: string) => {
     console.log('this is tab', tab);
     setActiveTab(tab);
+    setOpenSideBar((prev: boolean) => !prev);
   };
 
-  const renderMenuOptions = () => {
-    return menuOptions.map((option, index) => (
-      <button
-        onClick={() => handleTabClick(option.title.toLowerCase())}
-        key={index}
-        className={` ${
-          activeTab === option.title.toLowerCase()
-            ? 'bg-gray-200'
-            : 'bg-transparent'
-        } flex items-center my-4 cursor-pointer p-2 md:hover:backdrop-blur-md md:hover:bg-gray-200`}>
-        {option.icon}
-        <span className='ml-2'>{option.title}</span>
-      </button>
-    ));
-  };
+  // const renderMenuOptions = () => {
+  //   return menuOptions.map((option, index) => (
+  //     <button
+  //       onClick={() => handleTabClick(option.title.toLowerCase())}
+  //       key={index}
+  //       className={` ${
+  //         activeTab === option.title.toLowerCase()
+  //           ? 'bg-gray-200'
+  //           : 'bg-transparent'
+  //       } flex items-center my-4 cursor-pointer p-2 `}>
+  //       {option.icon}
+  //       <span className='ml-2'>{option.title}</span>
+  //     </button>
+  //   ));
+  // };
 
-  const isSmallScreen = useMediaQuery('(max-width: 640px)');
+  const isSmallScreen = useMediaQuery('(max-width: 780px)');
 
   return (
-    <div
-      className={`${
-        isSmallScreen
-          ? 'fixed top-[8vh] left-0 h-full translate-y-[100%] bg-red-200 z-10 '
-          : 'w-full h-full bg-white shadow-lg flex flex-col'
-      }`}>
-      <div className='flex p-4 font-bold text-lg border-b border-gray-200'>
-        Menu
+    <div className='w-full h-full bg-black/20 shadow-lg flex flex-col'>
+      <div className='flex justify-between p-4'>
+        <span className='flex flex-col p-4 font-bold text-lg border-b border-gray-200'>
+          Menu
+        </span>
+        <button
+          onClick={() => setOpenSideBar((prev: boolean) => !prev)}
+          className='hover:scale-105 hover:text-red-400 transition-all ease duration-300'>
+          <AiFillCloseCircle size={30} />
+        </button>
       </div>
-      <div className='flex flex-col p-4 '>{renderMenuOptions()}</div>
+      <div className='flex flex-col p-4'>
+        {menuOptions.map((option) => (
+          <button
+            onClick={() => handleTabClick(option.title.toLowerCase())}
+            key={option.title.toLowerCase()}
+            className={`${
+              activeTab === option.title.toLowerCase()
+                ? 'bg-gray-200'
+                : 'bg-transparent'
+            } flex items-center my-4 cursor-pointer p-2`}>
+            {option.icon}
+            <span className='ml-2'>{option.title}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

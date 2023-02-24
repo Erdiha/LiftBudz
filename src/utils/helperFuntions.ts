@@ -4,6 +4,14 @@ export function capitalizeWords(str: string) {
   });
 }
 
+export function isUserOnline(lastMessageTimestamp: number) {
+  const thirtyMinutes = 30 * 60 * 1000; // 30 minutes in milliseconds
+  const now = Date.now();
+  const timeSinceLastMessage = now - lastMessageTimestamp;
+  console.log('now is', now);
+  return timeSinceLastMessage <= thirtyMinutes;
+}
+
 export const sorting = (arr: any, type: string, order: string) => {
   const sorted = arr?.sort((a: any, b: any) => {
     if (type === 'name') {

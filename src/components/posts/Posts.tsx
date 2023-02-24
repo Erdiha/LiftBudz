@@ -2,60 +2,52 @@ import React, { useRef, useState } from 'react';
 import PostCard from './PostCard';
 import SendPost from '../posts/SendPost';
 import { Button } from '@material-tailwind/react';
-import { useFetchDB } from '../../hooks/useFetch';
 import { IPost } from './types';
-import { toast } from 'react-toastify';
 import { db } from '@/firebase/firebase';
 import { mockposts } from '../data/data';
-import Link from 'next/link';
 
-function Posts() {
+function Posts({ setOpenSideBar }: any) {
   const [openPostFields, setOpenPostFields] = useState<boolean>(false);
   const [posts, setPosts]: any = useState<any>(mockposts);
   const postRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    const unsubscribe = db.collection('posts').onSnapshot((snapshot) => {
-      const postsData: any = snapshot.docs.map((doc) => {
-        return {
-          id: doc.id,
-          ...doc.data(),
-        };
+    const unsubscribe = db
+      .collection('posts')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot((snapshot) => {
+        const postsData: any = snapshot.docs.map((doc) => {
+          return {
+            id: doc.id,
+            ...doc.data(),
+          };
+        });
+        setPosts(postsData);
       });
-      setPosts(mockposts);
-    });
 
     return () => unsubscribe();
-  }, [openPostFields, []]);
+  }, []);
   //const posts: IPost[] = useFetchDB('posts', 'desc');
   return (
-    <div className='flex flex-col h-full relative'>
+    <div className='flex flex-col h-full relative w-full'>
       <div className='flex  z-200 w-full justify-end pt-14 '>
         {openPostFields ? (
           <SendPost setOpenPostFields={setOpenPostFields} />
         ) : (
-          <>
-            {' '}
+          <div className='flex flex-row justify-between w-full px-8 pb-4 '>
             <Button
-              className='w-full text-xl p-1 mb-4 hidden md:flex  justify-center'
+              className='  '
               variant='gradient'
               onClick={() => setOpenPostFields(true)}>
               POST
             </Button>
-            <div className='flex flex-row justify-between w-full px-8 pb-4 md:hidden'>
-              <Link href='../'>
-                <Button className='justify-start' variant='gradient'>
-                  BACK
-                </Button>
-              </Link>
-              <Button
-                className='md:w-full md:text-xl md:p-1 md:mb-4 '
-                variant='gradient'
-                onClick={() => setOpenPostFields(true)}>
-                POST
-              </Button>
-            </div>
-          </>
+            <Button
+              onClick={() => setOpenSideBar((prev: boolean) => !prev)}
+              className='justify-start'
+              variant='gradient'>
+              Menu
+            </Button>
+          </div>
         )}
       </div>
       <div

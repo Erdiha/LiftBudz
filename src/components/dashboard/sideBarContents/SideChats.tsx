@@ -1,17 +1,18 @@
 import { db } from '../../../firebase/firebase';
 import useAuth, { useUserLibrary } from '@/firebase/usefirebaseUI';
-import Avatar from 'avataaars';
-import { Button, Card } from '@material-tailwind/react';
-import { useGetMessages } from '@/components/data';
+import { Avatar, Button, Card } from '@material-tailwind/react';
 import { useGetUsers } from '../../data';
 import Loading from '@/utils/Loading';
 import { useDelete } from '@/hooks/useDelete';
 import { AiFillDelete } from 'react-icons/ai';
 import { Tooltip } from '@material-tailwind/react';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { fetchChats } from '../../../redux/chatsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { fetchUsers } from '../../../redux/usersSlice';
+import { isUserOnline } from '../../../utils/helperFuntions';
+
 function SideChats({
   setActiveTab,
   activeTab,
@@ -19,6 +20,7 @@ function SideChats({
   setSendMessageToUser,
   messageUserId,
   setMessageUserId,
+  setOpenSideBar,
 }: any) {
   const { currentUser } = useAuth();
   const curUserEMAIL: any = currentUser?.email;
@@ -27,39 +29,61 @@ function SideChats({
   const allChats = useSelector((state: RootState) => state.chats.chats);
   const { deleteForMe, dLoading, dError } = useDelete();
   const { getCurrentUser } = useUserLibrary(useAuth().currentUser?.uid);
+  const { users, loading, error } = useGetUsers(curUserEMAIL, 'friends');
+  const onlineRef: any = useRef(false);
 
   useEffect(() => {
     dispatch(fetchChats());
+    dispatch(fetchUsers());
   }, [dispatch]);
 
-  const { users, loading, error } = useGetUsers(curUserEMAIL, 'friends');
+  function findNewestMessage(user: any) {
+    const userChats = allChats?.filter((chat: any) =>
+      chat?.conversationId.includes(user?.email),
+    );
+
+    if (userChats.length === 0) {
+      return null;
+    }
+
+    userChats.sort((a: any, b: any) => b.timestamp - a.timestamp);
+    onlineRef.current = isUserOnline(userChats[0].timestamp);
+    return userChats[0].text.substring(0, 15) + '...';
+  }
 
   const handleUserMessageClicked = async (user: any) => {
     if (!user) {
       return;
     } else {
-      allChats?.filter((m: any) => {
+      allChats?.filter(async (m: any) => {
+        // <-- add "async" here
         if (user.email === m.conversationId[0]) {
           const messageRef = db.collection('messages').doc(m.id);
-          messageRef.update({
-            receiverHasRead: true,
-          });
+          try {
+            await messageRef.update({
+              receiverHasRead: true,
+            });
+          } catch (error) {
+            // Handle the error here, e.g. by logging it or displaying a message to the user
+            console.log('Error updating message:', error);
+          }
         }
       });
       setSendMessageToUser(true);
       setMessageUserId(user?.email);
     }
   };
-  console.log('allChats', allChats);
+
+  console.log('allChats', allChats, onlineRef.current);
   return (
-    <div className='flex flex-col md:h-full bg-gray-200 bottom-0 w-full  p-8 gap-2 top-16 md:top-0 md:relative absolute mt-10'>
+    <div className='flex  md:w-[20rem] shadow-md backdrop-blur-lg    flex-col bg-white/10 rounded p-2 mt-20'>
       <Button
-        className='w-16 flex justify-center'
+        className='w-full flex justify-center'
         onClick={() => setActiveTab('posts')}>
         BACK
       </Button>
-      <div className='flex-flex-col bg-white w-full h-full rounded-lg p-4  relative overflow-y-auto scroll-y-auto'>
-        <div className='grid grid-flow-row gap-3 justify-center  rounded w-full '>
+      <div className='flex flex-col w-full h-full rounded-lg   relative overflow-y-auto scroll-y-auto p-6'>
+        <div className='grid grid-flow-row gap-4 justify-center items-center mx-auto  rounded md:w-[10rem] '>
           {loading ? (
             <Loading />
           ) : (
@@ -71,10 +95,10 @@ function SideChats({
                     !m.senderDeleted &&
                     m.conversationId.includes(currentUser?.email),
                 ) && (
-                  <Card
-                    color='teal'
+                  <div
+                    color={`${onlineRef.current ? 'green' : 'gray'}`}
                     key={user?.id}
-                    className={`flex rounded shadow-md backdrop-blur-sm items-center p-3 group  ${
+                    className={`flex w-full flex-row rounded shadow-md backdrop-blur-sm items-center group  ${
                       messageUserId === user.email
                         ? 'bg-blue-200 scale-105 text-white'
                         : 'bg-blue-gray-50 scale-100  text-gray-900 '
@@ -101,15 +125,12 @@ function SideChats({
                         <AiFillDelete className=' text-white' />
                       </button>
                     </Tooltip>
-                    <Avatar
-                      style={{
-                        width: '80px',
-                        height: '80px',
-                      }}
-                      {...user.photoURL}
-                      avatarStyle='Circle'
-                      className='hidden group-hover:block '
-                    />
+                    <span
+                      className={` ring-[2px] p-2 rounded-lg bg-white/50 ${
+                        onlineRef.current ? 'ring-green-400 ' : 'ring-gray-200'
+                      }`}>
+                      <Avatar src={user?.imageUrl} />
+                    </span>
                     <div className='pl-2 w-full px-2'>
                       <div className='font-semibold'>
                         <button
@@ -118,9 +139,11 @@ function SideChats({
                           {user?.displayName.toUpperCase()}
                         </button>
                       </div>
-                      <div className='text-xs text-gray-600'>Online</div>
+                      <div className='text-xs text-gray-600'>
+                        {findNewestMessage(user)}
+                      </div>
                     </div>
-                  </Card>
+                  </div>
                 ),
             )
           )}

@@ -1,8 +1,9 @@
-import { Input } from '@material-tailwind/react';
+import { Button, Input } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import Loading from '@/utils/Loading';
 import useAuth from '@/firebase/usefirebaseUI';
 import { auth } from '@/firebase/firebase';
+import Link from 'next/link';
 
 export default function SelectRecipient({
   sendMessageToUser,
@@ -32,7 +33,13 @@ export default function SelectRecipient({
   }
   console.log('this is users in selectrecipient', filteredUsers, users);
   return (
-    <div className='flex flex-col  h-full justify-center items-center p-8'>
+    <div className='flex flex-col relative  h-full justify-center items-center p-8'>
+      <Link
+        href='../'
+        onClick={() => setSendMessageToUser((prev: boolean) => !prev)}
+        className='absolute top-2 right-2'>
+        <Button> Cancel</Button>
+      </Link>
       <div className='mb-3 xl:w-96 w-[50%] '>
         <Input
           type='search'

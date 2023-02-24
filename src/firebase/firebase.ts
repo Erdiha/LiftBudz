@@ -6,7 +6,7 @@ import 'firebase/compat/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import 'firebase/compat/storage';
-import { getStorage } from 'firebase/storage';
+import { getStorage, ref, deleteObject } from 'firebase/storage';
 
 const credentials = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -28,5 +28,5 @@ const storage = firebase.storage();
 const getAUTH = getAuth(firebase.initializeApp(credentials));
 const getDB = getFirestore(firebase.initializeApp(credentials));
 const getStrge = getStorage(firebase.initializeApp(credentials));
-export { auth, db, getStrge, storage, getDB, getAUTH };
+export { auth, db, getStrge, storage, getDB, getAUTH, ref, deleteObject };
 export default firebase;

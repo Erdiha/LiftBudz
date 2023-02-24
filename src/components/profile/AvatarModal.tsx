@@ -13,6 +13,7 @@ export default function AvatarModal() {
 	const [open, setOpen] = useState(false);
 
 	const handleOpen = () => {
+		console.log("Dialog open");
 		setOpen(!open);
 	};
 	return (
