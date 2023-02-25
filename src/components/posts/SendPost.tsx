@@ -31,6 +31,7 @@ function SendPost({ setOpenPostFields }: any) {
       photoURL: downloadURL,
       createdAt: serverTimestamp(),
       comments: [],
+      subComments: [],
       likes: [],
       timeStamp: Date.now(),
       userEmail: email || currentUser?.email,
@@ -54,7 +55,7 @@ function SendPost({ setOpenPostFields }: any) {
   };
 
   return (
-    <div className='flex flex-col items-center w-full pt-6 bg-gray-100 sm:justify-center sm:pt-0'>
+    <div className='flex flex-col items-center w-full pt-6 bg-gray-100 sm:justify-center p-2 transition-all duration-300 ease-in-out transform-gpu'>
       {
         <form onSubmit={sendPost} className='w-full p-2'>
           <div className='mt-4'>

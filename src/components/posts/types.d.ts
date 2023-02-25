@@ -7,4 +7,5 @@ export interface IPost {
   likes?: any;
   comments?: any;
   timeStamp: Date | null | number;
+  subComments?: any;
 }

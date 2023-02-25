@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { AiOutlineLike, AiOutlineComment } from 'react-icons/ai';
 import { IPost } from './types';
-import Comment from './Comment';
+import Comments from './Comment';
 import EditPost from './EditPost';
 import Reply from './Reply';
 import { useGetAvatar } from '@/hooks/useFetch';
@@ -9,11 +9,14 @@ import useFindUser from '../../hooks/useFindUser';
 import useAuth, { useUserLibrary } from '@/firebase/usefirebaseUI';
 import { db } from '@/firebase/firebase';
 import { Avatar } from '@material-tailwind/react';
+import { useTimeAgo } from '../../hooks/useDate';
 
 const Postcard = (post: IPost) => {
   const { currentUser } = useAuth();
   const { getCurrentUser } = useUserLibrary(currentUser?.uid)!;
   const [openComment, setOpenComment] = React.useState(false);
+
+  const timeAgo = useTimeAgo(post.timeStamp);
 
   const handleLikes = async () => {
     const commentRef = db.collection('posts').doc(post.id);
@@ -35,26 +38,24 @@ const Postcard = (post: IPost) => {
       alert(error);
     }
   };
-  console.log('this is mockpost', post);
   return (
-    <div key={post.id} className='flex w-full p-8 py-8 '>
-      <div className='flex flex-col border shadow-md overflow-y-auto w-full '>
+    <div key={post.id} className='flex w-full p-4 py-8 '>
+      <div className='flex flex-col border shadow-md overflow-y-auto w-full ring-1 ring-gray-300 md:p-1'>
         <div className='w-full flex flex-col bg-gradient   rounded  ring-gray-900/10  h-full'>
           <div className='flex flex-col w-full '>
-            <div className='flex items-center w-full  h-24'>
-              <div className='w-[85%] flex pl-4'>
-                <Avatar src={getCurrentUser?.imageUrl} />
+            <div className='flex  w-full relative '>
+              <div className='w-fit p-2 rounded shadow-md flex pl-4 gap-2 md:bg-gray-100'>
+                <Avatar src={useFindUser(post?.uid)?.imageUrl} />
                 <span className='text-xs text-gray-500 flex  flex-col justify-end'>
-                  <span className='font-semibold text-blue-gray-800 flex flex-col'>
+                  <span className='font-semibold text-blue-gray-800 text-[15px] flex flex-col'>
                     {useFindUser(post?.uid)?.displayName}
                   </span>
                   <span className='text-[12px] text-gray-600 italic font-light'>
-                    {/* {post?.createdAt?.toDate()?.toLocaleTimeString()}{' '}
-                    {post?.createdAt?.toDate()?.toLocaleDateString()} */}
+                    {timeAgo}
                   </span>
                 </span>
               </div>
-              <div className='ml-10'>
+              <div className='flex self-end absolute right-10 top-[50%] -translate-y-1/2'>
                 {currentUser?.uid === post?.uid && <EditPost post={post} />}
               </div>
             </div>
@@ -67,19 +68,19 @@ const Postcard = (post: IPost) => {
               />
             )}
           </div>
-          <div className='w-full min-h-24   flex px-2 pt-1 flex-col bg-white rounded '>
-            <div className='pb-8 p-2  h-full rounded-lg'>
-              {post?.text && (
-                <p className='text-base text-gray-800 w-[80%]'>{post?.text}</p>
-              )}
-            </div>
-            <div className='flex  text-2xl w-[20%]   p-2 px-4  justify-between min-w-40 '>
+          <div className='w-full h-fit grid grid-cols-10 pr-[1.1rem] pt-1 flex-col bg-white rounded pl-2 '>
+            {post?.text && (
+              <p className='text-base text-start col-span-9 text-gray-800 p-2 flex-wrap break-words'>
+                {post?.text}
+              </p>
+            )}
+
+            <div className='flex w-full text-2xl col-span-1 self-end py-1 gap-2 md:gap-0  md:ml-2 md:px-0 justify-around'>
               <span
                 onClick={handleLikes}
-                className={`flex items-center cursor-pointer ${
+                className={`flex items-center cursor-pointer justify-center ${
                   post?.likes?.length > 0 ? 'text-blue-400' : 'text-black'
-                }
-                }`}>
+                }}`}>
                 <AiOutlineLike />
                 {post?.likes?.length > 0 && (
                   <span className='flex jusfity-center items-center text-sm font-bold text-red-400 min-w-4 cursor-default'>
@@ -89,7 +90,7 @@ const Postcard = (post: IPost) => {
               </span>
               <span
                 onClick={() => setOpenComment(true)}
-                className={`flex items-center cursor-pointer ${
+                className={`flex items-center cursor-pointer justify-center ${
                   post?.comments?.length > 0 ? 'text-blue-400' : 'text-black'
                 }  ${
                   openComment ? 'animate-bounce text-red-500 scale-105' : ''
@@ -103,13 +104,27 @@ const Postcard = (post: IPost) => {
               </span>
             </div>
             {openComment && (
-              <Comment post={post} setOpenComment={setOpenComment} />
+              <Comments
+                data={post}
+                setOpenComment={setOpenComment}
+                post={post}
+                types='comment'
+              />
             )}
           </div>
-
+          <hr />
+          <p className='w-full px-4 mt-2  font-semibold text-gray-700'>
+            Comments
+          </p>
+          <hr />
           {post?.comments?.length > 0 &&
-            post?.comments?.map((comment: any) => (
-              <Reply key={comment?.id} comment={comment} />
+            post?.comments?.map((comment: any, index: number) => (
+              <Reply
+                key={comment?.id}
+                comment={comment}
+                post={post}
+                index={index}
+              />
             ))}
         </div>
       </div>

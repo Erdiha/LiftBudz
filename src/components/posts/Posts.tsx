@@ -1,17 +1,17 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import PostCard from './PostCard';
 import SendPost from '../posts/SendPost';
 import { Button } from '@material-tailwind/react';
 import { IPost } from './types';
 import { db } from '@/firebase/firebase';
-import { mockposts } from '../data/data';
+import {} from '../data/data';
 
 function Posts({ setOpenSideBar }: any) {
   const [openPostFields, setOpenPostFields] = useState<boolean>(false);
-  const [posts, setPosts]: any = useState<any>(mockposts);
+  const [posts, setPosts]: any = useState<any>();
   const postRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unsubscribe = db
       .collection('posts')
       .orderBy('createdAt', 'desc')
@@ -27,25 +27,26 @@ function Posts({ setOpenSideBar }: any) {
 
     return () => unsubscribe();
   }, []);
-  //const posts: IPost[] = useFetchDB('posts', 'desc');
+
+  console.log('this is in posts', posts);
   return (
     <div className='flex flex-col h-full relative w-full'>
-      <div className='flex  z-200 w-full justify-end pt-14 '>
+      <div className='flex  w-full justify-end pt-14 mt-4 '>
         {openPostFields ? (
           <SendPost setOpenPostFields={setOpenPostFields} />
         ) : (
-          <div className='flex flex-row justify-between w-full px-8 pb-4 '>
-            <Button
-              className='  '
-              variant='gradient'
-              onClick={() => setOpenPostFields(true)}>
-              POST
-            </Button>
+          <div className='flex flex-row justify-between w-full gap-2 p-2'>
             <Button
               onClick={() => setOpenSideBar((prev: boolean) => !prev)}
               className='justify-start'
               variant='gradient'>
               Menu
+            </Button>
+            <Button
+              className='  w-full h-full'
+              variant='gradient'
+              onClick={() => setOpenPostFields(true)}>
+              POST
             </Button>
           </div>
         )}
@@ -64,6 +65,7 @@ function Posts({ setOpenSideBar }: any) {
             likes={post.likes}
             comments={post.comments}
             timeStamp={post.timeStamp}
+            subComments={post.subComments}
           />
         ))}
       </div>

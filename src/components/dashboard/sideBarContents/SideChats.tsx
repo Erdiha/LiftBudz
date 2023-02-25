@@ -129,7 +129,9 @@ function SideChats({
                       className={` ring-[2px] p-2 rounded-lg bg-white/50 ${
                         onlineRef.current ? 'ring-green-400 ' : 'ring-gray-200'
                       }`}>
-                      <Avatar src={user?.imageUrl} />
+                      <Avatar
+                        src={user?.imageUrl ? user?.imageUrl : 'No Image'}
+                      />
                     </span>
                     <div className='pl-2 w-full px-2'>
                       <div className='font-semibold'>

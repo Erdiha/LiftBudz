@@ -6,23 +6,25 @@ import useAuth, { useUserLibrary } from '../../firebase/usefirebaseUI';
 import firebase, { db } from '@/firebase/firebase';
 import { GiCancel } from 'react-icons/gi';
 import uuid from 'react-uuid';
+import { type } from 'os';
 interface IComment {
   id?: string;
   text: string;
   receiver: string;
-  sender: string;
+  sender: [string, string];
   timeStamp: any;
   likes: any;
-  subComment: any;
   userName: string;
   parentID: string;
   isParent: boolean;
 }
 
 const Comments: React.FC<{
-  post: IPost;
+  data: IPost;
   setOpenComment: Dispatch<SetStateAction<boolean>>;
-}> = ({ post, setOpenComment }) => {
+  types: string;
+  post: IPost;
+}> = ({ data, setOpenComment, types, post }) => {
   const [comments, setComments] = useState<any>([]);
   const [text, setText] = useState('');
   const { currentUser } = useAuth();
@@ -33,24 +35,31 @@ const Comments: React.FC<{
     const newComment: IComment = {
       id: uuid(),
       text: text.trim(),
-      sender: currentUser?.email!,
-      receiver: post?.uid,
+      sender: [currentUser?.email!, getCurrentUser?.userId!],
+      receiver: `${types === 'comment' ? post?.uid : data.id}`,
       timeStamp: Date.now(),
       likes: [],
-      subComment: [],
-      parentID: post?.uid,
+      parentID: `${types === 'comment' ? post?.uid : data.id}`,
       userName: getCurrentUser?.displayName,
-      isParent: true,
+      isParent: types === 'comment',
     };
 
     try {
       await db
         .collection('posts')
         .doc(post?.id)
-        .update({
-          comments: firebase.firestore.FieldValue.arrayUnion(newComment),
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
+        .update(
+          types === 'comment'
+            ? {
+                comments: firebase.firestore.FieldValue.arrayUnion(newComment),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              }
+            : {
+                subComments:
+                  firebase.firestore.FieldValue.arrayUnion(newComment),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              },
+        );
 
       setText('');
     } catch (error) {
@@ -59,7 +68,6 @@ const Comments: React.FC<{
     setOpenComment((prev) => !prev);
   };
 
-  console.log(comments);
   return (
     <div className='flex flex-col '>
       <button
