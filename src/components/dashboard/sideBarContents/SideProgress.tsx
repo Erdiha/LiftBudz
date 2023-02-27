@@ -2,9 +2,15 @@ import { Button, Tooltip } from '@material-tailwind/react';
 import Avatar from 'avataaars';
 import React from 'react';
 
-function SideProgress({ activeTab, setActiveTab }: any) {
+function SideProgress({
+  setActiveTab,
+  activeTab,
+}: {
+  setActiveTab: any;
+  activeTab: any;
+}) {
   return (
-    <div className='flex flex-col md:h-full bg-gray-200 bottom-0 w-full  p-8 gap-2 top-16 md:top-0 md:relative absolute'>
+    <div className='flex  md:w-[20rem] shadow-md backdrop-blur-lg w-[10rem] h-[94]    flex-col bg-black/10 rounded p-2 mt-20'>
       <Button
         className='w-16 flex justify-center'
         onClick={() => setActiveTab('posts')}>
@@ -24,7 +30,7 @@ function SideProgress({ activeTab, setActiveTab }: any) {
           />
           <div className='pl-2'>
             <div className='font-semibold'>
-              <button></button>
+              <button>/Button</button>
             </div>
             <div className='text-xs text-gray-600'>Online</div>
           </div>

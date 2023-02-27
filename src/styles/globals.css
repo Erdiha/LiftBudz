@@ -76,4 +76,34 @@
       to(rgba(0, 0, 0, 0))
     );
   }
+  
+  /* increase and decrease anmiaton for progerss card */
+  @keyframes increase {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes decrease {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(0.8);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  .animate-increase {
+    animation: increase 0.2s ease-in-out;
+  }
+  .animate-decrease {
+    animation: decrease 0.2s ease-in-out;
+  }
 }

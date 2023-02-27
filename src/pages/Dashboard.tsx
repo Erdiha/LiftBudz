@@ -5,11 +5,11 @@ import Friends from '../components/friends/Friends';
 import SideMenu from '../components/dashboard/SideMenu';
 import SideFriends from '../components/dashboard/sideBarContents/SideFriends';
 import SideChats from '../components/dashboard/sideBarContents/SideChats';
-import SideProgress from '../components/dashboard/sideBarContents/SideProgress';
 import Chat from '../components/chat/Chat';
-
+import SideProgress from '@/components/dashboard/sideBarContents/SideProgress';
 import { useGetUsers } from '../components/data';
 import { useMediaQuery } from '@react-hook/media-query';
+import Progress from '../components/progress/Progress';
 
 const Dashboard: React.FC = () => {
   const { currentUser } = useAuth();
@@ -61,7 +61,14 @@ const Dashboard: React.FC = () => {
           />
         );
       case 'progress':
-        return <div className='w-full h-full p-2 text-black'>PROGRESS</div>;
+        return (
+          <Progress
+            setActiveTab={setActiveTab}
+            activeTab={activeTab}
+            setOpenSideBar={setOpenSideBar}
+            openSideBar={openSideBar}
+          />
+        );
       default:
         return <div />;
     }
@@ -77,10 +84,7 @@ const Dashboard: React.FC = () => {
             setOpenSideBar={setOpenSideBar}
           />
         );
-      case 'friends':
-        return (
-          <SideFriends setActiveTab={setActiveTab} activeTab={activeTab} />
-        );
+
       case 'messages':
         return (
           <SideChats
@@ -91,18 +95,20 @@ const Dashboard: React.FC = () => {
             messageUserId={messageUserId}
             setMessageUserId={setMessageUserId}
             unreadMessages={unreadMessages}
+            openSideBar={openSideBar}
           />
         );
-      case 'progress':
-        return (
-          <SideProgress setActiveTab={setActiveTab} activeTab={activeTab} />
-        );
+
       default:
-        return <div />;
+        return (
+          <SideMenu
+            setActiveTab={setActiveTab}
+            activeTab={activeTab}
+            setOpenSideBar={setOpenSideBar}
+          />
+        );
     }
   };
-
-  console.log('this is messageUserId', messageUserId);
 
   return (
     <div
@@ -114,10 +120,10 @@ const Dashboard: React.FC = () => {
           ${openSideBar && ' fixed left-0 bottom-0 w-full   bg-black/70'}
             `}>
         <div
-          className={`   ${
+          className={`  fixed ${
             openSideBar
-              ? 'fixed  left-0 bottom-0  w-[75%] md:w-[30%]  top-10 bg-gray-100   ease-in duration-500 text-black '
-              : 'fixed left-[-100%] bottom-0 ease-in-out duration-500'
+              ? '  left-0 bottom-0  w-[75%] md:w-[30%]  top-10 bg-gray-100   ease-in duration-500 text-black '
+              : ' left-[-100%] bottom-0 ease-in-out duration-500'
           }
              `}>
           {' '}
@@ -127,8 +133,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div
-        className={` w-full
-          flex justify-center  h-full  text-black overflow-hidden`}>
+        className={` w-full flex justify-center  h-full  text-black`}>
         {renderRightSide()}
       </div>
     </div>
