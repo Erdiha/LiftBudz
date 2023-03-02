@@ -14,9 +14,22 @@ import {
   AccordionBody,
 } from '@material-tailwind/react';
 import { animated } from 'react-spring';
-export default function AnatomyCard() {
+import { toast } from 'react-toastify';
+
+export default function Main({
+  selectedItem,
+  incrementRef,
+  setSelectedItem,
+  sets,
+  setSets,
+  reps,
+  setReps,
+  isReps,
+  setIsReps,
+  savedWorkouts,
+  setSavedWorkouts,
+}: any) {
   const [front, setFront] = React.useState(true);
-  const [muscleClicked, setMuscleClicked] = React.useState(false);
   const [muscleValue, setMuscleValue]: any = React.useState();
   const [open, setOpen] = useState<number>(0);
 
@@ -27,7 +40,6 @@ export default function AnatomyCard() {
   const initialData: IExerciseData[] = [];
   const [data, setData] = useState<IExerciseData[]>([
     { name: 'Bench Press', muscles: ['triceps'] },
-    { name: 'Push Ups', muscles: ['abs'] },
   ]);
 
   const handleReset = () => {
@@ -70,7 +82,7 @@ export default function AnatomyCard() {
   );
 
   return (
-    <div className='flex flex-col md:flex-row h-full w-full bg-gray-100 p-4'>
+    <div className='flex flex-col md:flex-row  w-full bg-gray-100 p-4'>
       <div className='md:flex flex-col p-4 hidden  transition-all duration-300 ease-in-out ring-1  md:m-0  shadow-md md:h-fit'>
         <div className=' flex w-full justify-between'>
           {' '}
@@ -117,12 +129,37 @@ export default function AnatomyCard() {
               </AccordionHeader>
               <AccordionBody className='h-fit mt-4 flex justify-center'>
                 {' '}
-                <WorkoutCard
-                  title={part.title}
-                  icon={part.icon}
-                  key={index}
-                  subItems={part.types}
-                />
+                <div className='flex w-full h-full justify-around items-center'>
+                  <WorkoutCard
+                    title={part.title}
+                    icon={part.icon}
+                    key={index}
+                    subItems={part.types}
+                    reps={reps}
+                    setReps={setReps}
+                    incrementRef={incrementRef}
+                    setSelectedItem={setSelectedItem}
+                    selectedItem={selectedItem}
+                    sets={sets}
+                    setSets={setSets}
+                    isReps={isReps}
+                    setIsReps={setIsReps}
+                    muscle={selectedItem}
+                    muscleGroup={part.title}
+                  />
+                  <ExerciseTrack
+                    muscleGroup={part.title}
+                    muscle={selectedItem}
+                    reps={reps}
+                    sets={sets}
+                    setSets={setSets}
+                    setReps={setReps}
+                    isReps={isReps}
+                    setIsReps={setIsReps}
+                    savedWorkouts={savedWorkouts}
+                    setSavedWorkouts={setSavedWorkouts}
+                  />
+                </div>
               </AccordionBody>
             </Accordion>
           );
@@ -131,3 +168,50 @@ export default function AnatomyCard() {
     </div>
   );
 }
+
+const ExerciseTrack = ({
+  muscleGroup,
+  reps,
+  muscle,
+  sets,
+  save,
+  setSave,
+  setSets,
+  setReps,
+  savedWorkouts,
+  setSavedWorkouts,
+}: any) => {
+  console.log('workouts', savedWorkouts);
+
+  return (
+    <div className='p-4 bg-white rounded-lg h-full shadow-md w-[40%] '>
+      <p className='font-bold text-lg border-b-2 mb-4'>Exercise Card</p>
+      <p className='mb-2 text-lg font-normal'>
+        Muscle Group: <span className='font-semibold'>{muscleGroup}</span>
+      </p>
+      <p className='mb-2 text-lg font-normal'>
+        {' '}
+        Selected Muscle: <span className='font-semibold'> {muscle}</span>
+      </p>
+      <p className='mb-2 text-lg font-normal'>
+        Sets: <span className='font-semibold'> {sets}</span>
+      </p>
+      <p className='mb-2 text-lg font-normal'>
+        Reps: <span className='font-semibold'>{reps}</span>
+      </p>
+      <Tooltip content='creates the workout'>
+        <button
+          onClick={() => {
+            setSavedWorkouts([
+              ...savedWorkouts,
+              { muscleGroup, reps, muscle, sets },
+            ]);
+            toast.success('Workout Added');
+          }}
+          className='shadow rounded p-1 bg-blue-gray-100 smd:hover:text-white col-span-1 self-end w-full font-semibold tracking-wider'>
+          ADD
+        </button>
+      </Tooltip>
+    </div>
+  );
+};

@@ -76,7 +76,7 @@
       to(rgba(0, 0, 0, 0))
     );
   }
-  
+
   /* increase and decrease anmiaton for progerss card */
   @keyframes increase {
     0% {
@@ -105,5 +105,27 @@
   }
   .animate-decrease {
     animation: decrease 0.2s ease-in-out;
+  }
+
+  .start-button {
+    background-image: linear-gradient(to bottom, #0099ff, #0066cc);
+    /* Add rounded corners */
+    border-radius: 50px;
+    /* Add a box-shadow */
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    /* Add padding to the button */
+    padding: 10px 20px;
+    /* Add a hover effect */
+    transition: all 0.3s ease-in-out;
+  }
+  .start-button:hover {
+    /* Change the background color */
+    background-color: #0066cc;
+    /* Add a shadow effect */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    /* Change the text color */
+    color: #fff;
+    /* Add a transform effect */
+    transform: translateY(-2px);
   }
 }
