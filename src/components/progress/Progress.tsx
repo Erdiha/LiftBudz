@@ -55,6 +55,7 @@ function Progress({
         userId: auth?.currentUser?.uid,
         tiemstamp: Date.now(),
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        done: false,
         exercises: [...savedWorkouts],
       });
       toast.success('Exercise added successfully!');
@@ -82,17 +83,19 @@ function Progress({
     selectedItem,
   );
   return (
-    <div className='mt-[5rem] w-full  md:px-8 md:py-4 flex flex-col '>
-      <div className='flex w-full md:py-4 justify-between tracking-widest p-2'>
-        <Button
-          onClick={() => {
-            setOpenSideBar(!openSideBar);
-          }}
-          className='justify-start tracking-wider'
-          variant='gradient'>
-          MENU
-        </Button>
-        <div className='flex gap-4'>
+    <div className='mt-[5rem] w-[90%]  md:px-8 md:py-4 flex flex-col '>
+      <div className='flex md:gap-4 md:p-0  justify-between tracking-widest '>
+        <div className='flex md:gap-4 p gap-2 md:p-0 p-1 '>
+          <Button
+            onClick={() => {
+              setOpenSideBar(!openSideBar);
+            }}
+            className='tracking-wider px-3 py-2 justify-between flex items-center'
+            variant='gradient'>
+            MENU
+          </Button>
+        </div>
+        <div className='flex md:gap-4  gap-2 md:p-0 p-1 '>
           {' '}
           <Tooltip content='Saves The Workout'>
             <Button
@@ -103,7 +106,7 @@ function Progress({
                 sets === 0
               }
               onClick={handleFinish}
-              className='justify-start tracking-wider'
+              className='justify-start tracking-wider px-3 py-2'
               variant='gradient'>
               Save Workout
             </Button>
@@ -112,7 +115,7 @@ function Progress({
             <Button
               color='gray'
               onClick={() => setShowExercise(!showExercise)}
-              className='justify-start tracking-wider '
+              className='justify-start tracking-wider px-3 py-2'
               variant='gradient'>
               {`${showExercise ? 'Add Exercise' : 'Show Exercises'} `}
             </Button>

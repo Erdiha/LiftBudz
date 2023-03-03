@@ -30,7 +30,7 @@ function Exercises() {
   }, []);
   console.log('these are the workouts', workouts);
   return (
-    <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 w-full h-full'>
+    <div className='grid grid-cols-1 md:gap-8 md:grid-cols-2 lg:grid-cols-3 w-full h-full overflow-x-hidden md:p-10 p-4'>
       {workouts?.map((workout: any) => (
         <Exercise key={workout.id} workout={workout} />
       ))}
