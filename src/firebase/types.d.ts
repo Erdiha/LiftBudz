@@ -7,5 +7,5 @@ export interface IUser {
   mobile: string;
   profileMotto: string;
   userId: string;
-  photoURL: {};
+  imageUrl: {};
 }

@@ -3,26 +3,20 @@ import useAuth from '../firebase/usefirebaseUI';
 import Posts from '../components/posts/Posts';
 import Friends from '../components/friends/Friends';
 import SideMenu from '../components/dashboard/SideMenu';
-import SideFriends from '../components/dashboard/sideBarContents/SideFriends';
 import SideChats from '../components/dashboard/sideBarContents/SideChats';
 import Chat from '../components/chat/Chat';
-import SideProgress from '@/components/dashboard/sideBarContents/SideProgress';
-import { useGetUsers } from '../components/data';
-import { useMediaQuery } from '@react-hook/media-query';
 import Progress from '../components/progress/Progress';
+import { useGetUsers } from '@/components/data';
 
 const Dashboard: React.FC = () => {
   const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('posts');
-  const [openChat, setOpenChat] = useState(false);
   const [sendMessageToUser, setSendMessageToUser] = useState(false);
   const [messageUserId, setMessageUserId] = useState();
   const unreadMessages = useRef<number>(0);
   const dashboardRightSide = useRef<HTMLDivElement>(null);
   const [openSideBar, setOpenSideBar] = useState(false);
   const { users, loading, error } = useGetUsers(currentUser?.email, 'friends');
-
-  const isSmallScreen = useMediaQuery('(max-width: 720px)');
 
   useEffect(() => {
     if (dashboardRightSide.current) {
@@ -36,7 +30,13 @@ const Dashboard: React.FC = () => {
       case 'posts':
         return <Posts setOpenSideBar={setOpenSideBar} />;
       case 'friends':
-        return <Friends activeTab={activeTab} setActiveTab={setActiveTab} />;
+        return (
+          <Friends
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            setOpenSideBar={setOpenSideBar}
+          />
+        );
       case 'messages':
         return sendMessageToUser ? (
           <Chat
@@ -132,8 +132,7 @@ const Dashboard: React.FC = () => {
         {/* {isSmallScreen && openSideBar && renderLeftSide()} */}
       </div>
 
-      <div
-        className={` w-full flex justify-center  h-full  text-black`}>
+      <div className={` w-full flex justify-center  h-full  text-black`}>
         {renderRightSide()}
       </div>
     </div>

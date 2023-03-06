@@ -1,14 +1,9 @@
-import React, { useRef, useState } from 'react';
-import useAuth, { IRegister, Iinput } from '@/firebase/usefirebaseUI';
+import React, { useState } from 'react';
+import useAuth, { Iinput } from '@/firebase/usefirebaseUI';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Input } from '@material-tailwind/react';
-import Loading from '@/utils/Loading';
-import useEffect from 'react';
-interface Props {
-  imageUrl: string;
-}
 
-function Signin_signup() {
+function signin() {
   const [userLogin, setUserLogin] = useState(false);
   const [demo, setDemo] = useState(false);
   const { logIn, Register, isLoading } = useAuth();
@@ -27,16 +22,16 @@ function Signin_signup() {
       data.displayName = 'Guest';
       data.email = 'demo@demo.com';
       data.password = '123456';
+      await logIn(data.email, data.password);
+    } else {
+      signup && !demo
+        ? await Register(data.displayName, data.email, data.password)
+        : await logIn(data.email, data.password);
     }
-    //if user has account login else register
-    console.log(data);
-    signup
-      ? await Register(data.displayName, data.email, data.password)
-      : await logIn(data.email, data.password);
   };
 
   return (
-    <div className='lg:flex  flex justify-center items-center max-w-7xl m-auto h-[94vh] max-h-screen '>
+    <div className='lg:flex flex justify-center items-center max-w-7xl m-auto h-[94vh] max-h-screen '>
       <>
         <div className='lg:w-1/2 xl:max-w-screen-sm relative '>
           <div className=' p-12 sm:px-24 md:px-48 lg:px-12 lg:mt-16 xl:px-24 xl:max-w-2xl lg:border-r-[1px] lg:border-black'>
@@ -120,7 +115,7 @@ function Signin_signup() {
             </form>
           </div>
         </div>
-        <div className='rounded p-3  hidden lg:flex items-center justify-center flex-1 flex-col gap-4 drop-shadow-md'>
+        <div className='rounded p-3  hidden lg:flex items-center justify-center flex-1 flex-col gap-4 drop-shadow-md text-black'>
           <div className='max-w-xs transform duration-200 hover:scale-110 cursor-pointer shadow-sm shadow-white rounded-full'>
             <div className={`bg-black/60 p-4 rounded-full `}>
               <svg
@@ -131,20 +126,18 @@ function Signin_signup() {
               </svg>
             </div>
           </div>
-          <h1 className='text-center text-2xl font-bold leading-[40px]'>
-            Still Not Convinced? <br />{' '}
-            <a
-              target='_blank'
-              rel='noopener noreferrer'
-              className=' bg-blue-200 rounded p-1 backdrop-blur-lg shadow-sm text-blue-gray-800'
-              href='https://www.betterhealth.vic.gov.au/health/healthyliving/Exercise-with-a-friend'>
-              Read More...
-            </a>
-          </h1>
+          <p
+            // target='_blank'
+            // rel='noopener noreferrer'
+            className='  flex text-black rounded p-1 shadow-text-sm'
+            // href='https://www.betterhealth.vic.gov.au/health/healthyliving/Exercise-with-a-friend'
+          >
+            <p className='text-sm font-semibold'>Exercise</p>
+          </p>
         </div>
       </>
     </div>
   );
 }
 
-export default Signin_signup;
+export default signin;

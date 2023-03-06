@@ -8,6 +8,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import rootReducer from '../redux/reducers';
+import { animated } from 'react-spring';
 const store = configureStore({ reducer: rootReducer });
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -17,7 +18,19 @@ export default function App({ Component, pageProps }: AppProps) {
       <AuthProvider>
         <Provider store={store}>
           <NavbarComponent />
-          <ToastContainer />
+          <ToastContainer
+            position='top-right'
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable
+            pauseOnHover
+            theme='light'
+            
+          />
           <Component {...pageProps} />
         </Provider>
       </AuthProvider>

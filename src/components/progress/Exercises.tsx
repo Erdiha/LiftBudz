@@ -8,32 +8,33 @@ interface WorkoutState {
   muscle: string;
   sets: number;
 }
-function Exercises() {
+function Exercises({ showFinishedProjects, setShowFinishedProjects }: any) {
   const [workouts, setWorkouts]: any = useState([]);
-
   useEffect(() => {
     const unsubscribe = db
       .collection('workout')
       .orderBy('createdAt', 'desc')
       .onSnapshot((snapshot) => {
-        const newWorkouts = snapshot.docs.map(
-          (doc) =>
-            doc.data().userId === auth?.currentUser?.uid && {
-              id: doc.id,
-              ...doc.data(),
-            },
-        );
+        const newWorkouts = snapshot.docs
+          .map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as { userId: string }), // add type annotation here
+          }))
+          .filter((workout) => workout.userId === auth?.currentUser?.uid);
         setWorkouts(newWorkouts);
       });
 
     return unsubscribe;
   }, []);
+
   console.log('these are the workouts', workouts);
   return (
-    <div className='grid grid-cols-1 md:gap-8 md:grid-cols-2 lg:grid-cols-3 w-full h-full overflow-x-hidden md:p-10 p-4'>
-      {workouts?.map((workout: any) => (
-        <Exercise key={workout.id} workout={workout} />
-      ))}
+    <div className='grid grid-cols-1 md:gap-16  lg:grid-cols-2 w-full h-full overflow-x-hidden md:p-10 p-4'>
+      {workouts?.map((workout: any) =>
+        !showFinishedProjects
+          ? !workout?.done && <Exercise key={workout.id} workout={workout} />
+          : workout?.done && <Exercise key={workout.id} workout={workout} />,
+      )}
     </div>
   );
 }

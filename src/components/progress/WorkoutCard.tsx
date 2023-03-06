@@ -1,4 +1,4 @@
-import {  useState } from 'react';
+import { useState } from 'react';
 import { HiOutlinePlusSm, HiOutlineMinusSm } from 'react-icons/hi';
 import Image from 'next/image';
 import { Select, Option } from '@material-tailwind/react';
@@ -10,7 +10,6 @@ import {
   CardFooter,
   Typography,
   Button,
-
 } from '@material-tailwind/react';
 
 interface IMuscleCards {
@@ -64,10 +63,12 @@ const WorkoutCard: React.FC<IMuscleCards> = ({
     incrementRef.current = 1;
     setReps(0);
     setSets(0);
+    setCurrentClick(1);
+    setIsReps(true);
   };
   console.log();
   return (
-    <Card className='relative text-center  flex flex-col md:w-[50%]  justify-between bg-gray-100 rounded-b-none '>
+    <Card className='relative text-center flex flex-col md:w-[50%] justify-between bg-gray-100 rounded-b-none w-full '>
       <CardHeader
         variant='filled'
         color='white'
@@ -114,32 +115,25 @@ const WorkoutCard: React.FC<IMuscleCards> = ({
           '>
             Increment Amount (default is 1)
           </span>{' '}
-          <div className='flex justify-around w-full'>
-            <div className='flex w-full justify-around gap-2 p-1 border-r-black border-[1px]'>
+          <div className='flex justify-around w-full flex-col'>
+            <div className='flex w-full justify-around gap-2 p-1 '>
               <Button
-                onClick={() => setIsReps(() => false)}
-                className={`${
-                  isReps
-                    ? ' bg-gray-300 text-gray-800 ring-0'
-                    : 'bg-gray-500 text-white ring-1'
-                } w-full shadow `}>
-                Sets
+                variant={`${isReps ? 'gradient' : 'outlined'}`}
+                onClick={() => setIsReps(() => true)}
+                className={`p-2  w-full shadow `}>
+                Reps
               </Button>
               <Button
-                onClick={() => setIsReps(() => true)}
-                className={`${
-                  !isReps
-                    ? ' bg-gray-300 text-gray-800 ring-0 '
-                    : 'bg-gray-500 text-white ring-1'
-                } w-full shadow `}>
-                Reps
+                variant={`${!isReps ? 'gradient' : 'outlined'}`}
+                onClick={() => setIsReps(() => false)}
+                className={`p-2 ${!isReps ? '' : ''} w-full shadow `}>
+                Sets
               </Button>
             </div>
             <div className='flex justify-around w-full gap-2 p-1 '>
-              {' '}
               <Button
-                color={`${currentClick === 1 ? 'red' : 'blue'}`}
-                className={`py-2 px-4  w-full`}
+                variant={`${currentClick === 1 ? 'gradient' : 'outlined'}`}
+                className={`p-2 w-full bg-transparent`}
                 onClick={() => {
                   setCurrentClick(1);
                   incrementRef.current = 1;
@@ -147,8 +141,8 @@ const WorkoutCard: React.FC<IMuscleCards> = ({
                 1
               </Button>
               <Button
-                color={`${currentClick === 5 ? 'red' : 'blue'}`}
-                className='py-2 px-4 w-full'
+                variant={`${currentClick === 5 ? 'gradient' : 'outlined'}`}
+                className='p-2 w-full bg-transparent'
                 onClick={() => {
                   setCurrentClick(5);
                   incrementRef.current = 5;
@@ -156,8 +150,8 @@ const WorkoutCard: React.FC<IMuscleCards> = ({
                 5
               </Button>
               <Button
-                color={`${currentClick === 10 ? 'red' : 'blue'}`}
-                className='py-2 px-4 w-full'
+                variant={`${currentClick === 10 ? 'gradient' : 'outlined'}`}
+                className='p-2 w-full bg-transparent'
                 onClick={() => {
                   setCurrentClick(10);
                   incrementRef.current = 10;

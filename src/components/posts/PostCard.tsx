@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { AiOutlineLike, AiOutlineComment } from 'react-icons/ai';
 import { IPost } from './types';
-import Comments from './Comment';
+import Comments from './Comments';
 import EditPost from './EditPost';
 import Reply from './Reply';
 import { useGetAvatar } from '@/hooks/useFetch';
@@ -68,14 +68,14 @@ const Postcard = (post: IPost) => {
               />
             )}
           </div>
-          <div className='w-full h-fit grid grid-cols-10 pr-[1.1rem] pt-1 flex-col bg-white rounded pl-2 '>
+          <div className='w-full h-fit flex flex-col pr-[1.1rem] pt-1 bg-white rounded pl-2 '>
             {post?.text && (
               <p className='text-base text-start col-span-9 text-gray-800 p-2 flex-wrap break-words'>
                 {post?.text}
               </p>
             )}
 
-            <div className='flex w-full text-2xl col-span-1 self-end py-1 gap-2 md:gap-0  md:ml-2 md:px-0 justify-around'>
+            <div className='flex w-full text-2xl col-span-1 self-end py-1 gap-4 md:gap-8  md:ml-2 md:px-2 justify-end'>
               <span
                 onClick={handleLikes}
                 className={`flex items-center cursor-pointer justify-center ${

@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import firebase, { auth, db } from '@/firebase/firebase';
 import Exercises from './Exercises';
+import { ShareIcon } from '@heroicons/react/24/outline';
 
 interface ProgressProps {
   activeTab: string | null;
@@ -35,9 +36,8 @@ function Progress({
   const incrementRef = useRef(1);
   const [selectedItem, setSelectedItem]: any = useState(null);
   const [allWorkouts, setAllWorkouts]: any = useState([]);
-
   const [savedWorkouts, setSavedWorkouts]: any = useState([]);
-
+  const [showFinishedProjects, setShowFinishedProjects] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showExercise, setShowExercise] = useState(false);
 
@@ -83,39 +83,62 @@ function Progress({
     selectedItem,
   );
   return (
-    <div className='mt-[5rem] w-[90%]  md:px-8 md:py-4 flex flex-col '>
-      <div className='flex md:gap-4 md:p-0  justify-between tracking-widest '>
-        <div className='flex md:gap-4 p gap-2 md:p-0 p-1 '>
+    <div className='mt-[5rem] w-[90%]  md:px-8 md:py-8 flex flex-col '>
+      <div className='flex md:gap-4 md:py-4  justify-between tracking-widest  '>
+        <div className='flex md:gap-4  gap-2 p-2  '>
           <Button
             onClick={() => {
               setOpenSideBar(!openSideBar);
             }}
-            className='tracking-wider px-3 py-2 justify-between flex items-center'
+            className='tracking-wider px-3 py-2  justify-between flex items-center'
             variant='gradient'>
             MENU
           </Button>
         </div>
-        <div className='flex md:gap-4  gap-2 md:p-0 p-1 '>
-          {' '}
-          <Tooltip content='Saves The Workout'>
+        {showExercise && (
+          <div className='flex md:gap-4 gap-2 p-2  '>
             <Button
-              disabled={
-                savedWorkouts.length === 0 ||
-                selectedItem === null ||
-                reps === 0 ||
-                sets === 0
-              }
-              onClick={handleFinish}
-              className='justify-start tracking-wider px-3 py-2'
-              variant='gradient'>
-              Save Workout
+              ripple={true}
+              onClick={() => setShowFinishedProjects(false)}
+              color={`${showFinishedProjects ? 'gray' : 'blue'}`}
+              className={` ${
+                showFinishedProjects ? 'scale-100' : 'scale-105'
+              } tracking-wider rounded-r-none px-3 py-2`}>
+              IN PROGRESS
             </Button>
-          </Tooltip>
+            <Button
+              ripple={true}
+              onClick={() => setShowFinishedProjects(true)}
+              color={`${showFinishedProjects ? 'blue' : 'gray'}`}
+              className={`${
+                showFinishedProjects ? 'scale-105' : 'scale-100'
+              } tracking-wider rounded-l-none  px-3 py-2`}>
+              DONE
+            </Button>
+          </div>
+        )}
+        <div className='flex md:gap-4 gap-2 p-2 '>
+          {!showExercise && (
+            <Tooltip content='Saves The Workout'>
+              <Button
+                disabled={
+                  savedWorkouts.length === 0 ||
+                  selectedItem === null ||
+                  reps === 0 ||
+                  sets === 0
+                }
+                onClick={handleFinish}
+                className=' tracking-wider px-3 py-2'
+                variant='gradient'>
+                Save Workout
+              </Button>
+            </Tooltip>
+          )}
           <Tooltip content='Displays all workouts'>
             <Button
               color='gray'
               onClick={() => setShowExercise(!showExercise)}
-              className='justify-start tracking-wider px-3 py-2'
+              className='tracking-wider px-3 py-2'
               variant='gradient'>
               {`${showExercise ? 'Add Exercise' : 'Show Exercises'} `}
             </Button>
@@ -124,7 +147,12 @@ function Progress({
       </div>
 
       {showExercise ? (
-        <Exercises />
+        <Exercises
+          showFinishedProjects={showFinishedProjects}
+          setShowFinishedProjects={setShowFinishedProjects}
+          showExercise={showExercise}
+          setShowExercise={setShowExercise}
+        />
       ) : (
         <Main
           selectedItem={selectedItem}

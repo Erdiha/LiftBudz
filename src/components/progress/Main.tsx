@@ -1,10 +1,10 @@
-import React, { ReactNode } from 'react';
+import React, { MutableRefObject, ReactNode, useEffect, useRef } from 'react';
 import Model, {
   IExerciseData,
   IModelProps,
   IMuscleStats,
 } from 'react-body-highlighter';
-import { Card, Tooltip, CardBody } from '@material-tailwind/react';
+import { Card, Tooltip, CardBody, Button } from '@material-tailwind/react';
 import { bodyParts } from '../data/data';
 import WorkoutCard from './WorkoutCard';
 import { Fragment, useState } from 'react';
@@ -119,7 +119,7 @@ export default function Main({
       </div>
 
       <div className='w-full h-fit  xl:grid-cols-3 p-2 gap-5'>
-        {bodyParts.map((part: any, index: number) => {
+        {bodyParts?.map((part: any, index: number) => {
           return (
             <Accordion key={index} open={open === index + 1}>
               <AccordionHeader
@@ -174,36 +174,85 @@ const ExerciseTrack = ({
   reps,
   muscle,
   sets,
-  save,
-  setSave,
-  setSets,
-  setReps,
   savedWorkouts,
   setSavedWorkouts,
+  isReps,
 }: any) => {
   console.log('workouts', savedWorkouts);
+  const setsRef: MutableRefObject<HTMLSpanElement | null> = useRef(null);
+  const repsRef: MutableRefObject<HTMLSpanElement | null> = useRef(null);
+
+  useEffect(() => {
+    if (setsRef.current?.classList && repsRef.current?.classList) {
+      const setsEl = setsRef.current;
+      const repsEl = repsRef.current;
+      !isReps
+        ? setsEl.classList.add(
+            'animate-bounce',
+            'font-black',
+            'text-2xl',
+            'text-red-400',
+          )
+        : repsEl.classList.add(
+            'animate-bounce',
+            'font-black',
+            'text-2xl',
+            'text-red-400',
+          );
+      setTimeout(() => {
+        !isReps
+          ? setsEl.classList.remove(
+              'animate-bounce',
+              'font-black',
+              'text-2xl',
+              'text-red-400',
+            )
+          : repsEl.classList.remove(
+              'animate-bounce',
+              'font-black',
+              'text-2xl',
+              'text-red-400',
+            );
+      }, 800);
+    }
+  }, [sets, reps]);
 
   return (
     <div className='p-4 bg-white rounded-lg h-full w-full shadow-md md:w-[40%] '>
       <p className='font-bold text-lg border-b-2 mb-4'>Exercise Card</p>
-      <p className='mb-2 text-lg font-normal'>
+      <p className='mb-2 text-sm md:text-md xl:text-xl font-normal'>
         Muscle Group: <span className='font-semibold'>{muscleGroup}</span>
       </p>
-      <p className='mb-2 text-lg font-normal'>
+      <p className='mb-2 font-normal  text-sm md:text-md xl:text-xl'>
         {' '}
         Selected Muscle:{' '}
         <span className='font-semibold'> {muscle ? muscle : 'None'}</span>
       </p>
-      <div className='grid grid-flow-col grid-cols-2 justify-around pb-2'>
-        <p className=' text-lg font-normal text-start'>
-          Sets: <span className='font-semibold'> {sets}</span>
+      <div className='grid md:grid-flow-col grid-flow-row grid-cols-2 justify-around pb-2  '>
+        <p className='relative flex h-full w-36 text-sm md:text-md xl:text-xl font-normal border-l-2 pl-2 border-gray-300'>
+          Reps:{' '}
+          <span
+            ref={repsRef}
+            className='font-semibold flex justify-center w-8 h-8 pl-2'>
+            {reps}
+          </span>
         </p>
-        <p className='text-lg font-normal border-l-2 pl-2 border-gray-300'>
-          Reps: <span className='font-semibold'>{reps}</span>
+
+        <p className='relative flex h-full w-36 text-sm md:text-md xl:text-xl font-normal border-l-2 pl-2 border-gray-300'>
+          Sets:{' '}
+          <span
+            ref={setsRef}
+            className='font-semibold flex justify-center w-8 h-8 pl-2'>
+            {sets}
+          </span>
         </p>
       </div>
+
       <Tooltip content='creates the workout'>
-        <button
+        <Button
+          disabled={
+            muscle === '' || muscleGroup === '' || reps === 0 || sets === 0
+          }
           onClick={() => {
             setSavedWorkouts([
               ...savedWorkouts,
@@ -214,12 +263,12 @@ const ExerciseTrack = ({
                 sets: Array.from({ length: sets }, () => false),
               },
             ]);
-
             toast.success('Workout Added');
           }}
-          className='shadow rounded p-1 bg-blue-gray-100 smd:hover:text-white col-span-1 self-end w-full font-semibold tracking-wider'>
+          className='shadow
+   rounded p-1 bg-blue-gray-100 text-black/90 font-semibold smd:hover:text-white col-span-1 self-end w-full  tracking-wider'>
           ADD
-        </button>
+        </Button>
       </Tooltip>
     </div>
   );

@@ -5,6 +5,7 @@ import { Button } from '@material-tailwind/react';
 import { IPost } from './types';
 import { db } from '@/firebase/firebase';
 import {} from '../data/data';
+import { toast } from 'react-toastify';
 
 function Posts({ setOpenSideBar }: any) {
   const [openPostFields, setOpenPostFields] = useState<boolean>(false);
@@ -37,8 +38,10 @@ function Posts({ setOpenSideBar }: any) {
         ) : (
           <div className='flex flex-row justify-between w-full gap-2 p-2'>
             <Button
-              onClick={() => setOpenSideBar((prev: boolean) => !prev)}
-              className='justify-start'
+              onClick={() => {
+                setOpenSideBar((prev: boolean) => !prev);
+              }}
+              className='flex justify-center items-center w-full h-full md:w-[25%]'
               variant='gradient'>
               Menu
             </Button>

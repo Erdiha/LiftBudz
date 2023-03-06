@@ -50,7 +50,7 @@ function Message({ message, curUserEMAIL, sender, dLoading }: any) {
           </Tooltip>
           <div className='relative'>
             <span
-              className={`flex absolute border-[1px] border-blue-gray-300 bg-blue-gray-50 justify-center rounded-full md:p-4 md:w-8 md:h-8 md:font-bold font-semibold  text-gray-900 items-center ${
+              className={`flex absolute text-[11px] aspect-square p-1 ring-2 border-blue-gray-300 bg-blue-gray-50 justify-center rounded-full md:p-4 md:w-8 md:h-8 md:font-bold font-semibold  text-gray-900 items-center ${
                 message?.conversationId[0] === curUserEMAIL
                   ? '-right-5 -top-5'
                   : '-left-5 -top-5'

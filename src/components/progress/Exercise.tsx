@@ -8,18 +8,18 @@ import {
   CardFooter,
   Typography,
   Button,
+  Tooltip,
 } from '@material-tailwind/react';
 import { TrashIcon, ShareIcon } from '@heroicons/react/24/outline';
 
-import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import { toast } from 'react-toastify';
 import Modal from './Modal';
+import { useEffect } from 'react';
 
 function Exercise({ workout }: any) {
-  console.log('workout', workout);
-  const [completed, setCompleted] = useState(0);
+  const [completed, setCompleted] = useState({ complete: 0, incomplete: 0 });
   const calculatePercentage = useRef(0.0);
 
   const deleteWorkout = async (id: string) => {
@@ -30,26 +30,50 @@ function Exercise({ workout }: any) {
       toast.error('Error deleting workout!');
     }
   };
-  const percentage = 66;
+
+  useEffect(() => {
+    let completeCount = 0;
+    let incompleteCount = 0;
+
+    workout?.exercises?.forEach((item: any) => {
+      item.sets.forEach((s: any) => {
+        if (s === true) {
+          completeCount++;
+        } else {
+          incompleteCount++;
+        }
+      });
+    });
+
+    setCompleted({ complete: completeCount, incomplete: incompleteCount });
+  }, [workout]);
+
+  const percentage = Math.round(
+    (completed.complete / (completed.complete + completed.incomplete)) * 100,
+  );
+  console.log('completed', completed);
   return (
-    <Card className='my-4 mx-2 md:mx-0 bg-blue-gray-50/60  md:mt-10 md:p-4 shadow-xl px-2 h-fit relative'>
+    <Card
+      className={`my-4 mx-2 md:mx-0 ${
+        workout?.done ? 'bg-green-100/10' : 'bg-red-100/10'
+      }  md:mt-10 md:p-4 shadow-xl px-2 h-fit relative`}>
       <CircularProgressbar
-        value={calculatePercentage.current}
-        text={`${calculatePercentage.current}`}
+        value={percentage}
+        text={`${percentage}%`}
         className=' md:h-40 md:w-40 shadow-md py-4 h-20 w-20'
         styles={buildStyles({
-          rotation: 0.25,
+          rotation: 1,
           strokeLinecap: 'butt',
           textSize: '16px',
-          pathTransitionDuration: 0.5,
+          pathTransitionDuration: 1,
           pathColor: `rgba(62, 152, 199, ${percentage / 100})`,
           textColor: '#f88',
           trailColor: '#d6d6d6',
           backgroundColor: '#3e98c7',
         })}
       />
-      <CardBody className='p-3 md:p-6 ring-1 ring-gray-300  relative overflow-y-auto md:mb-20 md:h-96 mb-28'>
-        {workout?.exercises.map((w: any) => {
+      <CardBody className='p-3 md:p-3 ring-1 ring-gray-300  relative overflow-y-auto md:mb-20 md:h-96 mb-28 '>
+        {workout?.exercises?.map((w: any) => {
           calculatePercentage.current = (w.reps * w.sets) / 100;
           return (
             <section
@@ -69,19 +93,15 @@ function Exercise({ workout }: any) {
                 <p className='font-sans text-gray-500'>
                   Target Muscle:{' '}
                   <span className='text-gray-600 uppercase tracking-wider font-serif text-sm md:text-md '>
-                    {' '}
                     {w.muscle}
                   </span>
                 </p>
                 <p className='uppercase w-fit  flex gap-4'>
-                  {' '}
                   <span className='bg-blue-gray-50 p-2 rounded-lg'>
-                    {' '}
                     Sets:{' '}
                     <span className='font-serif text-xl'>{w.sets.length}</span>
                   </span>
                   <span className='bg-blue-gray-50 p-2 rounded-lg'>
-                    {' '}
                     Reps:{' '}
                     <span className='font-serif text-xl'>{w.reps.reps}</span>
                   </span>
@@ -93,20 +113,31 @@ function Exercise({ workout }: any) {
       </CardBody>
       <CardFooter
         divider
-        className='flex right-0 left-0 justify-around  items-center md:justify-between h-20 absolute bottom-1 rounded-none rounded-b-none   '>
-        <Button
-          className='flex text-gray-800 justify-between items-center gap-2 p-3 bg-blue-gray-100'
-          onClick={() => deleteWorkout(workout.id)}>
-          <TrashIcon strokeWidth={2} className='h-5 w-5' />
-          delete
-        </Button>
-        <Button className='start-button rounded-full py-0 px-0 w-20 aspect-square justify-center flex items-center  text-gray-200 '>
-          <Modal workout={workout} />
-        </Button>
-        <Button className='flex text-gray-800 justify-between items-center gap-2 p-3 bg-blue-gray-100'>
-          <ShareIcon strokeWidth={2} className='h-5 w-5' />
-          Post
-        </Button>
+        className='grid grid-cols-3 gap-2  items-center justify-between  absolute bottom-1 '>
+        <Tooltip content='Delete'>
+          <Button
+            className='flex text-gray-800 justify-between items-center bg-blue-gray-100'
+            onClick={() => deleteWorkout(workout.id)}>
+            <TrashIcon strokeWidth={2} className='h-5 w-5' />
+          </Button>
+        </Tooltip>
+        {!workout?.done && (
+          <Tooltip
+            content={`${
+              percentage > 0 ? 'resume the workout' : 'start the workout'
+            }`}>
+            <Button className='px-0 py-0  rounded-full  justify-center flex items-center  text-gray-200 '>
+              <Modal workout={workout} percentage={percentage} />
+            </Button>
+          </Tooltip>
+        )}
+        <Tooltip content='NOT COMPLETE YET'>
+          <Button
+            disabled
+            className='flex text-gray-800 justify-between items-center  bg-blue-gray-100'>
+            <ShareIcon strokeWidth={2} className='h-5 w-5' />
+          </Button>
+        </Tooltip>
       </CardFooter>
     </Card>
   );
