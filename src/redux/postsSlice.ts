@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { db } from '@/firebase/firebase';
-import { mockposts } from '@/components/data/data';
 import { IPost } from '@/components/posts/types';
 
 // Async Thunk to fetch posts from the database
@@ -24,7 +23,7 @@ interface PostsState {
 }
 
 const initialState: PostsState = {
-  posts: mockposts,
+  posts: [],
   status: 'idle',
   error: null,
 };
