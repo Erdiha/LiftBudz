@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import useAuth, { Iinput } from '@/firebase/usefirebaseUI';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Input } from '@material-tailwind/react';
+import Link from 'next/link';
+import Loading from '@/utils/Loading';
 
 function Signin() {
   const [userLogin, setUserLogin] = useState(false);
@@ -116,24 +118,36 @@ function Signin() {
           </div>
         </div>
         <div className='rounded p-3  hidden lg:flex items-center justify-center flex-1 flex-col gap-4 drop-shadow-md text-black'>
-          <div className='max-w-xs transform duration-200 hover:scale-110 cursor-pointer shadow-sm shadow-white rounded-full'>
-            <div className={`bg-black/60 p-4 rounded-full `}>
-              <svg
-                className='w-full h-full'
-                viewBox='0 0 100 100'
-                xmlns='http://www.w3.org/2000/svg'>
-                <image xlinkHref='/fittness.svg' width='100' height='100' />
-              </svg>
+          {isLoading ? (
+            <div>
+              <Loading />
             </div>
-          </div>
-          <p
-            // target='_blank'
-            // rel='noopener noreferrer'
-            className='  flex text-black rounded p-1 shadow-text-sm'
-            // href='https://www.betterhealth.vic.gov.au/health/healthyliving/Exercise-with-a-friend'
-          >
-            <p className='text-sm font-semibold'>Exercise</p>
-          </p>
+          ) : (
+            <>
+              <div className='max-w-xs transform duration-200 hover:scale-110 cursor-pointer shadow-sm shadow-white rounded-full'>
+                <div className={`bg-black/60 p-4 rounded-full `}>
+                  <svg
+                    className='w-full h-full'
+                    viewBox='0 0 100 100'
+                    xmlns='http://www.w3.org/2000/svg'>
+                    <image xlinkHref='/fittness.svg' width='100' height='100' />
+                  </svg>
+                </div>
+              </div>
+              <Link
+                target='_blank'
+                rel='noopener noreferrer'
+                className='  flex text-black rounded p-1 shadow-text-sm'
+                href='https://www.betterhealth.vic.gov.au/health/healthyliving/Exercise-with-a-friend'>
+                <article className='text-xl'>
+                  <p className='text font-semibold text-xl'>Why LiftBudz?</p>
+                  <p className='text-sm text-[17px]  text-blue-400 tracking-widest p-1  font-bold'>
+                    Read More...
+                  </p>
+                </article>
+              </Link>
+            </>
+          )}
         </div>
       </>
     </div>
