@@ -1,12 +1,12 @@
 import { db } from '../../../firebase/firebase';
 import useAuth, { useUserLibrary } from '@/firebase/usefirebaseUI';
-import { Avatar, Button, Card } from '@material-tailwind/react';
+import { Avatar, Button } from '@material-tailwind/react';
 import { useGetUsers } from '../../data';
 import Loading from '@/utils/Loading';
 import { useDelete } from '@/hooks/useDelete';
 import { AiFillDelete } from 'react-icons/ai';
 import { Tooltip } from '@material-tailwind/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { fetchChats } from '../../../redux/chatsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -15,12 +15,9 @@ import { isUserOnline } from '../../../utils/helperFuntions';
 
 function SideChats({
   setActiveTab,
-  activeTab,
-  sendMessageToUser,
   setSendMessageToUser,
   messageUserId,
   setMessageUserId,
-  setOpenSideBar,
 }: any) {
   const { currentUser } = useAuth();
   const curUserEMAIL: any = currentUser?.email;
@@ -74,7 +71,6 @@ function SideChats({
     }
   };
 
-  console.log('allChats', allChats, onlineRef.current);
   return (
     <div className='flex  md:w-[20rem] shadow-md backdrop-blur-lg    flex-col bg-white/10 rounded p-2 mt-20'>
       <Button
@@ -83,7 +79,7 @@ function SideChats({
         BACK
       </Button>
       <div className='flex flex-col w-full h-full rounded-lg   relative overflow-y-auto scroll-y-auto p-6'>
-        <div className='grid grid-flow-row gap-4 justify-center items-center mx-auto  rounded md:w-[10rem] '>
+        <div className='grid grid-flow-row gap-4 justify-center items-center mx-auto rounded'>
           {loading ? (
             <Loading />
           ) : (
@@ -96,9 +92,9 @@ function SideChats({
                     m.conversationId.includes(currentUser?.email),
                 ) && (
                   <div
-                    color={`${onlineRef.current ? 'green' : 'gray'}`}
                     key={user?.id}
-                    className={`flex w-full flex-row rounded shadow-md backdrop-blur-sm items-center group  ${
+                    onMouseDown={() => handleUserMessageClicked(user)}
+                    className={`flex w-full cursor-pointer rounded shadow-md backdrop-blur-sm items-center group  ${
                       messageUserId === user.email
                         ? 'bg-blue-200 scale-105 text-white'
                         : 'bg-blue-gray-50 scale-100  text-gray-900 '
@@ -126,20 +122,18 @@ function SideChats({
                       </button>
                     </Tooltip>
                     <span
-                      className={` ring-[2px] p-2 rounded-lg bg-white/50 ${
-                        onlineRef.current ? 'ring-green-400 ' : 'ring-gray-200'
-                      }`}>
+                      className={` ring-[2px] p-2 rounded-lg bg-white/50 
+                         'ring-gray-200'
+                      `}>
                       <Avatar
                         src={user?.imageUrl ? user?.imageUrl : 'No Image'}
                       />
                     </span>
                     <div className='pl-2 w-full px-2'>
                       <div className='font-semibold'>
-                        <button
-                          onClick={() => handleUserMessageClicked(user)}
-                          className='hover:underline flex  text-start '>
+                        <p className=' flex  text-start '>
                           {user?.displayName.toUpperCase()}
-                        </button>
+                        </p>
                       </div>
                       <div className='text-xs text-gray-600'>
                         {findNewestMessage(user)}

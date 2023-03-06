@@ -216,7 +216,7 @@ const ExerciseTrack = ({
       }, 800);
     }
   }, [sets, reps]);
-
+  console.log('muscle', muscle, 'muscleGroup', muscleGroup);
   return (
     <div className='p-4 bg-white rounded-lg h-full w-full shadow-md md:w-[40%] '>
       <p className='font-bold text-lg border-b-2 mb-4'>Exercise Card</p>
@@ -250,23 +250,34 @@ const ExerciseTrack = ({
 
       <Tooltip content='creates the workout'>
         <Button
-          disabled={
-            muscle === '' || muscleGroup === '' || reps === 0 || sets === 0
-          }
           onClick={() => {
-            setSavedWorkouts([
-              ...savedWorkouts,
-              {
-                muscleGroup,
-                reps: { reps: reps, done: false },
-                muscle,
-                sets: Array.from({ length: sets }, () => false),
-              },
-            ]);
-            toast.success('Workout Added');
+            let warningMessage = '';
+
+            if (muscle === null) {
+              warningMessage += 'Please select a  muscle. ';
+            }
+            else if (reps === 0) {
+              warningMessage += 'Pelase select a number of reps. ';
+            }
+            else if (sets === 0) {
+              warningMessage += 'Please select a number of sets. ';
+            }
+            if (warningMessage !== '') {
+              toast.warn(warningMessage);
+            } else {
+              setSavedWorkouts([
+                ...savedWorkouts,
+                {
+                  muscleGroup,
+                  reps: { reps: reps, done: false },
+                  muscle,
+                  sets: Array.from({ length: sets }, () => false),
+                },
+              ]);
+              toast.success('Workout Added');
+            }
           }}
-          className='shadow
-   rounded p-1 bg-blue-gray-100 text-black/90 font-semibold smd:hover:text-white col-span-1 self-end w-full  tracking-wider'>
+          className='shadow rounded p-1 bg-blue-gray-100 text-black/90 font-semibold smd:hover:text-white col-span-1 self-end w-full  tracking-wider'>
           ADD
         </Button>
       </Tooltip>

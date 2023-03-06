@@ -64,10 +64,10 @@ const Navbar = () => {
             </Link>
             {auth?.currentUser && (
               <Link
-                href='/profile'
-                onClick={() => router.push('/profile')}
+                href='/Profile'
+                onClick={() => router.push('/Profile')}
                 className={` ${
-                  router.asPath === '/profile'
+                  router.asPath === '/Profile'
                     ? 'md:border-b-4 md:border-blue-400 md:backdrop-blur gradient text-gray-200 '
                     : 'bg-transparent backdrop-blur-0 text-gray-200'
                 } block mt-4 md:inline-block md:mt-0  hover:text-white mr-4 md:p-2 py-2  rounded`}>
