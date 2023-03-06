@@ -8,7 +8,7 @@ import { Avatar } from '@material-tailwind/react';
 import { capitalFirstLetter } from '@/utils/textModify';
 import Loading from '@/utils/Loading';
 
-function profile() {
+function Profile() {
   const { getCurrentUser } = useUserLibrary(useAuth().currentUser?.uid);
   const { currentUser } = useAuth();
   const { file, downloadURL, handleButtonClick, imageLoading, handleDelete } =
@@ -72,4 +72,4 @@ function profile() {
     </>
   );
 }
-export default profile;
+export default Profile;

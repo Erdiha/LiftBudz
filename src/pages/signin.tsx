@@ -3,7 +3,7 @@ import useAuth, { Iinput } from '@/firebase/usefirebaseUI';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Input } from '@material-tailwind/react';
 
-function signin() {
+function Signin() {
   const [userLogin, setUserLogin] = useState(false);
   const [demo, setDemo] = useState(false);
   const { logIn, Register, isLoading } = useAuth();
@@ -140,4 +140,4 @@ function signin() {
   );
 }
 
-export default signin;
+export default Signin;
