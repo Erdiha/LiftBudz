@@ -1,14 +1,11 @@
 import Head from 'next/head';
 import Hero from '../components/mainpage/Hero';
 import MainSegments from '../components/mainpage/MainSegments';
-import { IPexelImages } from './types';
 import useAuth from '@/firebase/usefirebaseUI';
-
-import { toast } from 'react-toastify';
 import Dashboard from './Dashboard';
 
 export default function Home() {
-  const { isLoading, currentUser } = useAuth();
+  const { currentUser } = useAuth();
 
   return (
     <>

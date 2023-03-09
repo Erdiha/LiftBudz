@@ -16,7 +16,7 @@ export const bodyParts = [
       'biceps',
       'triceps',
       'forearm',
-      ' back-deltoids',
+      'back-deltoids',
       'front-deltoids',
     ],
     icon: '/arm.png',

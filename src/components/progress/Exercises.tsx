@@ -8,7 +8,7 @@ interface WorkoutState {
   muscle: string;
   sets: number;
 }
-function Exercises({ showFinishedProjects, setShowFinishedProjects }: any) {
+function Exercises({ showFinishedProjects }: any) {
   const [workouts, setWorkouts]: any = useState([]);
   useEffect(() => {
     const unsubscribe = db

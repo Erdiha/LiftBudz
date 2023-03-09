@@ -1,12 +1,9 @@
 import { Button, Tooltip } from '@material-tailwind/react';
 import React, { useRef, useState } from 'react';
-import Link from 'next/link';
 import Main from './Main';
-import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import firebase, { auth, db } from '@/firebase/firebase';
 import Exercises from './Exercises';
-import { ShareIcon } from '@heroicons/react/24/outline';
 
 interface ProgressProps {
   activeTab: string | null;
@@ -22,12 +19,7 @@ interface WorkoutState {
   exercises: [];
 }
 
-function Progress({
-  activeTab,
-  setActiveTab,
-  setOpenSideBar,
-  openSideBar,
-}: ProgressProps) {
+function Progress({ setOpenSideBar, openSideBar }: ProgressProps) {
   const workoutPlans = [];
 
   const [reps, setReps] = useState(0);

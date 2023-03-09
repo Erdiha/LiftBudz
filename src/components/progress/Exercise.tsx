@@ -36,7 +36,7 @@ function Exercise({ workout }: any) {
     let incompleteCount = 0;
 
     workout?.exercises?.forEach((item: any) => {
-      item.sets.forEach((s: any) => {
+      item?.sets?.forEach((s: any) => {
         if (s === true) {
           completeCount++;
         } else {

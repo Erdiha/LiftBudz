@@ -38,20 +38,40 @@ export default function Main({
   };
 
   const initialData: IExerciseData[] = [];
-  const [data, setData] = useState<IExerciseData[]>([
-    { name: 'Bench Press', muscles: ['triceps'] },
-  ]);
+  const [data, setData] = useState<IExerciseData[]>([]);
 
   const handleReset = () => {
     setData(initialData);
     setMuscleValue(null);
   };
 
+  useEffect(() => {
+    const backMuscles = [
+      'trapezius',
+      'upper-back',
+      'lower-back',
+      'back-deltoids',
+      'gluteal',
+      'triceps',
+      'right-soleus',
+      'left-soleus',
+      'hamstring',
+    ];
+
+    const itemArray = selectedItem?.split(' ') ?? [];
+    if (backMuscles.includes(itemArray[0])) {
+      setFront(false);
+    } else {
+      setFront(true);
+    }
+
+    setData([{ name: '', muscles: itemArray }]);
+  }, [selectedItem]);
+
   const handleClick = React.useCallback(
     ({ muscle, data }: IMuscleStats) => {
       const { exercises, frequency } = data;
 
-      console.log(exercises);
       setMuscleValue(
         <div className='flex flex-col text-gray-600'>
           <p className='p-1 '>
@@ -67,20 +87,11 @@ export default function Main({
             </span>{' '}
             times
           </p>
-          {exercises?.length > 0 && (
-            <p className='p-1'>
-              Execise is:{' '}
-              <span className='text-blue-400 text-semibold tracking-wider text-xl'>
-                {exercises.join(', ')}
-              </span>{' '}
-            </p>
-          )}
         </div>,
       );
     },
-    [data, []],
+    [data],
   );
-
   return (
     <div className='flex flex-col md:flex-row  w-full bg-gray-100 p-4'>
       <div className='md:flex flex-col p-4 hidden  transition-all duration-300 ease-in-out ring-1  md:m-0  shadow-md md:h-fit'>
@@ -178,7 +189,6 @@ const ExerciseTrack = ({
   setSavedWorkouts,
   isReps,
 }: any) => {
-  console.log('workouts', savedWorkouts);
   const setsRef: MutableRefObject<HTMLSpanElement | null> = useRef(null);
   const repsRef: MutableRefObject<HTMLSpanElement | null> = useRef(null);
 
@@ -255,11 +265,9 @@ const ExerciseTrack = ({
 
             if (muscle === null) {
               warningMessage += 'Please select a  muscle. ';
-            }
-            else if (reps === 0) {
+            } else if (reps === 0) {
               warningMessage += 'Pelase select a number of reps. ';
-            }
-            else if (sets === 0) {
+            } else if (sets === 0) {
               warningMessage += 'Please select a number of sets. ';
             }
             if (warningMessage !== '') {

@@ -9,22 +9,14 @@ import {
   Checkbox,
   Typography,
   Tooltip,
-  DialogProps,
 } from '@material-tailwind/react';
 import { toast } from 'react-toastify';
-import firebase, { db } from '@/firebase/firebase';
+import { db } from '@/firebase/firebase';
 import { AiFillPlayCircle, AiFillPauseCircle } from 'react-icons/ai';
 
 export default function Modal({ workout, percentage }: any) {
-  const [archieve, setArchieve] = useState(false);
   const [open, setOpen] = useState(false);
-
   const handleArchieve = async () => {
-    // const workoutDoc = await db.collection('workout').doc(workout.id).get();
-    // const workoutData = workoutDoc.data();
-    // if(workoutData){
-    //   workoutDoc.ref.update({ done: true });
-    // }
     try {
       await db.collection('workout').doc(workout.id).update({ done: true });
       toast.success('Workout archieved successfully!');

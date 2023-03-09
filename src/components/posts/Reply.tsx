@@ -26,7 +26,6 @@ const Reply: FC<CommentProps> = ({
   comment,
   mright = 1,
   mleft = 0,
-  done = false,
   post,
   index,
 }: CommentProps) => {
@@ -76,7 +75,9 @@ const Reply: FC<CommentProps> = ({
           </div>
 
           <div className='absolute bottom-0 right-0 flex gap-8 p-1 rounded-br-md'>
-            {comment?.isParent && post?.subComments?.length > 0 && (
+            {post?.subComments.filter(
+              (subComment: any) => subComment.parentID === comment?.id,
+            ).length > 0 && (
               <>
                 {open === 1 ? (
                   <Tooltip content='Collapse'>
@@ -93,26 +94,32 @@ const Reply: FC<CommentProps> = ({
                 )}
               </>
             )}
-
             <button
               onClick={() => setOpenReply(!openReply)}
               className='md:hover:scale-110 md:hover:bg-blue-gray-100 p-1 rounded-md md:hover:drop-shadow-md relative justify-center flex items-center '>
+              {/* Show the number of replies */}
               {comment?.isParent &&
-              !openReply &&
-              post?.subComments.filter(
-                (subComment: any) => subComment.parentID === comment?.id,
-              )
-                ? post?.subComments?.length > 1
-                  ? 'replies'
-                  : 'reply'
-                : ''}
+                post?.subComments.filter(
+                  (sub: any) => sub?.parentID === post?.comments[index]?.id,
+                ).length > 0 && (
+                  <span className='text-[11px] text-white absolute rounded-full bg-red-400  justify-center items-center flex -right-2 -top-1 w-4 aspect-auto'>
+                    {
+                      post?.subComments.filter(
+                        (subComment: any) =>
+                          subComment.parentID === comment?.id,
+                      ).length
+                    }
+                  </span>
+                )}
 
-              <span className='text-[11px] text-white absolute rounded-full bg-red-400  justify-center items-center flex -right-2 -top-1 w-4 aspect-auto'>
+              {/* Show "Replies" if there is more than one reply */}
+              <span className='text-[11px]'>
                 {comment?.isParent &&
-                  post?.subComments?.length > 0 &&
-                  post?.subComments.filter(
+                  (post?.subComments.filter(
                     (subComment: any) => subComment.parentID === comment?.id,
-                  ).length}
+                  ).length > 1
+                    ? 'Replies'
+                    : 'Reply')}
               </span>
             </button>
 
