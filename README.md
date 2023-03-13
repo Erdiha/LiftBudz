@@ -1,6 +1,6 @@
 # LiftBudz
 
-LiftBudz is a workout tracking application built with React Native that allows users to track their weightlifting progress and see their workout history.
+LiftBudz is a workout tracking application built with React, Tailwind, Firebase, Typescript, and Redux Toolkit that allows users to track their weightlifting progress and see their workout history.
 
 ## Features
 
