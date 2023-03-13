@@ -8,10 +8,9 @@ LiftBudz is a workout tracking application built with React, Tailwind, Firebase,
 - Add and delete exercises
 - Add and delete workout routines
 - Add and delete workout sets
-- Record weight and reps for each set
+- Record sets and reps for each set
 - View workout history
 - View workout statistics
-- Dark mode
 
 ## Installation
 
